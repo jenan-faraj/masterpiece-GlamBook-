@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --screen-red: #61090b;
+    --Logo-color: #B58152;
+    --button-color: #a0714f;
+    --text-color: #c4a484;
+  }
+}
+
