@@ -1,12 +1,13 @@
 "use client";
 import { useState } from "react";
-// Import SweetAlert2
+import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -37,9 +38,7 @@ export default function LoginForm() {
         confirmButtonText: "Continue",
         confirmButtonColor: "#a0714f"
       });
-      
-      // ممكن تعملي redirect مثلاً:
-      // router.push("/dashboard");
+      navigate("/"); 
     } catch (err) {
       setError("Something went wrong, please try again later.");
     }

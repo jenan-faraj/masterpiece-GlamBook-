@@ -4,7 +4,7 @@ import Navbar from "./components/Navbar";
 import Login from "./components/LogIn";
 import Register from "./components/Register";
 import Home from "./components/Home";
-import Logout from ".//components/Logout";
+import Logout from "./components/Logout";
 
 function App() {
   return (

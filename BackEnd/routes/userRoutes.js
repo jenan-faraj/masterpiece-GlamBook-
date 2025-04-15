@@ -14,5 +14,4 @@ router.put("/toggle-comment", protect, userController.toggleComment);
 router.delete("/delete", protect, userController.softDeleteUser);
 router.patch("/delete/restore", protect, userController.restoreUser);
 
-
 module.exports = router;
