@@ -6,6 +6,7 @@ import Register from "./components/Register";
 import Home from "./components/Home";
 import Logout from "./components/Logout";
 import RegisterSalon from "./Pages/RegisterSalon";
+import Categories from "./Pages/categories";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/RegisterSalon" element={<RegisterSalon />} />
+          <Route path="/categories" element={<Categories />} />
         </Routes>
       </div>
     </Router>
