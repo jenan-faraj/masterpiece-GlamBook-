@@ -1,13 +1,19 @@
 const express = require("express");
+const {
+  getAllSalons,
+  getSalonById,
+  createSalon,
+  updateSalon,
+  deleteSalon,
+} = require("../controller/SalonController");
+
 const router = express.Router();
-const salonController = require("../controller/SalonController");
 
-
-router.post("/", salonController.createSalon);
-router.get("/", salonController.getSalons);
-router.get("/:id", salonController.getSalonById);
-router.put("/:id", salonController.updateSalon);
-router.delete("/:id", salonController.deleteSalon);
-router.patch("/:salonId/services/:serviceId/delete", salonController.softDeleteService);
+// Routes
+router.get("/", getAllSalons);
+router.get("/:id", getSalonById);
+router.post("/", createSalon);
+router.put("/:id", updateSalon);
+router.delete("/:id", deleteSalon);
 
 module.exports = router;
