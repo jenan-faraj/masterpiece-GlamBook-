@@ -95,26 +95,85 @@ exports.cancelBooking = async (req, res) => {
   }
 };
 
-// ✅ Mark Booking as Completed
-exports.completeBooking = async (req, res) => {
+// ✅ Get All Completed Bookings
+exports.getCompletedBookings = async (req, res) => {
   try {
-    const booking = await Book.findByIdAndUpdate(
-      req.params.id,
-      { isCompleted: true },
-      { new: true }
-    );
+    const completedBookings = await Book.find({ isCompleted: true })
+      .populate("salonId", "name location")
+      .populate("userId", "name email")
+      .sort({ date: 1 });
 
-    if (!booking) {
+    if (completedBookings.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "Booking not found",
+        message: "No completed bookings found",
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Booking has been marked as completed",
-      data: booking,
+      count: completedBookings.length,
+      data: completedBookings,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ✅ Get Completed Bookings by User ID
+exports.getCompletedBookingsByUser = async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const completedBookings = await Book.find({ userId, isCompleted: true })
+      .populate("salonId", "name location")
+      .populate("userId", "name email")
+      .sort({ date: 1 });
+
+    if (completedBookings.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No completed bookings found for this user",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      count: completedBookings.length,
+      data: completedBookings,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ✅ Get Completed Bookings by Salon ID
+exports.getCompletedBookingsBySalon = async (req, res) => {
+  const salonId = req.params.salonId;
+
+  try {
+    const completedBookings = await Book.find({ salonId, isCompleted: true })
+      .populate("salonId", "name location")
+      .populate("userId", "name email")
+      .sort({ date: 1 });
+
+    if (completedBookings.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No completed bookings found for this salon",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      count: completedBookings.length,
+      data: completedBookings,
     });
   } catch (error) {
     res.status(500).json({

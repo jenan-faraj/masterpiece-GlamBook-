@@ -28,10 +28,6 @@ const bookSchema = new mongoose.Schema(
         "Time must be in format HH:MM AM/PM",
       ],
     },
-    OTP: {
-      type: String,
-      maxlength: [6, "OTP must be at most 6 characters"],
-    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
