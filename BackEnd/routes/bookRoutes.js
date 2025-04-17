@@ -1,11 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const bookController = require("../controller/bookController");
+const {
+  createBooking,
+  getAllBookings,
+  deleteBooking,
+  getBookingsByUser,
+  cancelBooking,
+} = require("../controllers/bookController");
 
-router.post("/", bookController.createBooking); // إنشاء حجز جديد
-router.get("/", bookController.getAllBookings); // جلب كل الحجوزات
-router.get("/:id", bookController.getBookingById); // جلب حجز حسب الـ ID
-router.put("/:id", bookController.updateBooking); // تحديث الحجز
-router.delete("/:id", bookController.deleteBooking); // حذف الحجز
+router.post("/", createBooking); // إضافة حجز جديد
+router.get("/", getAllBookings); // جلب كل الحجوزات
+router.delete("/:id", deleteBooking); // حذف حجز معيّن
+router.get("/user/:userId", getBookingsByUser);
+router.put("/cancel/:id", cancelBooking);
 
 module.exports = router;

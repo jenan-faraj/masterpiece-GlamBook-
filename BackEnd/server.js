@@ -22,7 +22,7 @@ app.use(cookieParser());
 const corsOptions = { origin: "http://localhost:5173", credentials: true };
 app.use(cors(corsOptions));
 console.log("JWT_SECRET:", process.env.JWT_SECRET);
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: "10mb" }));
 //---------------------------
 // Connect DB
 //---------------------------

@@ -1,103 +1,154 @@
 const Book = require("../models/book");
-const mongoose = require("mongoose");
 
-// إنشاء حجز جديد
+// ✅ Create Booking
 exports.createBooking = async (req, res) => {
   try {
-    const { fullName, phoneNumber, email, services, date, time, userId, salonId } = req.body;
-
-    // التحقق من القيم المطلوبة
-    if (!fullName || !phoneNumber || !email || !services || !date || !time || !userId || !salonId) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    // التحقق من صحة معرفات اليوزر والصالون
-    if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(salonId)) {
-      return res.status(400).json({ message: "Invalid User ID or Salon ID" });
-    }
-
-    // التحقق من صحة البريد الإلكتروني ورقم الهاتف
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
-    }
-
-    const phoneRegex = /^[0-9]{10,15}$/;
-    if (!phoneRegex.test(phoneNumber)) {
-      return res.status(400).json({ message: "Invalid phone number format" });
-    }
-
-    const newBooking = new Book({ fullName, phoneNumber, email, services, date, time, userId, salonId });
-
-    await newBooking.save();
-    res.status(201).json({ message: "Booking created successfully", newBooking });
+    const newBooking = await Book.create(req.body);
+    res.status(201).json({
+      success: true,
+      message: "Booking created successfully",
+      data: newBooking,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
-// جلب كل الحجوزات مع بيانات المستخدم والصالون
+// ✅ Get All Bookings
 exports.getAllBookings = async (req, res) => {
   try {
-    const bookings = await Book.find()
-      .populate("user", "name phone email")
-      .populate("salon", "name location services")
-      .lean();
+    const bookings = await Book.find({ isDeleted: false, isCanceled: false })
+      .populate("userId", "name email") // عرض بيانات المستخدم (اختياري)
+      .populate("salonId", "name location"); // عرض بيانات الصالون (اختياري)
 
-    res.status(200).json(bookings);
+    res.status(200).json({
+      success: true,
+      count: bookings.length,
+      data: bookings,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
-// جلب حجز واحد عن طريق الـ ID مع بيانات اليوزر والصالون
-exports.getBookingById = async (req, res) => {
+// ✅ Get Bookings by User ID
+exports.getBookingsByUser = async (req, res) => {
+  const userId = req.params.userId;
+
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({ message: "Invalid booking ID" });
+    const bookings = await Book.find({ userId, isDeleted: false })
+      .populate("salonId", "name location") // إذا بتحبي تعرضي بيانات الصالون
+      .sort({ date: 1 }); // ترتيب حسب التاريخ
+
+    if (bookings.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No bookings found for this user",
+      });
     }
 
-    const booking = await Book.findById(req.params.id)
-      .populate("user", "name phone email")
-      .populate("salon", "name location services");
-
-    if (!booking) return res.status(404).json({ message: "Booking not found" });
-
-    res.status(200).json(booking);
+    res.status(200).json({
+      success: true,
+      count: bookings.length,
+      data: bookings,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
-// تحديث حجز معين
-exports.updateBooking = async (req, res) => {
+// ✅ Cancel Booking
+exports.cancelBooking = async (req, res) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({ message: "Invalid booking ID" });
+    const booking = await Book.findByIdAndUpdate(
+      req.params.id,
+      { isCanceled: true },
+      { new: true }
+    );
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found",
+      });
     }
 
-    const updatedBooking = await Book.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-
-    if (!updatedBooking) return res.status(404).json({ message: "Booking not found" });
-
-    res.status(200).json({ message: "Booking updated successfully", updatedBooking });
+    res.status(200).json({
+      success: true,
+      message: "Booking has been canceled",
+      data: booking,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
-// حذف حجز
+// ✅ Mark Booking as Completed
+exports.completeBooking = async (req, res) => {
+  try {
+    const booking = await Book.findByIdAndUpdate(
+      req.params.id,
+      { isCompleted: true },
+      { new: true }
+    );
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Booking has been marked as completed",
+      data: booking,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ✅ Soft Delete Booking
 exports.deleteBooking = async (req, res) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({ message: "Invalid booking ID" });
+    const booking = await Book.findByIdAndUpdate(
+      req.params.id,
+      { isDeleted: true },
+      { new: true }
+    );
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found",
+      });
     }
 
-    const deletedBooking = await Book.findByIdAndDelete(req.params.id);
-    if (!deletedBooking) return res.status(404).json({ message: "Booking not found" });
-
-    res.status(200).json({ message: "Booking deleted successfully" });
+    res.status(200).json({
+      success: true,
+      message: "Booking marked as deleted (soft delete)",
+      data: booking,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };

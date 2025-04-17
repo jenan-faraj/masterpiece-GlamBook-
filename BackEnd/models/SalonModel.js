@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const salonSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, unique: true  },
+    name: { type: String, required: true, unique: true },
     ownerName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -39,8 +39,34 @@ const salonSchema = new mongoose.Schema(
     Review: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],
     book: [{ type: mongoose.Schema.Types.ObjectId, ref: "book" }],
     openingHours: {
-      open: { type: String, default: "" },
-      close: { type: String, default: "" },
+      monday: {
+        open: { type: String, default: "" },
+        close: { type: String, default: "" },
+      },
+      tuesday: {
+        open: { type: String, default: "" },
+        close: { type: String, default: "" },
+      },
+      wednesday: {
+        open: { type: String, default: "" },
+        close: { type: String, default: "" },
+      },
+      thursday: {
+        open: { type: String, default: "" },
+        close: { type: String, default: "" },
+      },
+      friday: {
+        open: { type: String, default: "" },
+        close: { type: String, default: "" },
+      },
+      saturday: {
+        open: { type: String, default: "" },
+        close: { type: String, default: "" },
+      },
+      sunday: {
+        open: { type: String, default: "" },
+        close: { type: String, default: "" },
+      },
     },
     openingYear: { type: String, default: "" },
     map: {

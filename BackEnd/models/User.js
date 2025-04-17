@@ -38,6 +38,7 @@ const userSchema = new mongoose.Schema(
         ref: "Comment",
       },
     ],
+    book: [{ type: mongoose.Schema.Types.ObjectId, ref: "book" }],
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }

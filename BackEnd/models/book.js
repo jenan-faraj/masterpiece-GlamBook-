@@ -2,23 +2,58 @@ const mongoose = require("mongoose");
 
 const bookSchema = new mongoose.Schema(
   {
-    fullName: { type: String, required: true },
-    phoneNumber: { type: String, required: true },
-    email: { type: String, required: true },
-    services: [{ type: String, required: true }],
-    date: { type: Date, required: true },
-    time: { type: String, required: true },
-    OTP: { type: String, required: false }, // إن كان مطلوبًا
+    services: [
+      {
+        type: String,
+        required: [true, "Service is required"],
+        trim: true,
+        minlength: [2, "Service name must be at least 2 characters long"],
+      },
+    ],
+    date: {
+      type: Date,
+      required: [true, "Date is required"],
+      validate: {
+        validator: function (value) {
+          return value >= new Date();
+        },
+        message: "Date must be today or in the future",
+      },
+    },
+    time: {
+      type: String,
+      required: [true, "Time is required"],
+      match: [
+        /^\d{1,2}:\d{2}\s?(AM|PM)$/i,
+        "Time must be in format HH:MM AM/PM",
+      ],
+    },
+    OTP: {
+      type: String,
+      maxlength: [6, "OTP must be at most 6 characters"],
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
-    }, // مرجع للمستخدم
+      required: [true, "User ID is required"],
+    },
     salonId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Salon",
-      required: true,
-    }, // مرجع للصالون
+      required: [true, "Salon ID is required"],
+    },
+    isCanceled: {
+      type: Boolean,
+      default: false,
+    },
+    isCompleted: {
+      type: Boolean,
+      default: false,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

@@ -5,6 +5,7 @@ const {
   createSalon,
   updateSalon,
   deleteSalon,
+  softDeleteService,
 } = require("../controller/SalonController");
 
 const router = express.Router();
@@ -15,5 +16,6 @@ router.get("/:id", getSalonById);
 router.post("/", createSalon);
 router.put("/:id", updateSalon);
 router.delete("/:id", deleteSalon);
+router.patch("/:salonId/services/:serviceId/delete", softDeleteService);
 
 module.exports = router;

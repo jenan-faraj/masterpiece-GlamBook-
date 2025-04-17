@@ -9,18 +9,6 @@ const getAllSalons = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-// Get single salon by ID
-const getSalonById = async (req, res) => {
-  try {
-    const salon = await Salon.findById(req.params.id);
-    if (!salon) return res.status(404).json({ message: "Salon not found" });
-    res.status(200).json(salon);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 // Create new salon
 const createSalon = async (req, res) => {
   try {
@@ -33,29 +21,71 @@ const createSalon = async (req, res) => {
   }
 };
 
-// Update salon
+const getSalonById = async (req, res) => {
+  try {
+    const salon = await Salon.findById(req.params.id);
+    if (!salon || salon.isDeleted) {
+      return res.status(404).json({ message: "Salon not found" });
+    }
+    res.json(salon);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 const updateSalon = async (req, res) => {
   try {
-    const updated = await Salon.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    res.status(200).json(updated);
+    const updatedSalon = await Salon.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true, // إرجاع المستند المحدث
+        runValidators: true, // التحقق من صحة البيانات حسب المخطط
+        context: "query", // تشغيل المتحققات قبل التحديث
+      }
+    );
+
+    if (!updatedSalon) {
+      return res.status(404).json({ message: "الصالون غير موجود" });
+    }
+
+    res.json(updatedSalon);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
-// Soft delete salon
 const deleteSalon = async (req, res) => {
   try {
-    const deleted = await Salon.findByIdAndUpdate(
+    await Salon.findByIdAndUpdate(
       req.params.id,
       { isDeleted: true },
       { new: true }
     );
-    res.status(200).json({ message: "Salon soft deleted", deleted });
+    res.json({ message: "Salon deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+const softDeleteService = async (req, res) => {
+  const { salonId, serviceId } = req.params;
+
+  try {
+    const result = await Salon.updateOne(
+      { _id: salonId, "services._id": serviceId },
+      { $set: { "services.$.isDeleted": true } }
+    );
+
+    if (result.modifiedCount === 0) {
+      return res
+        .status(404)
+        .json({ message: "Service not found or already deleted" });
+    }
+
+    res.status(200).json({ message: "Service soft deleted successfully" });
+  } catch (error) {
+    console.error("Error soft deleting service:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -65,4 +95,5 @@ module.exports = {
   createSalon,
   updateSalon,
   deleteSalon,
+  softDeleteService,
 };
