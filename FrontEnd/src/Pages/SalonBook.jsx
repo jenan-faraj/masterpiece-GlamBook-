@@ -9,9 +9,11 @@ import {
   Check,
   Clock,
   Trash,
+  CreditCard,
 } from "lucide-react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import PaymentForm from "../Pages/Payment";
 
 const BookingForm = () => {
   const { id } = useParams();
@@ -30,9 +32,12 @@ const BookingForm = () => {
     isCanceled: false,
     isCompleted: false,
     isDeleted: false,
+    transactionId: "",
+    paymentStatus: "",
   });
   const [errors, setErrors] = useState({});
   const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(0);
 
   useEffect(() => {
     // Fetch salon details
@@ -79,6 +84,22 @@ const BookingForm = () => {
     fetchUserAuth();
   }, [id]);
 
+  // Calculate total amount when services change
+  useEffect(() => {
+    if (salon && formData.services.length > 0) {
+      let total = 0;
+      formData.services.forEach((serviceName) => {
+        const serviceObj = salon.services.find((s) => s.title === serviceName);
+        if (serviceObj) {
+          total += serviceObj.price;
+        }
+      });
+      setTotalAmount(total);
+    } else {
+      setTotalAmount(0);
+    }
+  }, [formData.services, salon]);
+
   const validateStep = () => {
     const newErrors = {};
 
@@ -105,6 +126,9 @@ const BookingForm = () => {
           newErrors.time = "يجب أن يكون الوقت بتنسيق HH:MM AM/PM";
         }
         break;
+      case 5:
+        // Payment validation will be handled by PaymentForm component
+        break;
       default:
         break;
     }
@@ -130,7 +154,7 @@ const BookingForm = () => {
 
   const handleNextStep = () => {
     if (validateStep()) {
-      setCurrentStep((prev) => Math.min(prev + 1, 5));
+      setCurrentStep((prev) => Math.min(prev + 1, 6));
     }
   };
 
@@ -138,7 +162,16 @@ const BookingForm = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
 
-  const handleSubmit = async () => {
+  const handlePaymentSuccess = (transactionId) => {
+    setFormData((prev) => ({
+      ...prev,
+      transactionId: transactionId,
+      paymentStatus: "completed",
+    }));
+    handleSubmitBooking();
+  };
+
+  const handleSubmitBooking = async () => {
     if (!validateStep()) return;
 
     if (!userId) {
@@ -165,10 +198,9 @@ const BookingForm = () => {
         "http://localhost:3000/api/bookings",
         bookingData
       );
-      console.log("Booking response:", bookingData);
       if (response.status === 201 || response.status === 200) {
         setBookingSuccess(true);
-        setCurrentStep(5);
+        setCurrentStep(6);
         console.log("Booking successful:", response.data);
       }
     } catch (error) {
@@ -404,18 +436,26 @@ const BookingForm = () => {
 
             {formData.services.length > 0 && (
               <div className="bg-[var(--Logo-color)]/5 p-4 rounded-lg mt-4">
-                <h3 className="font-medium text-center mb-2">
-                  الخدمات المختارة
-                </h3>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-medium">الخدمات المختارة</h3>
+                  <span className="font-bold text-lg text-[var(--Logo-color)]">
+                    {totalAmount} د.أ
+                  </span>
+                </div>
                 <div className="flex flex-wrap gap-2 justify-center">
-                  {formData.services.map((service, index) => (
-                    <span
-                      key={index}
-                      className="bg-white px-3 py-1 rounded-full text-sm border border-[var(--Logo-color)]/30 text-[var(--Logo-color)]"
-                    >
-                      {service}
-                    </span>
-                  ))}
+                  {formData.services.map((service, index) => {
+                    const serviceObj = salon.services.find(
+                      (s) => s.title === service
+                    );
+                    return (
+                      <span
+                        key={index}
+                        className="bg-white px-3 py-1 rounded-full text-sm border border-[var(--Logo-color)]/30 text-[var(--Logo-color)]"
+                      >
+                        {service} - {serviceObj?.price} د.أ
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -463,12 +503,15 @@ const BookingForm = () => {
                       ${errors.time ? "border-red-500" : "border-gray-300"}`}
                   >
                     <option value="">اختر الوقت</option>
-                    <option value="10:00AM">10:00 صباحاً</option>
-                    <option value="11:00AM">11:00 صباحاً</option>
-                    <option value="12:00PM">12:00 ظهراً</option>
-                    <option value="2:00PM">2:00 مساءً</option>
-                    <option value="3:00PM">3:00 مساءً</option>
-                    <option value="4:00PM">4:00 مساءً</option>
+                    <option value="9:00 AM">9:00 AM</option>
+                    <option value="10:00 AM">10:00 AM</option>
+                    <option value="11:00 AM">11:00 AM</option>
+                    <option value="12:00 PM">12:00 PM</option>
+                    <option value="1:00 PM">1:00 PM</option>
+                    <option value="2:00 PM">2:00 PM</option>
+                    <option value="3:00 PM">3:00 PM</option>
+                    <option value="4:00 PM">4:00 PM</option>
+                    <option value="5:00 PM">5:00 PM</option>
                   </select>
                 </div>
                 {errors.time && (
@@ -478,25 +521,13 @@ const BookingForm = () => {
             </div>
 
             {formData.date && formData.time && (
-              <div className="mt-6 p-4 bg-[var(--Logo-color)]/5 rounded-lg">
-                <h3 className="font-medium text-center mb-3">ملخص الحجز</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-                  <div className="bg-white p-3 rounded-md border border-[var(--Logo-color)]/20">
-                    <p className="text-sm text-gray-500">التاريخ</p>
-                    <p className="font-medium">
-                      {new Date(formData.date).toLocaleDateString("ar-EG", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </p>
-                  </div>
-                  <div className="bg-white p-3 rounded-md border border-[var(--Logo-color)]/20">
-                    <p className="text-sm text-gray-500">الوقت</p>
-                    <p className="font-medium">
-                      {formatTimeForDisplay(formData.time)}
-                    </p>
-                  </div>
+              <div className="mt-6 p-4 bg-green-50 rounded-lg">
+                <div className="flex items-center justify-center">
+                  <Calendar className="w-5 h-5 mr-2 text-green-600" />
+                  <p className="text-green-700">
+                    تم تحديد موعدك في {formData.date} الساعة{" "}
+                    {formatTimeForDisplay(formData.time)}
+                  </p>
                 </div>
               </div>
             )}
@@ -505,76 +536,71 @@ const BookingForm = () => {
 
       case 5:
         return (
-          <div className="p-6 bg-white rounded-lg shadow-md text-center">
-            <div className="mb-6">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                <Check className="w-10 h-10 text-green-500" />
+          <PaymentForm
+            totalAmount={totalAmount}
+            onPaymentSuccess={handlePaymentSuccess}
+            selectedServices={formData.services}
+            salon={salon}
+          />
+        );
+
+      case 6:
+        return (
+          <div className="p-6 bg-white rounded-lg shadow-md">
+            <div className="flex flex-col items-center justify-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                <Check className="w-8 h-8 text-green-500" />
               </div>
-            </div>
+              <h2 className="text-2xl font-bold text-center mb-2 text-green-600">
+                تم الحجز بنجاح
+              </h2>
+              <p className="text-gray-600 text-center mb-6">
+                لقد تم تأكيد حجزك مع صالون {salon.name}. سنرسل لك تأكيدًا عبر
+                البريد الإلكتروني.
+              </p>
 
-            <h2 className="text-3xl font-bold mb-4 text-[var(--Logo-color)]">
-              تم تأكيد حجزك بنجاح!
-            </h2>
-
-            <p className="text-gray-600 mb-6">
-              سيتم إرسال تفاصيل الموعد إلى بريدك الإلكتروني
-            </p>
-
-            <div className="bg-[var(--Logo-color)]/5 p-6 rounded-lg mb-6">
-              <h3 className="font-medium mb-4 text-lg">تفاصيل الحجز</h3>
-
-              <div className="grid grid-cols-1 gap-4">
-                <div className="bg-white p-4 rounded-lg border border-[var(--Logo-color)]/20">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-gray-500">الصالون</span>
-                    <span className="font-medium">{salon.name}</span>
+              <div className="w-full bg-gray-50 p-4 rounded-lg mb-6">
+                <h3 className="text-lg font-bold mb-3 text-center">
+                  تفاصيل الحجز
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">التاريخ:</span>
+                    <span className="font-medium">{formData.date}</span>
                   </div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-gray-500">التاريخ</span>
-                    <span className="font-medium">
-                      {new Date(formData.date).toLocaleDateString("ar-EG", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-gray-500">الوقت</span>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">الوقت:</span>
                     <span className="font-medium">
                       {formatTimeForDisplay(formData.time)}
                     </span>
                   </div>
-                  <div className="pt-3 border-t border-gray-100">
-                    <p className="text-gray-500 mb-2">الخدمات</p>
-                    <div className="flex flex-wrap gap-2">
-                      {formData.services.map((service, index) => (
-                        <span
-                          key={index}
-                          className="bg-[var(--Logo-color)]/10 px-3 py-1 rounded-full text-sm text-[var(--Logo-color)]"
-                        >
-                          {service}
-                        </span>
-                      ))}
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">الخدمات:</span>
+                    <span className="font-medium">
+                      {formData.services.join(", ")}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">المبلغ الإجمالي:</span>
+                    <span className="font-bold">{totalAmount} د.أ</span>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex justify-center space-x-4 rtl:space-x-reverse">
-              <Link
-                to="/"
-                className="px-6 py-3 bg-[var(--Logo-color)] text-white rounded-lg hover:bg-[var(--button-color)] transition-colors"
-              >
-                العودة للصفحة الرئيسية
-              </Link>
-              <Link
-                to="/bookings"
-                className="px-6 py-3 bg-white border border-[var(--Logo-color)] text-[var(--Logo-color)] rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                عرض الحجوزات
-              </Link>
+              <div className="flex space-x-3 rtl:space-x-reverse">
+                <button
+                  onClick={() => navigate("/")}
+                  className="px-6 py-2 bg-[var(--Logo-color)] text-white rounded-lg hover:bg-[var(--button-color)] transition-colors"
+                >
+                  العودة للصفحة الرئيسية
+                </button>
+                <button
+                  onClick={() => navigate("/my-bookings")}
+                  className="px-6 py-2 border-2 border-[var(--Logo-color)] text-[var(--Logo-color)] rounded-lg hover:bg-[var(--Logo-color)]/5 transition-colors"
+                >
+                  عرض حجوزاتي
+                </button>
+              </div>
             </div>
           </div>
         );
@@ -584,92 +610,83 @@ const BookingForm = () => {
     }
   };
 
-  const renderProgressBar = () => {
-    const steps = [
-      { number: 1, label: "معلومات الصالون" },
-      { number: 2, label: "التحقق" },
-      { number: 3, label: "الخدمات" },
-      { number: 4, label: "الموعد" },
-      { number: 5, label: "التأكيد" },
-    ];
-
-    return (
-      <div className="mb-6">
-        <div className="flex justify-between items-center">
-          {steps.map((step) => (
-            <div key={step.number} className="flex flex-col items-center">
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center 
-                  ${
-                    currentStep >= step.number
-                      ? "bg-[var(--Logo-color)] text-white"
-                      : "bg-gray-200 text-gray-500"
-                  }`}
-              >
-                {currentStep > step.number ? (
-                  <Check className="w-4 h-4" />
-                ) : (
-                  <span>{step.number}</span>
-                )}
-              </div>
-              <span
-                className={`text-xs mt-1 ${
-                  currentStep >= step.number
-                    ? "text-[var(--Logo-color)]"
-                    : "text-gray-500"
-                }`}
-              >
-                {step.label}
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className="relative mt-2">
-          <div className="absolute top-0 h-1 bg-gray-200 w-full"></div>
-          <div
-            className="absolute top-0 h-1 bg-[var(--Logo-color)]"
-            style={{ width: `${(currentStep - 1) * 25}%` }}
-          ></div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderNavigation = () => {
-    if (currentStep === 5) return null;
-
-    return (
-      <div className="flex justify-between p-4 mt-6">
-        {currentStep > 1 && (
-          <button
-            onClick={handlePrevStep}
-            className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            السابق
-          </button>
-        )}
-        <button
-          onClick={currentStep === 4 ? handleSubmit : handleNextStep}
-          disabled={currentStep === 2 && !userId}
-          className={`px-6 py-2 bg-[var(--Logo-color)] text-white rounded-lg hover:bg-[var(--button-color)] transition-colors
-            ${
-              currentStep === 2 && !userId
-                ? "opacity-50 cursor-not-allowed"
-                : ""
-            }`}
-        >
-          {currentStep === 4 ? "تأكيد الحجز" : "التالي"}
-        </button>
-      </div>
-    );
+  const getStepTitle = (step) => {
+    switch (step) {
+      case 1:
+        return "معلومات الصالون";
+      case 2:
+        return "التحقق من الحساب";
+      case 3:
+        return "اختيار الخدمات";
+      case 4:
+        return "تحديد الموعد";
+      case 5:
+        return "الدفع";
+      case 6:
+        return "التأكيد";
+      default:
+        return "";
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
-        {renderProgressBar()}
-        {renderStepContent()}
-        {renderNavigation()}
+    <div className="container mx-auto py-8 px-4">
+      <div className="max-w-3xl mx-auto">
+        {/* Progress bar */}
+        <div className="mb-8">
+          <div className="flex justify-between mb-2">
+            {[1, 2, 3, 4, 5, 6].map((step) => (
+              <div
+                key={step}
+                className={`text-xs md:text-sm text-center ${
+                  step === currentStep
+                    ? "text-[var(--Logo-color)] font-bold"
+                    : step < currentStep
+                    ? "text-green-500"
+                    : "text-gray-400"
+                }`}
+              >
+                {getStepTitle(step)}
+              </div>
+            ))}
+          </div>
+          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-[var(--Logo-color)]"
+              style={{ width: `${((currentStep - 1) / 5) * 100}%` }}
+            ></div>
+          </div>
+        </div>
+
+        {/* Step content */}
+        <div className="mb-6">{renderStepContent()}</div>
+
+        {/* Navigation buttons */}
+        {!bookingSuccess && currentStep < 6 && (
+          <div className="flex justify-between">
+            {currentStep > 1 && (
+              <button
+                onClick={handlePrevStep}
+                className="px-6 py-2 border-2 border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                السابق
+              </button>
+            )}
+            {currentStep < 5 && (
+              <button
+                onClick={handleNextStep}
+                disabled={currentStep === 2 && !userId}
+                className={`px-6 py-2 bg-[var(--Logo-color)] text-white rounded-lg hover:bg-[var(--button-color)] transition-colors ${
+                  currentStep === 2 && !userId
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+              >
+                التالي
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

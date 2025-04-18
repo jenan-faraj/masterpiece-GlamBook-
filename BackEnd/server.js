@@ -9,6 +9,7 @@ const salonRoutes = require("./routes/SalonRoute");
 const bookRoutes = require("./routes/bookRoutes");
 const reviewRoutes = require("./routes/ReviewRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
+const paymentRoutes = require('./routes/payments');
 const path = require("path");
 
 //---------------------------
@@ -44,6 +45,8 @@ app.use("/api/users", userRoute);
 app.use("/api/salons", salonRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/bookings", bookRoutes); // تحديد المسار الأساسي للـ routes
+// Routes
+app.use('/api/payments', paymentRoutes);
 app.get("/get_token", (req, res) => {
   const token = req.cookies.token;
   if (!token) {

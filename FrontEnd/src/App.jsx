@@ -9,6 +9,7 @@ import Categories from "./Pages/categories";
 import SalonRegistrationForm from "./Pages/RegisterSalon";
 import SalonDetails from "./Pages/salonDetails";
 import Book from "./Pages/SalonBook";
+import Payment from "./Pages/Payment";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/book/:id" element={<Book />} />
         <Route path="/salonDetails/:id" element={<SalonDetails />} />
         <Route path="/RegisterSalon" element={<SalonRegistrationForm />} />
+        <Route path="/payment" element={<Payment />} />
       </Routes>
     </Router>
   );
