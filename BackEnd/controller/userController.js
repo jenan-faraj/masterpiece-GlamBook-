@@ -12,6 +12,18 @@ const createToken = (user) => {
   );
 };
 
+// 📋 Get All Users (except soft-deleted ones)
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({ isDeleted: false }).select("-password");
+    res.status(200).json(users);
+  } catch (error) {
+    console.log("🔥 GET ALL USERS ERROR:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 exports.register = async (req, res) => {
   try {
     const { username, email, password } = req.body;

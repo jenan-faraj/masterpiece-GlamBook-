@@ -4,6 +4,7 @@ const router = express.Router();
 const userController = require("../controller/userController");
 const { protect } = require("../middlewares/auth");
 
+router.get("/all", userController.getAllUsers); // حطي protect إذا بدك تكون محمية
 router.post("/register", userController.register);
 router.post("/login", userController.login);
 router.post("/logout", userController.logout);

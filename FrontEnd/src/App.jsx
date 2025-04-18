@@ -10,6 +10,7 @@ import SalonRegistrationForm from "./Pages/RegisterSalon";
 import SalonDetails from "./Pages/salonDetails";
 import Book from "./Pages/SalonBook";
 import Payment from "./Pages/Payment";
+import AboutPage from "./Pages/About";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
         <Route path="/salonDetails/:id" element={<SalonDetails />} />
         <Route path="/RegisterSalon" element={<SalonRegistrationForm />} />
         <Route path="/payment" element={<Payment />} />
+        <Route path="/about" element={<AboutPage />} />
       </Routes>
     </Router>
   );
