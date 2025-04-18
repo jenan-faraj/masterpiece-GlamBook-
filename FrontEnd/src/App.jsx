@@ -11,6 +11,7 @@ import SalonDetails from "./Pages/salonDetails";
 import Book from "./Pages/SalonBook";
 import Payment from "./Pages/Payment";
 import AboutPage from "./Pages/About";
+import ContactUs from "./Pages/Contact";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
         <Route path="/RegisterSalon" element={<SalonRegistrationForm />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/ContactUs" element={<ContactUs />} />
       </Routes>
     </Router>
   );

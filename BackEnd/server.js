@@ -10,6 +10,7 @@ const bookRoutes = require("./routes/bookRoutes");
 const reviewRoutes = require("./routes/ReviewRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const paymentRoutes = require('./routes/payments');
+const contact = require("./routes/contact");
 const path = require("path");
 
 //---------------------------
@@ -44,8 +45,8 @@ mongoose
 app.use("/api/users", userRoute);
 app.use("/api/salons", salonRoutes);
 app.use("/api/reviews", reviewRoutes);
-app.use("/api/bookings", bookRoutes); // تحديد المسار الأساسي للـ routes
-// Routes
+app.use("/api/bookings", bookRoutes); 
+app.use('/api/contacts', contact);
 app.use('/api/payments', paymentRoutes);
 app.get("/get_token", (req, res) => {
   const token = req.cookies.token;

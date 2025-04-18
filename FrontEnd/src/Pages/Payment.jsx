@@ -65,8 +65,8 @@ const PaymentForm = ({
     try {
       const response = await axios.post("http://localhost:3000/api/payments", {
         amount: totalAmount,
-        userId: user, 
-        salonId: salon, 
+        userId: user,
+        salonId: salon,
         currency: "JOD",
         paymentMethod: "paypal",
         customer: {
@@ -199,7 +199,9 @@ const PaymentForm = ({
           </div>
 
           <div className="mt-6">
-            <PayPalScriptProvider options={{ "client-id": "test" }}>
+            <PayPalScriptProvider
+              options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID }}
+            >
               <PayPalButtons
                 createOrder={(data, actions) => {
                   return actions.order.create({
