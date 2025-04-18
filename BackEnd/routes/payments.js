@@ -6,7 +6,8 @@ const axios = require('axios');
 // Create a new payment
 router.post('/', async (req, res) => {
     try {
-        const { amount, currency, paymentMethod, customer } = req.body;
+        const { amount, currency, paymentMethod, customer, userId, salonId } = req.body;
+
         
         let paymentResult;
         
@@ -23,6 +24,8 @@ router.post('/', async (req, res) => {
             currency,
             paymentMethod,
             customer,
+            userId,
+            salonId,
             status: paymentResult.success ? 'completed' : 'failed',
             transactionId: paymentResult.transactionId
         });

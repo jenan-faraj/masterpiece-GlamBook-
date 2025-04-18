@@ -540,7 +540,8 @@ const BookingForm = () => {
             totalAmount={totalAmount}
             onPaymentSuccess={handlePaymentSuccess}
             selectedServices={formData.services}
-            salon={salon}
+            salon={salon._id}
+            user={userId}
           />
         );
 

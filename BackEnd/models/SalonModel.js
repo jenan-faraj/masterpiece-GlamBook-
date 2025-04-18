@@ -38,6 +38,13 @@ const salonSchema = new mongoose.Schema(
     visitors: { type: Number, default: 0 },
     Review: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],
     book: [{ type: mongoose.Schema.Types.ObjectId, ref: "book" }],
+    payments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Payment",
+      },
+    ],
+    
     openingHours: {
       monday: {
         open: { type: String, default: "" },

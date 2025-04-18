@@ -4,6 +4,7 @@ const Book = require("../models/book");
 exports.createBooking = async (req, res) => {
   try {
     const newBooking = await Book.create(req.body);
+    console.log("ddddaaattttaaaa :" + newBooking);
     res.status(201).json({
       success: true,
       message: "Booking created successfully",

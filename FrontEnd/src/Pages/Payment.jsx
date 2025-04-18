@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { User, CreditCard, Check, DollarSign, Phone, Mail } from "lucide-react";
 import axios from "axios";
@@ -8,6 +8,7 @@ const PaymentForm = ({
   onPaymentSuccess,
   selectedServices,
   salon,
+  user,
 }) => {
   const [paymentMethod, setPaymentMethod] = useState("paypal");
   const [loading, setLoading] = useState(false);
@@ -35,17 +36,23 @@ const PaymentForm = ({
     try {
       const response = await axios.post("http://localhost:3000/api/payments", {
         amount: totalAmount,
+        userId: user,
+        salonId: salon,
         currency: "JOD",
-        paymentMethod: "cliq",
-        customer: customer,
+        paymentMethod: "paypal",
+        customer: {
+          ...customer,
+          email: details.payer.email_address,
+        },
         services: selectedServices,
-        salonId: salon._id,
       });
 
       if (response.status === 201 || response.status === 200) {
         onPaymentSuccess(response.data.transactionId);
       }
     } catch (error) {
+      console.log(salon);
+      console.log(user);
       console.error("فشل عملية الدفع:", error);
       alert("فشلت عملية الدفع. يرجى المحاولة مرة أخرى.");
     } finally {
@@ -58,6 +65,8 @@ const PaymentForm = ({
     try {
       const response = await axios.post("http://localhost:3000/api/payments", {
         amount: totalAmount,
+        userId: user, 
+        salonId: salon, 
         currency: "JOD",
         paymentMethod: "paypal",
         customer: {
@@ -65,13 +74,14 @@ const PaymentForm = ({
           email: details.payer.email_address,
         },
         services: selectedServices,
-        salonId: salon._id,
       });
 
       if (response.status === 201 || response.status === 200) {
         onPaymentSuccess(response.data.transactionId);
       }
     } catch (error) {
+      console.log(salon);
+      console.log(user);
       console.error("فشل عملية الدفع:", error);
       alert("فشلت عملية الدفع. يرجى المحاولة مرة أخرى.");
     } finally {

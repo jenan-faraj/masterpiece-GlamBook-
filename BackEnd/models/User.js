@@ -38,6 +38,13 @@ const userSchema = new mongoose.Schema(
         ref: "Comment",
       },
     ],
+    payments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Payment",
+      },
+    ],
+    
     book: [{ type: mongoose.Schema.Types.ObjectId, ref: "book" }],
     isDeleted: { type: Boolean, default: false },
   },
