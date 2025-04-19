@@ -257,7 +257,7 @@ function Categories() {
                 {/* Background image instead of gradient div */}
                 <div className="absolute top-0 w-80 h-24 rounded-t-2xl overflow-hidden transition-all duration-500 group-hover:h-72 group-hover:w-80 group-hover:rounded-b-2xl">
                   <img
-                    src={salon.profileImage}
+                    src={salon.bgImage || "https://i.pinimg.com/474x/81/3a/27/813a2759cb59a7e7def1f5f8e7fe6992.jpg"}
                     alt="Profile background"
                     className="w-full h-full object-cover"
                   />
@@ -266,7 +266,7 @@ function Categories() {
                 {/* Profile picture instead of blue circle */}
                 <div className="w-28 h-28 mt-8 rounded-full border-4 border-slate-50 z-10 overflow-hidden group-hover:scale-150 group-hover:-translate-x-24 group-hover:-translate-y-20 transition-all duration-500">
                   <img
-                    src={salon.profileImage}
+                    src={salon.profileImage || "https://i.pinimg.com/474x/81/3a/27/813a2759cb59a7e7def1f5f8e7fe6992.jpg"} 
                     alt="George Johnson"
                     className="w-full h-full object-cover"
                   />

@@ -62,7 +62,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen lg:px-20" dir="rtl">
       {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+      <div className="mt-10 absolute top-0 left-0 w-full h-full overflow-hidden z-0">
         <motion.div
           className="absolute w-32 h-32 rounded-full bg-[#a0714f] opacity-10 top-20 left-20"
           animate={{ x: floating.x, y: floating.y }}

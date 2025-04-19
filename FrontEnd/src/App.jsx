@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import Register from "./Pages/Register";
 import Login from "./Pages/LogIn";
 import Profile from "./Pages/Profile";
@@ -13,10 +18,14 @@ import Payment from "./Pages/Payment";
 import AboutPage from "./Pages/About";
 import ContactUs from "./Pages/Contact";
 
-const App = () => {
+// هاد الكمبوننت بنفصل فيه النافبار بناءً على المسار
+const AppContent = () => {
+  const location = useLocation();
+  const hideNavbarRoutes = ["/login", "/signup"];
+
   return (
-    <Router>
-      <Navbar />
+    <>
+      {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/categories" element={<Categories />} />
@@ -30,6 +39,14 @@ const App = () => {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/ContactUs" element={<ContactUs />} />
       </Routes>
+    </>
+  );
+};
+
+const App = () => {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 };
