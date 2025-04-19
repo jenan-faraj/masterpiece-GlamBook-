@@ -110,17 +110,15 @@ const Navbar = () => {
 
   return (
     <header className="w-full bg-[#F9F3F1] shadow-md">
-      <nav
-        className="container flex justify-between items-center mx-auto px-4"
-        dir="rtl"
-      >
-        {/* الشعار */}
-        <Link to="/" className="text-[#B58152] text-2xl md:text-3xl font-bold">
-          GlamBook
-        </Link>
+      <nav className="container mx-auto px-4" dir="rtl">
         <div className="flex justify-between items-center h-16">
+          {/* الشعار */}
+          <Link to="/" className="text-[#B58152] text-2xl md:text-3xl font-bold">
+            GlamBook
+          </Link>
+
           {/* قائمة التنقل للشاشات الكبيرة */}
-          <div className="hidden lg:flex items-center space-x-reverse space-x-4">
+          <div className="hidden lg:flex items-center justify-between flex-1 mx-8">
             <ul className="flex items-center text-lg space-x-reverse space-x-3 text-[#B58152] font-medium">
               {navLinks.map((link) => (
                 <li key={link.path}>
@@ -135,6 +133,67 @@ const Navbar = () => {
             </ul>
           </div>
 
+          {/* أزرار تسجيل الدخول/الخروج للشاشات الكبيرة */}
+          <div className="hidden lg:flex items-center space-x-reverse space-x-4">
+            {isLoggedIn ? (
+              <ul className="flex items-center text-lg space-x-reverse space-x-3 text-[#B58152] font-medium">
+                <li>
+                  <Link
+                    to="/userProfile"
+                    className="flex items-center gap-2 px-3 py-2 rounded hover:bg-[#f5e6e1] transition-colors"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>{username}</span>
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 px-4 py-2 rounded bg-[#B58152] hover:bg-[#a37245] transition-colors text-white"
+                  >
+                    <span>تسجيل خروج</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                  </button>
+                </li>
+              </ul>
+            ) : (
+              <ul className="flex items-center text-lg space-x-reverse space-x-3 text-[#B58152] font-medium">
+                <li>
+                  <Link
+                    to="/login"
+                    className="px-4 py-2 bg-[#B58152] text-white rounded-md hover:bg-[#a37245] transition-colors shadow-sm"
+                  >
+                    تسجيل الدخول
+                  </Link>
+                </li>
+              </ul>
+            )}
+          </div>
+
           {/* زر القائمة للشاشات الصغيرة */}
           <button
             className="lg:hidden text-[#B58152] text-2xl p-2 focus:outline-none"
@@ -144,65 +203,6 @@ const Navbar = () => {
             {isOpen ? "✕" : "☰"}
           </button>
         </div>
-        {isLoggedIn ? (
-          <>
-            <ul className="flex items-center text-lg space-x-reverse space-x-3 text-[#B58152] font-medium">
-              <li>
-                <Link
-                  to="/userProfile"
-                  className="flex items-center gap-2 px-3 py-2 rounded hover:bg-[#f5e6e1] transition-colors"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span>{username}</span>
-                </Link>
-              </li>
-              <li>
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-2 px-4 py-2 rounded bg-[#B58152] hover:bg-[#a37245] transition-colors text-white"
-                >
-                  <span>تسجيل خروج</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                    />
-                  </svg>
-                </button>
-              </li>
-            </ul>
-          </>
-        ) : (
-          <ul className="flex items-center text-lg space-x-reverse space-x-3 text-[#B58152] font-medium">
-            <li>
-              <Link
-                to="/login"
-                className="px-4 py-2 bg-[#B58152] text-white rounded-md hover:bg-[#a37245] transition-colors shadow-sm"
-              >
-                تسجيل الدخول
-              </Link>
-            </li>
-          </ul>
-        )}
 
         {/* قائمة التنقل للشاشات الصغيرة */}
         {isOpen && (
@@ -225,7 +225,7 @@ const Navbar = () => {
                   <li className="border-b border-[#e6d8d3]">
                     <Link
                       to="/userProfile"
-                      className="flex items-center justify-end gap-2 py-3 px-4 hover:bg-[#f5e6e1] transition-colors"
+                      className="flex items-center justify-between py-3 px-4 hover:bg-[#f5e6e1] transition-colors"
                       onClick={toggleMenu}
                     >
                       <span>{username}</span>

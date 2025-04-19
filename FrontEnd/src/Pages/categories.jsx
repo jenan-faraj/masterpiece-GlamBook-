@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Star, Search, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
+import HeroSection from "../components/categoriesHeroSection";
 
 // StarRating component to display stars based on rating
 const StarRating = ({ rating }) => {
@@ -46,26 +47,6 @@ function Categories() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [ratingFilter, setRatingFilter] = useState("");
-  const [activeSlide, setActiveSlide] = useState(0);
-
-  const carouselItems = [
-    {
-      image: "./src/images/Hair.jpg",
-      title: "Book with Ease!",
-      description: "Glow with Confidence.",
-    },
-    {
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRo9QuSWA0LxSz4xDVTsylvmcJ9uqVUqmM10w&s",
-      title: "Beauty, Your Way",
-      description: "Find & Book Your Perfect Salon!",
-    },
-    {
-      image: "./src/images/contactBg.png",
-      title: "Explore, Choose, Shine",
-      description: "Your Beauty Journey Starts Here!",
-    },
-  ];
 
   // Fetch data from Firebase using Axios
   useEffect(() => {
@@ -152,48 +133,7 @@ function Categories() {
 
   return (
     <>
-      <div className="relative w-full">
-        <div className="relative h-[500px] overflow-hidden">
-          {carouselItems.map((item, index) => (
-            <div
-              key={index}
-              className={`absolute w-full h-full transition-opacity duration-500 ${
-                index === activeSlide ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              <img
-                src={item.image}
-                alt={item.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute flex-col flex justify-center items-center bottom-0 left-0 right-0 p-8 text-white bg-[#00000030]">
-                <h5 className="text-2xl font-bold">{item.title}</h5>
-                <p className="text-lg">{item.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <button
-          onClick={() =>
-            setActiveSlide((prev) =>
-              prev === 0 ? carouselItems.length - 1 : prev - 1
-            )
-          }
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#eeeeee3b] text-white p-2 rounded-full"
-        >
-          ←
-        </button>
-        <button
-          onClick={() =>
-            setActiveSlide((prev) =>
-              prev === carouselItems.length - 1 ? 0 : prev + 1
-            )
-          }
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#eeeeee3b] text-white p-2 rounded-full"
-        >
-          →
-        </button>
-      </div>
+      <HeroSection />
       {/* Search and Filter Section */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 px-4 py-4 bg-white shadow-sm">
         {/* Search Bar */}
@@ -257,7 +197,10 @@ function Categories() {
                 {/* Background image instead of gradient div */}
                 <div className="absolute top-0 w-80 h-24 rounded-t-2xl overflow-hidden transition-all duration-500 group-hover:h-72 group-hover:w-80 group-hover:rounded-b-2xl">
                   <img
-                    src={salon.bgImage || "https://i.pinimg.com/474x/81/3a/27/813a2759cb59a7e7def1f5f8e7fe6992.jpg"}
+                    src={
+                      salon.bgImage ||
+                      "https://i.pinimg.com/474x/81/3a/27/813a2759cb59a7e7def1f5f8e7fe6992.jpg"
+                    }
                     alt="Profile background"
                     className="w-full h-full object-cover"
                   />
@@ -266,7 +209,10 @@ function Categories() {
                 {/* Profile picture instead of blue circle */}
                 <div className="w-28 h-28 mt-8 rounded-full border-4 border-slate-50 z-10 overflow-hidden group-hover:scale-150 group-hover:-translate-x-24 group-hover:-translate-y-20 transition-all duration-500">
                   <img
-                    src={salon.profileImage || "https://i.pinimg.com/474x/81/3a/27/813a2759cb59a7e7def1f5f8e7fe6992.jpg"} 
+                    src={
+                      salon.profileImage ||
+                      "https://i.pinimg.com/474x/81/3a/27/813a2759cb59a7e7def1f5f8e7fe6992.jpg"
+                    }
                     alt="George Johnson"
                     className="w-full h-full object-cover"
                   />
@@ -281,7 +227,7 @@ function Categories() {
                 </div>
 
                 <Link
-                  onClick={() => visitorsCount(salon)} 
+                  onClick={() => visitorsCount(salon)}
                   className="bg-[var(--Logo-color)] px-4 py-1 text-slate-50 rounded-md z-10 hover:scale-125 transition-all duration-500 hover:bg-[var(--button-color)]"
                   to={`/salonDetails/${salon._id}`}
                 >
