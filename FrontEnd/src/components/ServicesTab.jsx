@@ -254,7 +254,7 @@ const ServicesTab = ({ user, salon }) => {
           {user.email === salon.email && (
             <button
               onClick={() => setShowModal(true)}
-              className="bg-[var(--Logo-color)] hover:bg-[var(--button-color)] hover:cursor-pointer text-white px-4 py-2 rounded-md"
+              className="bg-[#825c41] hover:cursor-pointer hover:bg-[#a0714f] text-white px-4 py-2 rounded-md"
             >
               + Add Service
             </button>

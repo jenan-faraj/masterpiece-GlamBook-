@@ -89,6 +89,7 @@ const salonSchema = new mongoose.Schema(
         endDate: { type: Date, default: null },
         originalPrice: { type: Number, default: 0 },
         discountPrice: { type: Number, default: 0 },
+        isDeleted: { type: Boolean, default: false },
       },
     ],
   },

@@ -89,6 +89,29 @@ const softDeleteService = async (req, res) => {
   }
 };
 
+// Soft delete an offer (mark as deleted without removing from database)
+const softDeleteOffer = async (req, res) => {
+  const { salonId, offerId } = req.params;
+
+  try {
+    const result = await Salon.updateOne(
+      { _id: salonId, "offers._id": offerId },
+      { $set: { "offers.$.isDeleted": true } }
+    );
+
+    if (result.modifiedCount === 0) {
+      return res
+        .status(404)
+        .json({ message: "Offer not found or already deleted" });
+    }
+
+    res.status(200).json({ message: "Offer soft deleted successfully" });
+  } catch (error) {
+    console.error("Error soft deleting offer:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   getAllSalons,
   getSalonById,
@@ -96,4 +119,5 @@ module.exports = {
   updateSalon,
   deleteSalon,
   softDeleteService,
+  softDeleteOffer,
 };

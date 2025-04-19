@@ -7,7 +7,7 @@ import ReviewsTab from "../components/ReviewsTab";
 import AddServiceButton from "../components/ServicesTab";
 import SalonSetting from "../components/SalonSetting";
 import SalonInfo from "../components/SalonInfo";
-
+import SpecialOffers from "../components/offers";
 function SalonDetails() {
   const { id } = useParams();
   const [salon, setSalon] = useState(null);
@@ -268,65 +268,8 @@ function SalonDetails() {
 
         {activeTab === "offers" && (
           <div className="bg-white shadow-md rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-6">Special Offers</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {salon.offers &&
-                salon.offers.map((offer, index) => (
-                  <div
-                    key={index}
-                    className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-gradient-to-r from-pink-50 to-white"
-                  >
-                    <div className="flex">
-                      <div className="w-1/3 pr-4">
-                        <div className="h-32 rounded-md overflow-hidden">
-                          <img
-                            src={offer.image || salon.profileImage}
-                            alt={offer.title}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      </div>
-                      <div className="w-2/3">
-                        <div className="bg-[#fff5eb] border border-[#B58152] text-[#B58152] font-bold rounded-full px-3 py-1 text-xs inline-block mb-2">
-                          Special Offer
-                        </div>
-                        <h3 className="text-lg font-medium text-[#B58152]">
-                          {offer.title || "MMMeeeooowwww"}
-                        </h3>
-                        <p className="text-gray-600 text-sm mt-1">
-                          {offer.description ||
-                            "Meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow"}
-                        </p>
-                        <div className="mt-2 flex justify-between items-center">
-                          <div>
-                            <span className="line-through text-gray-500 text-sm">
-                              ${offer.originalPrice || 100}
-                            </span>
-                            <span className="text-[#B58152] font-bold ml-2">
-                              ${offer.discountPrice || 50}
-                            </span>
-                          </div>
-                          <div className="flex items-center text-sm text-gray-500">
-                            <Calendar size={14} className="mr-1" />
-                            <span>
-                              Ends{" "}
-                              {new Date(
-                                offer.endDate || "soon"
-                              ).toLocaleDateString()}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-              {(!salon.offers || salon.offers.length === 0) && (
-                <p className="text-gray-500 col-span-2 text-center py-10">
-                  No special offers available at the moment
-                </p>
-              )}
-            </div>
+            <SpecialOffers salon={salon} user={user}/>
+            
           </div>
         )}
 
