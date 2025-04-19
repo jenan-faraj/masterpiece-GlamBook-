@@ -160,7 +160,7 @@ const ReviewForm = () => {
       {user && (
         <button
           onClick={toggleForm}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md mb-6 transition duration-200"
+          className="bg-[#a0714f] hover:cursor-pointer hover:bg-[#8a5936] text-white font-medium py-2 px-4 rounded-md mb-6 transition duration-200"
         >
           {showForm ? "إغلاق النموذج" : "إضافة تعليق جديد"}
         </button>
@@ -223,7 +223,7 @@ const ReviewForm = () => {
             </div>
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200"
+              className="bg-[#a0714f] hover:cursor-pointer hover:bg-[#8a5936] text-white font-medium py-2 px-4 rounded-md transition duration-200"
               disabled={submitLoading || rating === 0}
             >
               {submitLoading ? "جاري الإرسال..." : "إرسال التعليق"}

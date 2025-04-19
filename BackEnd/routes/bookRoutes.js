@@ -9,6 +9,7 @@ const {
   getCompletedBookings,
   getCompletedBookingsByUser,
   getCompletedBookingsBySalon,
+  getSalonBookings,
 } = require("../controller/bookController");
 
 // Route to create a booking
@@ -19,7 +20,8 @@ router.get("/user/:userId", getBookingsByUser);
 router.put("/cancel/:id", cancelBooking);
 // Route to get all completed bookings
 router.get("/completed", getCompletedBookings);
-
+// Route to get bookings for a specific salon
+router.get("/salon/:salonId", getSalonBookings);
 // Route to get completed bookings by user
 router.get("/completed/user/:userId", getCompletedBookingsByUser);
 

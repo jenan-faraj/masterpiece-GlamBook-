@@ -212,3 +212,31 @@ exports.deleteBooking = async (req, res) => {
     });
   }
 };
+
+exports.getSalonBookings = async (req, res) => {
+  try {
+    const { salonId } = req.params;
+    const { isCompleted, isCanceled } = req.query;
+
+    const filter = {
+      salonId,
+      isDeleted: false,
+    };
+
+    if (isCompleted !== undefined) {
+      filter.isCompleted = isCompleted === "true";
+    }
+
+    if (isCanceled !== undefined) {
+      filter.isCanceled = isCanceled === "true";
+    }
+
+    const bookings = await Book.find(filter)
+      .populate("userId", "name email")
+      .sort({ date: 1, time: 1 });
+
+    res.status(200).json(bookings);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching bookings", error });
+  }
+};

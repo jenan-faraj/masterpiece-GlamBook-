@@ -37,7 +37,6 @@ const Navbar = () => {
               setIsLoggedIn(true);
               // استخدام اسم المستخدم من التوكن إذا كان متاحًا
               setUsername(decodedToken.username);
-              console.log(decodedToken);
             } else {
               setIsLoggedIn(false);
             }

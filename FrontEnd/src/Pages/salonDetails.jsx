@@ -8,6 +8,8 @@ import AddServiceButton from "../components/ServicesTab";
 import SalonSetting from "../components/SalonSetting";
 import SalonInfo from "../components/SalonInfo";
 import SpecialOffers from "../components/offers";
+import SalonBookings from "../components/SalonBookings";
+
 function SalonDetails() {
   const { id } = useParams();
   const [salon, setSalon] = useState(null);
@@ -18,7 +20,6 @@ function SalonDetails() {
   const [userId, setUserId] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  console.log("Salon data:", id);
   useEffect(() => {
     axios
       .get(`http://localhost:3000/api/salons/${id}`)
@@ -66,7 +67,6 @@ function SalonDetails() {
         withCredentials: true, // مهم عشان يبعث الكوكيز للتوكن
       });
       setUser(response.data);
-      console.log("User Profile:", response.data);
       return response.data;
     } catch (error) {
       console.error(
@@ -204,7 +204,7 @@ function SalonDetails() {
 
       {/* Tab Navigate*/}
       <div className="mx-6 md:mx-10 mb-4">
-        <div className="flex justify-between md:justify-start flex-wrap gap-2 border-b">
+        <div className="flex justify-center lg:justify-start md:justify-between  flex-wrap gap-1 lg:gap-2 border-b">
           <button
             onClick={() => setActiveTab("services")}
             className={`px-6 py-3 font-medium ${
@@ -257,6 +257,18 @@ function SalonDetails() {
               Settings
             </button>
           )}
+          {user && user.email === salon.email && (
+            <button
+              onClick={() => setActiveTab("Bookings")}
+              className={`px-6 py-3 font-medium ${
+                activeTab === "Bookings"
+                  ? "text-[var(--Logo-color)] border-b-2 border-[var(--Logo-color)]"
+                  : "text-gray-500"
+              }`}
+            >
+              Bookings
+            </button>
+          )}
         </div>
       </div>
 
@@ -268,8 +280,7 @@ function SalonDetails() {
 
         {activeTab === "offers" && (
           <div className="bg-white shadow-md rounded-lg p-6">
-            <SpecialOffers salon={salon} user={user}/>
-            
+            <SpecialOffers salon={salon} user={user} />
           </div>
         )}
 
@@ -320,6 +331,10 @@ function SalonDetails() {
 
         {activeTab === "settings" && user && user.email === salon.email && (
           <SalonSetting salon={salon} />
+        )}
+
+        {activeTab === "Bookings" && user && user.email === salon.email && (
+          <SalonBookings salonId={id} />
         )}
       </div>
     </div>
