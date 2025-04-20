@@ -29,23 +29,18 @@ const userSchema = new mongoose.Schema(
     favoriteList: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Item", // استبدلي "Item" بالمودل المناسب
+        ref: "FavoriteList", // استبدلي "Item" بالمودل المناسب
       },
     ],
-    comments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
-      },
-    ],
+    reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],
     payments: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Payment",
       },
     ],
-    
-    book: [{ type: mongoose.Schema.Types.ObjectId, ref: "book" }],
+
+    book: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }

@@ -23,7 +23,6 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-
 exports.register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -69,7 +68,17 @@ exports.getProfile = async (req, res) => {
     const user = await User.findOne({
       _id: req.user.id,
       isDeleted: false,
-    }).select("-password");
+    })
+      .select("-password")
+      .populate("reviews")
+      .populate("book")
+      .populate({
+        path: "reviews",
+        populate: {
+          path: "salonId",
+          model: "Salon",
+        },
+      }); // لربط بيانات المستخدم
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.status(200).json(user);
@@ -78,18 +87,31 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-exports.updateProfileImage = async (req, res) => {
+// تحديث بيانات المستخدم
+exports.updateUser = async (req, res) => {
   try {
-    const user = await User.findOneAndUpdate(
-      { _id: req.user.id, isDeleted: false },
-      { profileImage: req.body.profileImage },
-      { new: true }
-    );
-    if (!user) return res.status(404).json({ message: "User not found" });
+    const userId = req.params.id;
+    const updates = req.body;
 
-    res.status(200).json(user);
+    // إذا كان في password جديدة بدنا نعملها hash
+    if (updates.password) {
+      const salt = await bcrypt.genSalt(10);
+      updates.password = await bcrypt.hash(updates.password, salt);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ message: "User updated successfully", user: updatedUser });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error updating user:", error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 

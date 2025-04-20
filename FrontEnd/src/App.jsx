@@ -17,6 +17,7 @@ import Book from "./Pages/SalonBook";
 import Payment from "./Pages/Payment";
 import AboutPage from "./Pages/About";
 import ContactUs from "./Pages/Contact";
+import UserProfile from "./Pages/userProfile";
 
 // هاد الكمبوننت بنفصل فيه النافبار بناءً على المسار
 const AppContent = () => {
@@ -36,8 +37,9 @@ const AppContent = () => {
         <Route path="/salonDetails/:id" element={<SalonDetails />} />
         <Route path="/RegisterSalon" element={<SalonRegistrationForm />} />
         <Route path="/payment" element={<Payment />} />
-        <Route path="/about" element={<AboutPage />} />
+        <Route path="/aboutUs" element={<AboutPage />} />
         <Route path="/ContactUs" element={<ContactUs />} />
+        <Route path="/userProfile" element={<UserProfile />} />
       </Routes>
     </>
   );

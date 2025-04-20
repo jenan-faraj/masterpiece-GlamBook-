@@ -1,10 +1,16 @@
 const Book = require("../models/book");
+const User = require("../models/User");
 
 // ✅ Create Booking
 exports.createBooking = async (req, res) => {
   try {
-    const newBooking = await Book.create(req.body);
-    console.log("ddddaaattttaaaa :" + newBooking);
+    const newBooking = new Book(req.body);
+    await newBooking.save();
+    // نضيف الـ booking لحساب المستخدم
+    await User.findByIdAndUpdate(newBooking.userId, {
+      $push: { book: newBooking._id }, // تأكدي من اسم الحقل!
+    });
+
     res.status(201).json({
       success: true,
       message: "Booking created successfully",

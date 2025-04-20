@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { Star, X } from "lucide-react";
-import { format } from "date-fns";
+import { Star, X, Plus, Loader2 } from "lucide-react";
+import { toast } from "react-toastify"; // للتوست
+import "react-toastify/dist/ReactToastify.css";
 
 const ReviewForm = () => {
   const [showForm, setShowForm] = useState(false);
@@ -19,34 +20,37 @@ const ReviewForm = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:3000/api/reviews/reviews/${id}`)
-      .then((response) => {
-        setReviews(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error);
-        setLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (salonId) {
-      axios
-        .get(`http://localhost:3000/api/reviews/reviews/${id}`)
-        .then((response) => {
-          setReviews(response.data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          setError(error);
-          setLoading(false);
-        });
+    if (id) {
+      setSalonId(id);
+      fetchReviews(id);
+      fetchSalon(id);
     }
   }, [id]);
 
-  // جلب التوكن من الـ API وتحديد الـ userId
+  const fetchReviews = async (salonId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/reviews/reviews/${salonId}`
+      );
+      setReviews(response.data);
+      setLoading(false);
+    } catch (err) {
+      setError(err);
+      setLoading(false);
+    }
+  };
+
+  const fetchSalon = async (salonId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/salons/${salonId}`
+      );
+      setSalon(response.data);
+    } catch (err) {
+      console.error("Error fetching salon:", err);
+    }
+  };
+
   useEffect(() => {
     const fetchToken = async () => {
       try {
@@ -75,12 +79,6 @@ const ReviewForm = () => {
     fetchToken();
   }, []);
 
-  useEffect(() => {
-    if (id) {
-      setSalonId(id);
-    }
-  }, [id]);
-
   const toggleForm = () => {
     setShowForm(!showForm);
   };
@@ -89,7 +87,6 @@ const ReviewForm = () => {
     setRating(star);
   };
 
-  // دالة إرسال التقييم
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -102,229 +99,247 @@ const ReviewForm = () => {
 
     try {
       const reviewData = { rating, text, userId, salonId };
-      console.log(reviewData);
-      const response = await axios.post(
-        "http://localhost:3000/api/reviews",
-        reviewData
-      );
-      alert("تم إرسال التعليق بنجاح!");
-      console.log(response.data);
+      await axios.post("http://localhost:3000/api/reviews", reviewData);
+      toast.success("تم إرسال التعليق بنجاح!");
 
-      axios
-        .get(`http://localhost:3000/api/reviews/reviews/${id}`)
-        .then((response) => {
-          setReviews(response.data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          setError(error);
-          setLoading(false);
-        });
-      // إعادة تعيين النموذج
+      // تحديث المراجعات والصالون
+      fetchReviews(salonId);
+      fetchSalon(salonId);
+
       setRating(0);
       setText("");
       setShowForm(false);
     } catch (error) {
       console.error("Error submitting review:", error);
-      alert("فشل في إرسال التعليق");
+      toast.error("فشل في إرسال التعليق");
     } finally {
       setSubmitLoading(false);
     }
   };
 
-  // افتراض وجود مستخدم مسجل دخول للعرض
-  const user = userId ? { _id: userId } : null;
+  const handleDeleteReview = async (reviewId) => {
+    if (window.confirm("هل أنت متأكد من رغبتك في حذف هذا التعليق؟")) {
+      try {
+        await axios.delete(`http://localhost:3000/api/reviews/${reviewId}`);
+        toast.success("تم حذف التعليق بنجاح");
+        fetchReviews(salonId);
+        fetchSalon(salonId);
+      } catch (err) {
+        console.error("Error deleting review:", err);
+        toast.error("فشل في حذف التعليق");
+      }
+    }
+  };
 
-  if (loading)
+  const setFilteredReviews = reviews.filter((review) => {
+    return !review.isDeleted; // تأكد من أن التعليق ليس محذوفًا
+  });
+
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <p className="text-2xl">Loading...</p>
       </div>
     );
+  }
 
-  if (error)
+  if (error) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p className="text-2xl text-red-500">Error fetching salon details.</p>
+        <p className="text-2xl text-red-500">حدث خطأ أثناء تحميل التعليقات.</p>
       </div>
     );
+  }
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <h2 className="text-xl font-semibold">تعليقات العملاء</h2>
-        {/* هنا يمكن إضافة متوسط التقييم وعدد التعليقات إذا كانت البيانات متوفرة */}
-      </div>
-
-      {/* Only show Add Review button if user is logged in */}
-      {user && (
-        <button
-          onClick={toggleForm}
-          className="bg-[#a0714f] hover:cursor-pointer hover:bg-[#8a5936] text-white font-medium py-2 px-4 rounded-md mb-6 transition duration-200"
-        >
-          {showForm ? "إغلاق النموذج" : "إضافة تعليق جديد"}
-        </button>
-      )}
-
-      {/* Review Form */}
-      {showForm && (
-        <div className="bg-gray-50 rounded-md p-4 mb-6 border border-gray-200">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="font-medium">إضافة تعليق جديد</h3>
-            <button
-              onClick={toggleForm}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <X size={20} />
-            </button>
-          </div>
-          <form onSubmit={handleSubmit}>
-            {/* Star Rating Input */}
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-1">التقييم</label>
-              <div className="flex">
+    <div className="bg-white shadow-lg rounded-xl p-6 max-w-4xl mx-auto">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b pb-4">
+        <div>
+          <h2 className="text-2xl font-bold text-[#5d4037]">تعليقات العملاء</h2>
+          {salon?.rating && (
+            <div className="flex items-center mt-2">
+              <div className="flex mr-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
                     key={star}
-                    size={32}
-                    className={`cursor-pointer ${
-                      (hoveredRating || rating) >= star
-                        ? "text-yellow-500"
-                        : "text-gray-300"
-                    }`}
+                    size={20}
+                    className="text-yellow-400"
                     fill={
-                      (hoveredRating || rating) >= star
-                        ? "currentColor"
-                        : "none"
+                      Math.round(salon.rating) >= star ? "currentColor" : "none"
                     }
+                  />
+                ))}
+              </div>
+              <span className="text-gray-600">
+                {salon.rating.toFixed(1)} ({reviews.length} تقييم)
+              </span>
+            </div>
+          )}
+        </div>
+
+        {userId && (
+          <button
+            onClick={toggleForm}
+            className="bg-[#8d6e63] hover:bg-[#6d4c41] text-white font-medium py-2 px-6 rounded-lg transition duration-300 flex items-center mt-4 md:mt-0"
+          >
+            {showForm ? (
+              <>
+                <X size={18} className="ml-1" />
+                إغلاق النموذج
+              </>
+            ) : (
+              <>
+                <Plus size={18} className="ml-1" />
+                أضف تقييمك
+              </>
+            )}
+          </button>
+        )}
+      </div>
+
+      {/* Review Form */}
+      {showForm && (
+        <div className="bg-[#f5f5f5] rounded-xl p-6 mb-8 border border-[#e0e0e0] shadow-sm">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">
+                تقييمك
+              </label>
+              <div className="flex items-center">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    type="button"
+                    key={star}
+                    className="focus:outline-none"
                     onClick={() => handleRatingClick(star)}
                     onMouseEnter={() => setHoveredRating(star)}
                     onMouseLeave={() => setHoveredRating(0)}
-                  />
+                  >
+                    <Star
+                      size={32}
+                      className={`mx-1 ${
+                        (hoveredRating || rating) >= star
+                          ? "text-yellow-500"
+                          : "text-gray-300"
+                      }`}
+                      fill={
+                        (hoveredRating || rating) >= star
+                          ? "currentColor"
+                          : "none"
+                      }
+                    />
+                  </button>
                 ))}
-                <span className="mr-2 text-gray-700">
-                  {rating > 0 ? `${rating} / 5` : "اختر تقييماً"}
+                <span className="mr-3 text-gray-700 font-medium">
+                  {rating > 0 ? `${rating} من 5` : "اختر تقييماً"}
                 </span>
               </div>
             </div>
 
-            <div className="mb-4">
-              <label htmlFor="text" className="block text-gray-700 mb-1">
-                التعليق
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">
+                تعليقك
               </label>
               <textarea
-                id="text"
-                className="w-full border border-gray-300 rounded-md p-2 min-h-[100px]"
-                placeholder="اكتب تعليقك هنا..."
+                className="w-full border border-gray-300 rounded-lg p-3 min-h-[120px] focus:ring-2 focus:ring-[#8d6e63]"
+                placeholder="ما هو انطباعك عن الخدمة؟ شاركنا تجربتك..."
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 required
               ></textarea>
             </div>
-            <button
-              type="submit"
-              className="bg-[#a0714f] hover:cursor-pointer hover:bg-[#8a5936] text-white font-medium py-2 px-4 rounded-md transition duration-200"
-              disabled={submitLoading || rating === 0}
-            >
-              {submitLoading ? "جاري الإرسال..." : "إرسال التعليق"}
-            </button>
+
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="bg-[#8d6e63] hover:bg-[#6d4c41] text-white font-medium py-2 px-6 rounded-lg transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={submitLoading || rating === 0}
+              >
+                {submitLoading ? (
+                  <span className="flex items-center">
+                    <Loader2 className="animate-spin mr-2" size={18} />
+                    جاري الإرسال...
+                  </span>
+                ) : (
+                  "نشر التقييم"
+                )}
+              </button>
+            </div>
           </form>
         </div>
       )}
 
-      {/* قسم عرض التعليقات */}
       <div className="space-y-6" dir="rtl">
-        <div className="space-y-6">
-          {reviews && reviews.length > 0 ? (
-            reviews.map((review) => {
-              // دالة حذف التعليق
-              const handleDeleteReview = async () => {
-                if (
-                  window.confirm("هل أنت متأكد من رغبتك في حذف هذا التعليق؟")
-                ) {
-                  try {
-                    const baseUrl = "http://localhost:3000";
-
-                    // حذف التعليق
-                    await axios.delete(`${baseUrl}/api/reviews/${review._id}`);
-
-                    // إزالة التعليق المحذوف من الـ state المحلي
-                    setReviews(reviews.filter((r) => r._id !== review._id));
-
-                    // تحديث معلومات الصالون (التقييم العام)
-                    const salonResponse = await axios.get(
-                      `${baseUrl}/api/salons/${salonId}`
-                    );
-                    setSalon(salonResponse.data);
-
-                    // إشعار نجاح العملية
-                    alert("تم حذف التعليق بنجاح");
-                  } catch (err) {
-                    console.error("Error deleting review:", err);
-                    alert("فشل في حذف التعليق");
-                  }
-                }
-              };
-
-              return (
-                <div key={review._id} className="border-b pb-6 last:border-0">
-                  <div className="flex justify-between items-start">
-                    <div className="flex items-center">
-                      <div className="w-10 h-10 rounded-full bg-gray-200 ml-3 overflow-hidden">
-                        <img
-                          src={
-                            review.userId?.profileImage ||
-                            "https://via.placeholder.com/40"
-                          }
-                          alt=""
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div>
-                        <h4 className="font-medium">
-                          {review.userId?.name || "عميل"}
-                        </h4>
-                        {/* عرض التقييم بالنجوم */}
-                        <div className="flex mt-1">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                              key={star}
-                              size={16}
-                              className="text-yellow-500"
-                              fill={
-                                review.rating >= star ? "currentColor" : "none"
-                              }
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <span className="text-gray-500 text-sm">
-                      {review.createdAt
-                        ? format(new Date(review.createdAt), "yyyy/MM/dd")
-                        : "حديثاً"}
-                    </span>
+        {setFilteredReviews.length > 0 ? (
+          setFilteredReviews.map((review) => (
+            <div
+              key={review._id}
+              className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300"
+            >
+              <div className="flex items-start gap-4">
+                {/* Avatar with first letter */}
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-md">
+                    {review.userId?.username
+                      ? review.userId.username.charAt(0)
+                      : "؟"}
                   </div>
-                  <p className="mt-3 text-gray-700">{review.text}</p>
-
-                  {/* زر حذف التعليق (يظهر فقط للمستخدم صاحب التعليق) */}
-                  {userId === review.userId && (
-                    <button
-                      onClick={handleDeleteReview}
-                      className="text-red-500 text-sm mt-2 hover:underline"
-                    >
-                      حذف التعليق
-                    </button>
-                  )}
                 </div>
-              );
-            })
-          ) : (
-            <p className="text-gray-500 text-center py-10">
-              لا توجد تعليقات بعد. كن أول من يترك تعليقاً!
-            </p>
-          )}
-        </div>
+
+                <div className="flex-grow">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="font-bold text-gray-800 text-lg">
+                      {review.userId?.username}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            size={18}
+                            className="ml-1"
+                            fill={
+                              review.rating >= star ? "currentColor" : "none"
+                            }
+                            color={
+                              review.rating >= star ? "#facc15" : "#e5e7eb"
+                            }
+                            strokeWidth={1.5}
+                          />
+                        ))}
+                      </div>
+
+                      {review.userId._id === userId && (
+                        <button
+                          onClick={() => handleDeleteReview(review._id)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          حذف
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-xl p-4 shadow-sm">
+                    <p className="text-gray-700 leading-relaxed">
+                      {review.text}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-center py-12 bg-white rounded-2xl shadow-sm border border-gray-100">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Star size={24} className="text-gray-400" />
+            </div>
+            <p className="text-gray-500 font-medium">لا توجد تعليقات بعد.</p>
+            <p className="text-gray-400 text-sm mt-1">كن أول من يضيف تعليقاً</p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -36,7 +36,13 @@ const salonSchema = new mongoose.Schema(
       },
     ],
     visitors: { type: Number, default: 0 },
-    Review: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],
+    reviews: [
+      // هنا تم إضافة الحقل الذي سيحتوي على المراجعات
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Review", // استبدلي "Review" بالمودل المناسب للمراجعات
+      },
+    ],
     book: [{ type: mongoose.Schema.Types.ObjectId, ref: "book" }],
     payments: [
       {
@@ -44,7 +50,7 @@ const salonSchema = new mongoose.Schema(
         ref: "Payment",
       },
     ],
-    
+
     openingHours: {
       monday: {
         open: { type: String, default: "" },
