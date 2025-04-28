@@ -78,6 +78,6 @@ Here are some helpful links related to the GlamBook project:
 - 📚 [Technical Documentation](https://docs.google.com/document/d/1ggk2SQp_zCATc8khTZHYyodm0dsz0NMn/edit?usp=sharing&ouid=110054354370055930574&rtpof=true&sd=true) – Backend API details, data models, and setup instructions  
 - 🎞️ [Presentation Slides](https://www.canva.com/design/DAGlRMW6W94/PdaHXUnm6FsTS4eHKEAbyQ/edit?utm_content=DAGlRMW6W94&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) – Project pitch and visual walkthrough  
 - 🎨 [Figma Design](https://www.figma.com/design/D3C7H4rjaXDLppUXcSWvur/Masterpiece?m=auto&t=bIkhAKrzBKMKWeQP-6) – UI/UX design prototype for the app
-- 🎨 [Trello](https://trello.com/b/ElKgtUXD/masterpiece) 
+- 📚 [Trello](https://trello.com/b/ElKgtUXD/masterpiece) 
 
 
