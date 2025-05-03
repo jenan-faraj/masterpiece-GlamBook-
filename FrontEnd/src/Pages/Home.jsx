@@ -17,7 +17,7 @@ import {
   Zap,
 } from "lucide-react";
 import HeroSection from "../components/HeroSection";
-
+import ScrollToTopButton from "../components/ScrollToTopButton";
 // مكون تقييم النجوم لعرض النجوم بناءً على التقييم
 const StarRating = ({ rating }) => {
   const numRating = parseFloat(rating);
@@ -181,6 +181,8 @@ export default function ArabicHomePage() {
     <div className="bg-white min-h-screen" dir="rtl" lang="ar">
       {/* قسم الهيرو */}
       <HeroSection />
+
+      <ScrollToTopButton />
 
       {/* قسم الميزات */}
       <div className="py-20 container mx-auto lg:px-20">
