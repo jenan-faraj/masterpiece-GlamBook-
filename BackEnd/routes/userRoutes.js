@@ -5,6 +5,7 @@ const userController = require("../controller/userController");
 const { protect } = require("../middlewares/auth");
 
 router.get("/all", userController.getAllUsers); // حطي protect إذا بدك تكون محمية
+router.get("/dash", userController.getAllUsersForDash); // حطي protect إذا بدك تكون محمية
 router.post("/register", userController.register);
 router.post("/login", userController.login);
 router.post("/logout", userController.logout);
@@ -13,7 +14,7 @@ router.get("/me", protect, userController.getProfile);
 router.put("/me/:id", userController.updateUser);
 router.put("/toggle-favorite", protect, userController.toggleFavorite);
 router.put("/toggle-comment", protect, userController.toggleComment);
-router.delete("/delete", protect, userController.softDeleteUser);
-router.patch("/delete/restore", protect, userController.restoreUser);
+router.patch("/delete/:id", userController.softDeleteUser);
+router.patch("/delete/restore/:id", protect, userController.restoreUser);
 
 module.exports = router;

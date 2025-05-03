@@ -17,14 +17,17 @@ const Hero = () => {
       />
 
       {/* محتوى الهيرو فوق الفيديو */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-white bg-black/50">
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-white ">
         <h1 className="text-4xl md:text-6xl font-bold mb-4 text-center">
           مرحباً بك في GlamBook
         </h1>
         <p className="text-lg md:text-2xl mb-6 text-center">
           احجزي صالونك المفضل خلال ثوانٍ
         </p>
-        <Link to={"/categories"} className="bg-[#895a39] hover:cursor-pointer hover:bg-[#744a2c] text-2xl text-white font-semibold py-3 px-6 rounded-xl transition duration-300">
+        <Link
+          to={"/categories"}
+          className="bg-[#895a39] hover:cursor-pointer hover:bg-[#744a2c] text-2xl text-white font-semibold py-3 px-6 rounded-xl transition duration-300"
+        >
           ابدئي الآن
         </Link>
       </div>

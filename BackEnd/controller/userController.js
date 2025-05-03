@@ -23,6 +23,27 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+exports.getAllUsersForDash = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1; // رقم الصفحة
+    const limit = parseInt(req.query.limit) || 10; // عدد المستخدمين بالصفحة
+
+    const skip = (page - 1) * limit;
+
+    const users = await User.find({ isDeleted: false }).skip(skip).limit(limit);
+    const totalUsers = await User.countDocuments();
+
+    res.json({
+      users,
+      totalPages: Math.ceil(totalUsers / limit),
+      currentPage: page,
+    });
+  } catch (err) {
+    console.error("Error fetching users with pagination:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 exports.register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -65,6 +86,7 @@ exports.logout = (req, res) => {
 
 exports.getProfile = async (req, res) => {
   try {
+    console.log("-------------------------------------------------------",req.user.id)
     const user = await User.findOne({
       _id: req.user.id,
       isDeleted: false,
@@ -80,7 +102,6 @@ exports.getProfile = async (req, res) => {
         },
       }); // لربط بيانات المستخدم
     if (!user) return res.status(404).json({ message: "User not found" });
-
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -142,19 +163,12 @@ exports.toggleComment = async (req, res) => {
 // 🧼 Soft Delete User
 exports.softDeleteUser = async (req, res) => {
   try {
-    const user = await User.findOneAndUpdate(
-      { _id: req.user.id, isDeleted: false },
-      { isDeleted: true },
-      { new: true }
-    );
-    if (!user)
-      return res
-        .status(404)
-        .json({ message: "User not found or already deleted" });
-
-    res.status(200).json({ message: "User soft-deleted successfully", user });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const userId = req.params.id;
+    const updatedUser = await User.findByIdAndUpdate(userId, { isDeleted: true }); // أو أي منطق حذف عندك
+    res.status(200).json({ message: 'User deleted' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 

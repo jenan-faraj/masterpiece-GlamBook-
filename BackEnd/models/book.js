@@ -4,10 +4,17 @@ const bookSchema = new mongoose.Schema(
   {
     services: [
       {
-        type: String,
-        required: [true, "Service is required"],
-        trim: true,
-        minlength: [2, "Service name must be at least 2 characters long"],
+        serviceName: {
+          type: String,
+          required: [true, "Service name is required"],
+          trim: true,
+          minlength: [2, "Service name must be at least 2 characters long"],
+        },
+        servicePrice: {
+          type: Number,
+          required: [true, "Service price is required"],
+          min: [0, "Service price cannot be negative"],
+        },
       },
     ],
     date: {

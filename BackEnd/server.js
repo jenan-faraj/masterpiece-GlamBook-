@@ -12,6 +12,7 @@ const uploadRoutes = require("./routes/uploadRoutes");
 const paymentRoutes = require('./routes/payments');
 const contact = require("./routes/contact");
 const path = require("path");
+const emailRoute = require("./routes/email");
 
 //---------------------------
 // Middleware
@@ -41,7 +42,7 @@ mongoose
 //---------------------------
 // ROUTES
 //---------------------------
-
+app.use("/api/email", emailRoute);
 app.use("/api/users", userRoute);
 app.use("/api/salons", salonRoutes);
 app.use("/api/reviews", reviewRoutes);

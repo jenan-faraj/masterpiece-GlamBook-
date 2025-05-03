@@ -24,7 +24,7 @@ const BookingForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [userId, setUserId] = useState(null);
   const [formData, setFormData] = useState({
-    services: [],
+    services: [], // Will store objects with {serviceName, servicePrice}
     date: "",
     time: "",
     userId: "",
@@ -88,11 +88,8 @@ const BookingForm = () => {
   useEffect(() => {
     if (salon && formData.services.length > 0) {
       let total = 0;
-      formData.services.forEach((serviceName) => {
-        const serviceObj = salon.services.find((s) => s.title === serviceName);
-        if (serviceObj) {
-          total += serviceObj.price;
-        }
+      formData.services.forEach((service) => {
+        total += service.servicePrice;
       });
       setTotalAmount(total);
     } else {
@@ -141,12 +138,28 @@ const BookingForm = () => {
     const { name, value, type, checked } = e.target;
 
     if (type === "checkbox") {
-      setFormData((prev) => ({
-        ...prev,
-        services: checked
-          ? [...prev.services, value]
-          : prev.services.filter((service) => service !== value),
-      }));
+      if (checked) {
+        // Add service with both name and price
+        const selectedService = salon.services.find((s) => s.title === value);
+        if (selectedService) {
+          setFormData((prev) => ({
+            ...prev,
+            services: [
+              ...prev.services,
+              {
+                serviceName: selectedService.title,
+                servicePrice: selectedService.price,
+              },
+            ],
+          }));
+        }
+      } else {
+        // Remove service by name
+        setFormData((prev) => ({
+          ...prev,
+          services: prev.services.filter((s) => s.serviceName !== value),
+        }));
+      }
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -377,7 +390,9 @@ const BookingForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               {salon.services.map((service) => {
-                const isChecked = formData.services.includes(service.title);
+                const isChecked = formData.services.some(
+                  (s) => s.serviceName === service.title
+                );
                 return (
                   <label
                     key={service._id}
@@ -443,19 +458,14 @@ const BookingForm = () => {
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-2 justify-center">
-                  {formData.services.map((service, index) => {
-                    const serviceObj = salon.services.find(
-                      (s) => s.title === service
-                    );
-                    return (
-                      <span
-                        key={index}
-                        className="bg-white px-3 py-1 rounded-full text-sm border border-[var(--Logo-color)]/30 text-[var(--Logo-color)]"
-                      >
-                        {service} - {serviceObj?.price} د.أ
-                      </span>
-                    );
-                  })}
+                  {formData.services.map((service, index) => (
+                    <span
+                      key={index}
+                      className="bg-white px-3 py-1 rounded-full text-sm border border-[var(--Logo-color)]/30 text-[var(--Logo-color)]"
+                    >
+                      {service.serviceName} - {service.servicePrice} د.أ
+                    </span>
+                  ))}
                 </div>
               </div>
             )}
@@ -539,7 +549,7 @@ const BookingForm = () => {
           <PaymentForm
             totalAmount={totalAmount}
             onPaymentSuccess={handlePaymentSuccess}
-            selectedServices={formData.services}
+            selectedServices={formData.services.map(s => s.serviceName)}
             salon={salon._id}
             user={userId}
           />
@@ -578,7 +588,7 @@ const BookingForm = () => {
                   <div className="flex justify-between">
                     <span className="text-gray-500">الخدمات:</span>
                     <span className="font-medium">
-                      {formData.services.join(", ")}
+                      {formData.services.map(s => s.serviceName).join(", ")}
                     </span>
                   </div>
                   <div className="flex justify-between">

@@ -17,7 +17,7 @@ const PaymentSchema = new mongoose.Schema({
   },
   currency: {
     type: String,
-    default: "USD",
+    default: "JOD",
   },
   paymentMethod: {
     type: String,

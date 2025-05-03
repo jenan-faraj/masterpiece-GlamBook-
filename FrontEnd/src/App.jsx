@@ -18,15 +18,18 @@ import Payment from "./Pages/Payment";
 import AboutPage from "./Pages/About";
 import ContactUs from "./Pages/Contact";
 import UserProfile from "./Pages/userProfile";
-
+import AdminSidebar from "./components/Dashboard/AdminSidebar";
+import Footer from "./components/Footer";
 // هاد الكمبوننت بنفصل فيه النافبار بناءً على المسار
 const AppContent = () => {
   const location = useLocation();
-  const hideNavbarRoutes = ["/login", "/signup"];
+  const hideNavbarRoutes = ["/login", "/signup", "/dashboard"];
+  const hideFooterRoutes = ["/login", "/signup", "/dashboard"];
 
   return (
     <>
       {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/categories" element={<Categories />} />
@@ -40,7 +43,18 @@ const AppContent = () => {
         <Route path="/aboutUs" element={<AboutPage />} />
         <Route path="/ContactUs" element={<ContactUs />} />
         <Route path="/userProfile" element={<UserProfile />} />
+        <Route path="/dashboard" element={<AdminSidebar />} />
+        <Route
+          path="*"
+          element={
+            <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
+              asdasdasdasdas
+            </main>
+          }
+        />
       </Routes>
+
+      {!hideNavbarRoutes.includes(location.pathname) && <Footer />}
     </>
   );
 };

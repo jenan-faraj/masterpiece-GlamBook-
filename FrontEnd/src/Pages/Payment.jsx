@@ -34,7 +34,7 @@ const PaymentForm = ({
   const handleCliqPayment = async () => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3000/api/payments", {
+      const response = await axios.post("http://localhost:3000/api/bookings", {
         amount: totalAmount,
         userId: user,
         salonId: salon,

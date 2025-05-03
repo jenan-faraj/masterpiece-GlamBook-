@@ -109,10 +109,13 @@ const Navbar = () => {
 
   return (
     <header className="w-full bg-[#F9F3F1] shadow-md">
-      <nav className="container mx-auto px-4" dir="rtl">
+      <nav className="container lg:px-20 mx-auto px-4" dir="rtl">
         <div className="flex justify-between items-center h-16">
           {/* الشعار */}
-          <Link to="/" className="text-[#B58152] text-2xl md:text-3xl font-bold">
+          <Link
+            to="/"
+            className="text-[#B58152] text-2xl md:text-3xl font-bold"
+          >
             GlamBook
           </Link>
 

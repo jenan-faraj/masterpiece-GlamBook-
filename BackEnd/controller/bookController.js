@@ -28,7 +28,7 @@ exports.createBooking = async (req, res) => {
 exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await Book.find({ isDeleted: false, isCanceled: false })
-      .populate("userId", "name email") // عرض بيانات المستخدم (اختياري)
+      .populate("userId", "username email") // عرض بيانات المستخدم (اختياري)
       .populate("salonId", "name location"); // عرض بيانات الصالون (اختياري)
 
     res.status(200).json({
