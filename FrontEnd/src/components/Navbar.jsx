@@ -112,12 +112,11 @@ const Navbar = () => {
       <nav className="container lg:px-20 mx-auto px-4" dir="rtl">
         <div className="flex justify-between items-center h-16">
           {/* الشعار */}
-          <Link
-            to="/"
-            className="text-[#B58152] text-2xl md:text-3xl font-bold"
-          >
-            GlamBook
-          </Link>
+          <img
+            className=" h-18 object-cover"
+            src="../../public/بيـــــــــوتي.png"
+            alt="بيوتي"
+          />
 
           {/* قائمة التنقل للشاشات الكبيرة */}
           <div className="hidden lg:flex items-center justify-between flex-1 mx-8">
