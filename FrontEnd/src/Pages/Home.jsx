@@ -11,10 +11,14 @@ import {
   Heart,
   Sparkles,
   MessageSquare,
+  Clock,
+  Shield,
+  ThumbsUp,
+  Zap,
 } from "lucide-react";
 import HeroSection from "../components/HeroSection";
 
-// StarRating component to display stars based on rating
+// مكون تقييم النجوم لعرض النجوم بناءً على التقييم
 const StarRating = ({ rating }) => {
   const numRating = parseFloat(rating);
   const fullStars = Math.floor(numRating);
@@ -23,7 +27,7 @@ const StarRating = ({ rating }) => {
 
   return (
     <div className="flex justify-center">
-      {/* Full stars */}
+      {/* النجوم الكاملة */}
       {[...Array(fullStars)].map((_, i) => (
         <Star
           key={`full-${i}`}
@@ -32,7 +36,7 @@ const StarRating = ({ rating }) => {
         />
       ))}
 
-      {/* Half star */}
+      {/* نصف نجمة */}
       {hasHalfStar && (
         <div className="relative">
           <Star className="text-yellow-400" size={16} />
@@ -42,7 +46,7 @@ const StarRating = ({ rating }) => {
         </div>
       )}
 
-      {/* Empty stars */}
+      {/* النجوم الفارغة */}
       {[...Array(emptyStars)].map((_, i) => (
         <Star key={`empty-${i}`} className="text-yellow-400" size={16} />
       ))}
@@ -59,12 +63,12 @@ export default function ArabicHomePage() {
   const [ratingFilter, setRatingFilter] = useState("");
   const [topRatedSalons, setTopRatedSalons] = useState([]);
 
-  // Fetch data from Firebase using Axios
+  // جلب البيانات من Firebase باستخدام Axios
   useEffect(() => {
     axios
       .get("http://localhost:3000/api/salons")
       .then((response) => {
-        // Convert Firebase data to array (as it comes as an object)
+        // تحويل بيانات Firebase إلى مصفوفة (لأنها تأتي كائن)
         const fetchedSalons = [];
         for (let key in response.data) {
           fetchedSalons.push({
@@ -92,15 +96,15 @@ export default function ArabicHomePage() {
       });
   }, []);
 
-  // Apply search and filter whenever either changes
+  // تطبيق البحث والتصفية عند تغيير أي منهما
   useEffect(() => {
     const filtered = salons.filter((salon) => {
-      // Check if salon name includes search term (case insensitive)
+      // التحقق مما إذا كان اسم الصالون يتضمن مصطلح البحث (غير حساس لحالة الأحرف)
       const nameMatch = salon.name
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
 
-      // Check if salon rating matches the filter (if set)
+      // التحقق مما إذا كان تقييم الصالون يطابق الفلتر (إذا تم تعيينه)
       const ratingMatch =
         ratingFilter === "" ||
         (parseFloat(salon.rating) >= parseFloat(ratingFilter) &&
@@ -112,14 +116,9 @@ export default function ArabicHomePage() {
     setFilteredSalons(filtered);
   }, [searchTerm, ratingFilter, salons]);
 
-  // Handler for search input
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
   async function visitorsCount(salon) {
     if (!salon || !salon._id) {
-      console.error("Invalid salon data");
+      console.error("بيانات الصالون غير صالحة");
       return;
     }
 
@@ -136,105 +135,82 @@ export default function ArabicHomePage() {
         }
       );
 
-      console.log("Salon updated successfully:", response.data);
+      console.log("تم تحديث الصالون بنجاح:", response.data);
       return response.data;
     } catch (error) {
       console.error(
-        "Error updating salon:",
+        "خطأ في تحديث الصالون:",
         error.response?.data || error.message
       );
     }
   }
 
-  // Handler for rating filter
-  const handleRatingFilter = (e) => {
-    setRatingFilter(e.target.value);
-  };
-  const categories = [
+  // ميزات الموقع (بدلاً من الفئات)
+  const features = [
     {
-      name: "تصفيف الشعر",
-      icon: <Scissors size={32} />,
+      name: "حجز سريع وسهل",
+      icon: <Clock size={32} />,
+      description: "احجز موعدك بنقرات قليلة في أي وقت ومن أي مكان",
       bgColor: "#fbeee6",
       iconColor: "#B58152",
     },
     {
-      name: "العناية بالوجه",
-      icon: <Sparkles size={32} />,
+      name: "تقييمات موثوقة",
+      icon: <ThumbsUp size={32} />,
+      description: "اطلع على تجارب العملاء الحقيقية قبل اتخاذ قرارك",
       bgColor: "#fbeee6",
       iconColor: "#B58152",
     },
     {
-      name: "العناية بالأظافر",
-      icon: <Star size={32} />,
+      name: "أمان وخصوصية",
+      icon: <Shield size={32} />,
+      description: "حماية كاملة لبياناتك الشخصية ومعلومات الدفع",
       bgColor: "#fbeee6",
       iconColor: "#B58152",
     },
     {
-      name: "المكياج",
-      icon: <Heart size={32} />,
+      name: "عروض حصرية",
+      icon: <Zap size={32} />,
+      description: "احصل على خصومات وعروض خاصة لمستخدمي المنصة",
       bgColor: "#fbeee6",
       iconColor: "#B58152",
-    },
-  ];
-
-  const testimonials = [
-    {
-      id: 1,
-      name: "سارة أحمد",
-      text: "غلام سبوت غيّر طريقة حجزي لمواعيد التجميل. سهل الاستخدام ويوفر العديد من الخيارات الرائعة!",
-      image: "/api/placeholder/64/64",
-      rating: 5,
-    },
-    {
-      id: 2,
-      name: "ليلى محمد",
-      text: "وجدت صالون أحلامي من خلال هذا التطبيق. الحجز كان سهلاً والنتائج كانت رائعة.",
-      image: "/api/placeholder/64/64",
-      rating: 4,
-    },
-    {
-      id: 3,
-      name: "نور الهاشمي",
-      text: "تطبيق رائع! أحب كيف يمكنني رؤية أعمال المصففين قبل الحجز. توفير للوقت والجهد.",
-      image: "/api/placeholder/64/64",
-      rating: 5,
     },
   ];
 
   return (
     <div className="bg-white min-h-screen" dir="rtl" lang="ar">
-      {/* Hero Section */}
+      {/* قسم الهيرو */}
       <HeroSection />
 
-      {/* Categories Section */}
+      {/* قسم الميزات */}
       <div className="py-20 container mx-auto lg:px-20">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-6" style={{ color: "#B58152" }}>
-            استكشف خدماتنا
+            ميزات الموقع
           </h2>
           <div
             className="w-24 h-1 mx-auto mb-8"
             style={{ backgroundColor: "#a0714f" }}
           ></div>
           <p className="text-lg max-w-2xl mx-auto" style={{ color: "#a0714f" }}>
-            اكتشف مجموعة متنوعة من خدمات التجميل والعناية الشخصية المصممة لتناسب
-            احتياجاتك
+            اكتشف لماذا يختار آلاف المستخدمين منصتنا للحصول على أفضل خدمات
+            التجميل
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {categories.map((category, index) => (
+          {features.map((feature, index) => (
             <div
               key={index}
-              className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105"
+              className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:translate-y-2"
             >
               <div
                 className="h-40 flex items-center justify-center"
-                style={{ backgroundColor: category.bgColor }}
+                style={{ backgroundColor: feature.bgColor }}
               >
                 <div className="p-4 rounded-full bg-white">
-                  {React.cloneElement(category.icon, {
-                    style: { color: category.iconColor },
+                  {React.cloneElement(feature.icon, {
+                    style: { color: feature.iconColor },
                   })}
                 </div>
               </div>
@@ -243,23 +219,16 @@ export default function ArabicHomePage() {
                   className="text-xl font-bold mb-3"
                   style={{ color: "#B58152" }}
                 >
-                  {category.name}
+                  {feature.name}
                 </h3>
-                <Link
-                  to={`/category/${category.name}`}
-                  className="inline-flex items-center font-medium"
-                  style={{ color: "#a0714f" }}
-                >
-                  عرض الصالونات
-                  <ArrowRight size={16} className="mr-2" />
-                </Link>
+                <p className="text-gray-600 mb-4">{feature.description}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* How It Works Section */}
+      {/* قسم كيف يعمل التطبيق */}
       <div style={{ backgroundColor: "#fdf6f0" }} className="py-20 lg:px-20">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
@@ -282,7 +251,7 @@ export default function ArabicHomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <div className="text-center">
+            <div className="text-center transform transition-all duration-300 hover:scale-105">
               <div
                 className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
                 style={{ backgroundColor: "#fbeee6" }}
@@ -300,7 +269,7 @@ export default function ArabicHomePage() {
               </p>
             </div>
 
-            <div className="text-center">
+            <div className="text-center transform transition-all duration-300 hover:scale-105">
               <div
                 className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
                 style={{ backgroundColor: "#fbeee6" }}
@@ -318,7 +287,7 @@ export default function ArabicHomePage() {
               </p>
             </div>
 
-            <div className="text-center">
+            <div className="text-center transform transition-all duration-300 hover:scale-105">
               <div
                 className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
                 style={{ backgroundColor: "#fbeee6" }}
@@ -339,74 +308,86 @@ export default function ArabicHomePage() {
         </div>
       </div>
 
-      {/* Salon Cards */}
-      <h2 className="text-2xl font-bold text-[var(--Logo-color)] mt-20 flex justify-center items-center  my-4 text-center">
-        أفضل ٤ صالونات
-      </h2>
-      <div className="flex lg:px-20 flex-wrap justify-evenly gap-5 mb-20 my-10">
-        {loading ? (
-          <div className="w-full text-center py-8">Loading salons...</div>
-        ) : error ? (
-          <div className="w-full text-center py-8 text-red-500">
-            Error loading salons. Please try again later.
-          </div>
-        ) : topRatedSalons.length === 0 ? (
-          <div className="w-full text-center py-8">
-            No salons found matching your search criteria.
-          </div>
-        ) : (
-          topRatedSalons.map((salon) => {
-            return (
-              <div
-                key={salon._id}
-                className="group relative w-80 h-72 bg-slate-50 flex flex-col items-center justify-center gap-2 text-center rounded-2xl overflow-hidden shadow-md"
-              >
-                {/* Background image instead of gradient div */}
-                <div className="absolute top-0 w-80 h-24 rounded-t-2xl overflow-hidden transition-all duration-500 group-hover:h-72 group-hover:w-80 group-hover:rounded-b-2xl">
-                  <img
-                    src={
-                      salon.bgImage ||
-                      "https://i.pinimg.com/474x/81/3a/27/813a2759cb59a7e7def1f5f8e7fe6992.jpg"
-                    }
-                    alt="Profile background"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+      {/* بطاقات الصالونات */}
+      <div className="py-14 container mx-auto ">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold mb-6" style={{ color: "#B58152" }}>
+            أفضل الصالونات
+          </h2>
+          <div
+            className="w-24 h-1 mx-auto mb-8"
+            style={{ backgroundColor: "#a0714f" }}
+          ></div>
+          <p className="text-lg max-w-2xl mx-auto" style={{ color: "#a0714f" }}>
+            استكشف أعلى الصالونات تقييماً في منصتنا
+          </p>
+        </div>
 
-                {/* Profile picture instead of blue circle */}
-                <div className="w-28 h-28 mt-8 rounded-full border-4 border-slate-50 z-10 overflow-hidden group-hover:scale-150 group-hover:-translate-x-24 group-hover:-translate-y-20 transition-all duration-500">
-                  <img
-                    src={
-                      salon.profileImage ||
-                      "https://i.pinimg.com/474x/81/3a/27/813a2759cb59a7e7def1f5f8e7fe6992.jpg"
-                    }
-                    alt="George Johnson"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-
-                <div className="z-10 group-hover:-translate-y-10 bg-[#ffffff74] p-2 rounded-2xl transition-all duration-500">
-                  <span className="text-2xl font-semibold">{salon.name}</span>
-                  {/* Replace the plain rating text with star rating component */}
-                  <div className="flex flex-col items-center">
-                    <StarRating rating={salon.rating} />
-                  </div>
-                </div>
-
-                <Link
-                  onClick={() => visitorsCount(salon)}
-                  className="bg-[var(--Logo-color)] px-4 py-1 text-slate-50 rounded-md z-10 hover:scale-125 transition-all duration-500 hover:bg-[var(--button-color)]"
-                  to={`/salonDetails/${salon._id}`}
+        <div className="flex lg:px-20 flex-wrap justify-evenly gap-5 mb-20 my-10">
+          {loading ? (
+            <div className="w-full text-center py-8">Loading salons...</div>
+          ) : error ? (
+            <div className="w-full text-center py-8 text-red-500">
+              Error loading salons. Please try again later.
+            </div>
+          ) : topRatedSalons.length === 0 ? (
+            <div className="w-full text-center py-8">
+              No salons found matching your search criteria.
+            </div>
+          ) : (
+            topRatedSalons.map((salon) => {
+              return (
+                <div
+                  key={salon._id}
+                  className="group relative w-80 h-72 bg-slate-50 flex flex-col items-center justify-center gap-2 text-center rounded-2xl overflow-hidden shadow-md"
                 >
-                  visit
-                </Link>
-              </div>
-            );
-          })
-        )}
+                  {/* Background image instead of gradient div */}
+                  <div className="absolute top-0 w-80 h-24 rounded-t-2xl overflow-hidden transition-all duration-500 group-hover:h-72 group-hover:w-80 group-hover:rounded-b-2xl">
+                    <img
+                      src={
+                        salon.bgImage ||
+                        "https://i.pinimg.com/474x/81/3a/27/813a2759cb59a7e7def1f5f8e7fe6992.jpg"
+                      }
+                      alt="Profile background"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* Profile picture instead of blue circle */}
+                  <div className="w-28 h-28 mt-8 rounded-full border-4 border-slate-50 z-10 overflow-hidden group-hover:scale-150 group-hover:-translate-x-24 group-hover:-translate-y-20 transition-all duration-500">
+                    <img
+                      src={
+                        salon.profileImage ||
+                        "https://i.pinimg.com/474x/81/3a/27/813a2759cb59a7e7def1f5f8e7fe6992.jpg"
+                      }
+                      alt="George Johnson"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  <div className="z-10 group-hover:-translate-y-10 bg-[#ffffff74] p-2 rounded-2xl transition-all duration-500">
+                    <span className="text-2xl font-semibold">{salon.name}</span>
+                    {/* Replace the plain rating text with star rating component */}
+                    <div className="flex flex-col items-center">
+                      <StarRating rating={salon.rating} />
+                    </div>
+                  </div>
+
+                  <Link
+                    onClick={() => visitorsCount(salon)}
+                    className="bg-[var(--Logo-color)] px-4 py-1 text-slate-50 rounded-md z-10 hover:scale-125 transition-all duration-500 hover:bg-[var(--button-color)]"
+                    to={`/salonDetails/${salon._id}`}
+                  >
+                    visit
+                  </Link>
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
 
-      {/* Join as Salon Partner */}
+      {/* انضم كشريك صالون */}
       <div style={{ backgroundColor: "#fdf6f0" }} className="py-20 lg:px-20">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-6" style={{ color: "#B58152" }}>
@@ -426,7 +407,7 @@ export default function ArabicHomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
             <div
-              className="p-8 rounded-xl"
+              className="p-8 rounded-xl shadow-md transform transition-all duration-300 hover:shadow-xl hover:scale-105"
               style={{ backgroundColor: "#fbeee6" }}
             >
               <div
@@ -448,7 +429,7 @@ export default function ArabicHomePage() {
             </div>
 
             <div
-              className="p-8 rounded-xl"
+              className="p-8 rounded-xl shadow-md transform transition-all duration-300 hover:shadow-xl hover:scale-105"
               style={{ backgroundColor: "#fbeee6" }}
             >
               <div
@@ -470,7 +451,7 @@ export default function ArabicHomePage() {
             </div>
 
             <div
-              className="p-8 rounded-xl"
+              className="p-8 rounded-xl shadow-md transform transition-all duration-300 hover:shadow-xl hover:scale-105"
               style={{ backgroundColor: "#fbeee6" }}
             >
               <div
@@ -493,17 +474,17 @@ export default function ArabicHomePage() {
 
           <Link
             to="/RegisterSalon"
-            className="inline-block px-8 py-4 rounded-lg text-white font-medium text-lg transition-all duration-300 hover:shadow-lg"
-            style={{ backgroundColor: "#a0714f" }}
+            className="inline-block px-8 py-4 rounded-lg text-white font-medium text-lg transition-all duration-300 hover:shadow-lg transform hover:scale-105"
+            style={{ backgroundColor: "#B58152" }}
           >
             انضم إلى شركائنا الآن
           </Link>
         </div>
       </div>
 
-      {/* Call to Action */}
-      <div className="bg-[#703603] py-16">
-        <div className="container mx-auto px-6 text-center">
+      {/* دعوة للتصرف */}
+      <div className="bg-gradient-to-r from-[#703603] to-[#B58152] py-16 px-6">
+        <div className="container mx-auto text-center">
           <h2 className="text-4xl font-bold mb-6 text-white">
             جاهز لتجربة جمالية مميزة؟
           </h2>
@@ -512,8 +493,8 @@ export default function ArabicHomePage() {
             في مدينتك
           </p>
           <Link
-            to="/explore"
-            className="inline-block px-8 py-4 rounded-lg text-[#703603] font-medium text-lg bg-white transition-all duration-300 hover:shadow-lg"
+            to="/categories"
+            className="inline-block px-8 py-4 rounded-lg text-[#703603] font-semibold text-lg bg-white transition-all duration-300 hover:bg-gray-100 hover:shadow-lg transform hover:scale-105"
           >
             اكتشف الصالونات
           </Link>

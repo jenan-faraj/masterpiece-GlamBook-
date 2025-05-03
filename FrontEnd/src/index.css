@@ -13,3 +13,6 @@
   color: white;
   -webkit-text-stroke: 1px #895a39; /* دا بيضيف outline بني حول النص */
 }
+* {
+  font-family: 'Tajawal', sans-serif;
+}
