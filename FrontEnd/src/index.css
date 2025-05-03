@@ -12,5 +12,4 @@
 .text-outline {
   color: white;
   -webkit-text-stroke: 1px #895a39; /* دا بيضيف outline بني حول النص */
-  text-stroke: 1px #895a39; /* لحالات غير متوافقة مع WebKit */
 }
