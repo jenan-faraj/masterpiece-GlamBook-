@@ -9,6 +9,7 @@ import SalonSetting from "../components/SalonSetting";
 import SalonInfo from "../components/SalonInfo";
 import SpecialOffers from "../components/offers";
 import SalonBookings from "../components/SalonBookings";
+import Swal from "sweetalert2";
 
 function SalonDetails() {
   const { id } = useParams();
@@ -30,6 +31,12 @@ function SalonDetails() {
       .catch((error) => {
         setError(error);
         setLoading(false);
+        Swal.fire({
+          title: "خطأ!",
+          text: "حدث خطأ أثناء جلب بيانات الصالون",
+          icon: "error",
+          confirmButtonText: "حسناً",
+        });
       });
   }, [id]);
 
@@ -55,6 +62,12 @@ function SalonDetails() {
         }
       } catch (error) {
         console.error("Error fetching token:", error);
+        Swal.fire({
+          title: "خطأ!",
+          text: "حدث خطأ أثناء جلب بيانات المستخدم",
+          icon: "error",
+          confirmButtonText: "حسناً",
+        });
       }
     };
 
@@ -64,7 +77,7 @@ function SalonDetails() {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/users/me", {
-        withCredentials: true, // مهم عشان يبعث الكوكيز للتوكن
+        withCredentials: true,
       });
       setUser(response.data);
       return response.data;
@@ -73,6 +86,12 @@ function SalonDetails() {
         "Error fetching profile:",
         error.response?.data || error.message
       );
+      Swal.fire({
+        title: "خطأ!",
+        text: "حدث خطأ أثناء جلب ملف المستخدم الشخصي",
+        icon: "error",
+        confirmButtonText: "حسناً",
+      });
       return null;
     }
   };
@@ -86,6 +105,13 @@ function SalonDetails() {
 
     if (file) {
       setUploading(true);
+      Swal.fire({
+        title: "جاري رفع الصورة...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
 
       try {
         const formData = new FormData();
@@ -102,21 +128,32 @@ function SalonDetails() {
         );
 
         if (response.data && response.data.url) {
-          // Update salon in database
+          // تحديث الصالون في قاعدة البيانات
           await axios.put(`http://localhost:3000/api/salons/${salon._id}`, {
             [fieldName]: response.data.url,
           });
 
-          // Update local state
+          // تحديث الحالة المحلية
           setSalon((prev) => ({
             ...prev,
             [fieldName]: response.data.url,
           }));
 
-          console.log(`${fieldName} updated successfully!`);
+          Swal.fire({
+            title: "تم!",
+            text: "تم تحديث الصورة بنجاح",
+            icon: "success",
+            confirmButtonText: "حسناً",
+          });
         }
       } catch (error) {
         console.error("Error uploading image:", error);
+        Swal.fire({
+          title: "خطأ!",
+          text: "حدث خطأ أثناء رفع الصورة",
+          icon: "error",
+          confirmButtonText: "حسناً",
+        });
       } finally {
         setUploading(false);
       }
@@ -134,27 +171,29 @@ function SalonDetails() {
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen">
-        <p className="text-2xl">Loading...</p>
+        <p className="text-2xl">جاري التحميل...</p>
       </div>
     );
 
   if (error)
     return (
       <div className="flex justify-center items-center h-screen">
-        <p className="text-2xl text-red-500">Error fetching salon details.</p>
+        <p className="text-2xl text-red-500">
+          حدث خطأ أثناء جلب تفاصيل الصالون.
+        </p>
       </div>
     );
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-12">
-      {/* Header with Profile Image */}
-      <div className="relative h-64">
+    <div dir="rtl" className="bg-gray-50 min-h-screen pb-12">
+      {/* رأس الصفحة مع صورة الملف الشخصي */}
+      <div className="relative h-90">
         {salon.bgImage ? (
           <div className="relative w-full h-full">
             <img
               className="w-full h-full object-cover bg-[var(--Logo-color)]"
               src={salon.bgImage}
-              alt="background"
+              alt="خلفية"
             />
             {user && user.email === salon.email && (
               <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md cursor-pointer">
@@ -179,7 +218,7 @@ function SalonDetails() {
             )}
           </div>
         )}
-        <div className="absolute -bottom-16 left-10 bg-white rounded-full p-1 border-4 border-white shadow-lg h-32 w-32">
+        <div className="absolute -bottom-16 right-10 bg-white rounded-full p-1 border-4 border-white shadow-lg h-32 w-32">
           <img
             src={
               salon.profileImage ||
@@ -202,9 +241,9 @@ function SalonDetails() {
 
       <SalonInfo salon={salon} />
 
-      {/* Tab Navigate*/}
+      {/* تبويب التنقل */}
       <div className="mx-6 md:mx-10 mb-4">
-        <div className="flex justify-center lg:justify-start md:justify-between  flex-wrap gap-1 lg:gap-2 border-b">
+        <div className="flex justify-center lg:justify-start md:justify-between flex-wrap gap-1 lg:gap-2 border-b">
           <button
             onClick={() => setActiveTab("services")}
             className={`px-6 py-3 font-medium ${
@@ -213,7 +252,7 @@ function SalonDetails() {
                 : "text-gray-500"
             }`}
           >
-            Services
+            الخدمات
           </button>
           <button
             onClick={() => setActiveTab("offers")}
@@ -223,7 +262,7 @@ function SalonDetails() {
                 : "text-gray-500"
             }`}
           >
-            Special Offers
+            العروض الخاصة
           </button>
           <button
             onClick={() => setActiveTab("reviews")}
@@ -233,7 +272,7 @@ function SalonDetails() {
                 : "text-gray-500"
             }`}
           >
-            Reviews
+            التقييمات
           </button>
           <button
             onClick={() => setActiveTab("location")}
@@ -243,7 +282,7 @@ function SalonDetails() {
                 : "text-gray-500"
             }`}
           >
-            Location
+            الموقع
           </button>
           {user && user.email === salon.email && (
             <button
@@ -254,7 +293,7 @@ function SalonDetails() {
                   : "text-gray-500"
               }`}
             >
-              Settings
+              الإعدادات
             </button>
           )}
           {user && user.email === salon.email && (
@@ -266,13 +305,13 @@ function SalonDetails() {
                   : "text-gray-500"
               }`}
             >
-              Bookings
+              الحجوزات
             </button>
           )}
         </div>
       </div>
 
-      {/* Tab content */}
+      {/* محتوى التبويب */}
       <div className="mx-6 md:mx-10">
         {activeTab === "services" && (
           <AddServiceButton user={user} salon={salon} />
@@ -288,32 +327,31 @@ function SalonDetails() {
 
         {activeTab === "location" && (
           <div className="bg-white shadow-md rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-6">Location</h2>
+            <h2 className="text-xl font-semibold mb-6">الموقع</h2>
             <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden mb-6">
-              {/* Placeholder for map */}
               {<MapComponent location={salon.map} />}
             </div>
             <div className="flex flex-col md:flex-row justify-between">
               <div>
-                <h3 className="font-medium mb-2">Address</h3>
+                <h3 className="font-medium mb-2">العنوان</h3>
                 <p className="text-gray-700">{salon.location}</p>
                 <div className="mt-4">
-                  <h3 className="font-medium mb-2">Opening Hours</h3>
+                  <h3 className="font-medium mb-2">ساعات العمل</h3>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <p className="text-gray-700">Sunday - Saturday</p>
+                      <p className="text-gray-700">الأحد - السبت</p>
                     </div>
                     <div>
                       <p className="text-gray-700">
-                        {salon.openingHours.open || "9:00"}AM -{" "}
-                        {salon.openingHours.close || "8:00 PM"} PM
+                        {salon.openingHours.open || "9:00"} صباحاً -{" "}
+                        {salon.openingHours.close || "8:00 مساءً"}
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="mt-6 md:mt-0">
-                <h3 className="font-medium mb-2">Contact Information</h3>
+                <h3 className="font-medium mb-2">معلومات الاتصال</h3>
                 <div className="space-y-2">
                   <div className="flex items-center">
                     <Phone size={16} className="text-gray-700 mr-2" />
