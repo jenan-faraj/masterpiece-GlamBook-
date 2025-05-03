@@ -9,7 +9,7 @@ const Hero = () => {
       {/* الخلفية: الفيديو */}
       <video
         className="absolute top-0 left-0 w-full h-full object-cover"
-        src="../../public/Recording 2025-04-19 152930.mp4"
+        src="../../public/beauty-hero-section.mp4"
         autoPlay
         loop
         muted
@@ -17,12 +17,12 @@ const Hero = () => {
       />
 
       {/* محتوى الهيرو فوق الفيديو */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-white ">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 text-center">
-          مرحباً بك في GlamBook
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
+        <h1 className="text-4xl md:text-6xl font-bold mb-4 text-center text-outline">
+          مرحباً بك في بيوتي
         </h1>
-        <p className="text-lg md:text-2xl mb-6 text-center">
-          احجزي صالونك المفضل خلال ثوانٍ
+        <p className="text-lg md:text-2xl md:font-bold mb-6 text-center text-outline">
+          اختاري صالونك المفضل بسهولة و بسرعة
         </p>
         <Link
           to={"/categories"}
