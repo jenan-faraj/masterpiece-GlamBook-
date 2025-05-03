@@ -122,6 +122,26 @@ export default function SalonRegistrationForm() {
     window.location.href = "/";
   };
 
+  const isCurrentStepValid = () => {
+    if (currentStep === 1) {
+      return (
+        formData.name.trim() !== "" &&
+        formData.ownerName.trim() !== "" &&
+        formData.email.trim() !== "" &&
+        formData.password.trim() !== ""
+      );
+    } else if (currentStep === 2) {
+      return formData.phone.trim() !== "" && formData.location.trim() !== "";
+    } else if (currentStep === 3) {
+      return (
+        formData.salonOwnershipImages.length > 0 &&
+        formData.identityImages.length > 0
+      );
+    }
+
+    return false;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -293,7 +313,7 @@ export default function SalonRegistrationForm() {
                 required
                 value={formData.name}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--button-color)] focus:border-[var(--button-color)]"
+                className="w-full px-3 py-2 border border-[var(--button-color)] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--button-color)] focus:border-[var(--button-color)]"
                 placeholder="أدخل اسم الصالون"
               />
             </div>
@@ -313,7 +333,7 @@ export default function SalonRegistrationForm() {
                 required
                 value={formData.ownerName}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--button-color)] focus:border-[var(--button-color)]"
+                className="w-full px-3 py-2 border border-[var(--button-color)] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--button-color)] focus:border-[var(--button-color)]"
                 placeholder="أدخل الاسم الكامل للمالك"
               />
             </div>
@@ -333,7 +353,7 @@ export default function SalonRegistrationForm() {
                 required
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--button-color)] focus:border-[var(--button-color)]"
+                className="w-full px-3 py-2 border border-[var(--button-color)] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--button-color)] focus:border-[var(--button-color)]"
                 placeholder="example@email.com"
               />
             </div>
@@ -353,16 +373,20 @@ export default function SalonRegistrationForm() {
                 required
                 value={formData.password}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--button-color)] focus:border-[var(--button-color)]"
+                className="w-full px-3 py-2 border border-[var(--button-color)] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--button-color)] focus:border-[var(--button-color)]"
                 placeholder="أدخل كلمة مرور آمنة"
               />
             </div>
 
             <div className="pt-4">
               <button
-                type="button"
                 onClick={nextStep}
-                className="w-full py-2 px-4 bg-[var(--button-color)] text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--button-color)]"
+                disabled={!isCurrentStepValid()}
+                className={`w-full py-2 px-4 rounded-md font-semibold shadow-sm focus:outline-none focus:ring-2 ${
+                  isCurrentStepValid()
+                    ? "bg-[var(--button-color)] text-white hover:bg-opacity-90"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
               >
                 التالي
               </button>
@@ -390,7 +414,7 @@ export default function SalonRegistrationForm() {
                 required
                 value={formData.phone}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--button-color)] focus:border-[var(--button-color)]"
+                className="w-full px-3 py-2 border border-[var(--button-color)] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--button-color)] focus:border-[var(--button-color)]"
                 placeholder="أدخل رقم الهاتف"
               />
             </div>
@@ -410,7 +434,7 @@ export default function SalonRegistrationForm() {
                 required
                 value={formData.location}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--button-color)] focus:border-[var(--button-color)]"
+                className="w-full px-3 py-2 border border-[var(--button-color)] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--button-color)] focus:border-[var(--button-color)]"
                 placeholder="أدخل موقع الصالون"
               />
             </div>
@@ -419,7 +443,7 @@ export default function SalonRegistrationForm() {
               <button
                 type="button"
                 onClick={prevStep}
-                className="py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[var(--button-color)]"
+                className="py-2 px-4 border border-[var(--button-color)] rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[var(--button-color)]"
               >
                 السابق
               </button>
@@ -522,7 +546,7 @@ export default function SalonRegistrationForm() {
               <button
                 type="button"
                 onClick={prevStep}
-                className="py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[var(--button-color)]"
+                className="py-2 px-4 border border-[var(--button-color)] rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[var(--button-color)]"
               >
                 السابق
               </button>
