@@ -113,7 +113,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* الشعار */}
           <img
-            className=" h-18 object-cover"
+            className=" h-14 object-cover"
             src="../../public/بيـــــــــوتي.png"
             alt="بيوتي"
           />

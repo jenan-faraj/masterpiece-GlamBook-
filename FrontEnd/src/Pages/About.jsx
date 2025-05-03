@@ -21,69 +21,51 @@ export default function EnhancedAboutPage() {
   const [booking, setBooking] = useState([]);
   // Fetch data from Firebase using Axios
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/salons")
-      .then((response) => {
-        // Convert Firebase data to array (as it comes as an object)
-        const fetchedSalons = [];
-        for (let key in response.data) {
-          fetchedSalons.push({
+    const fetchData = async () => {
+      try {
+        const [salonsRes, usersRes, bookingsRes] = await Promise.all([
+          axios.get("http://localhost:3000/api/salons"),
+          axios.get("http://localhost:3000/api/users/all"),
+          axios.get("http://localhost:3000/api/bookings"),
+        ]);
+
+        // تحويل البيانات من object إلى array
+        const fetchedSalons = Object.entries(salonsRes.data).map(
+          ([key, value]) => ({
             id: key,
-            ...response.data[key],
-          });
-        }
+            ...value,
+          })
+        );
+
+        const fetchedUsers = Object.entries(usersRes.data).map(
+          ([key, value]) => ({
+            id: key,
+            ...value,
+          })
+        );
+
+        const fetchedBooking = Object.entries(bookingsRes.data).map(
+          ([key, value]) => ({
+            id: key,
+            ...value,
+          })
+        );
+
         console.log(fetchedSalons);
-        setSalons(fetchedSalons);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error);
-        setLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/users/all")
-      .then((response) => {
-        // Convert Firebase data to array (as it comes as an object)
-        const fetchedUsers = [];
-        for (let key in response.data) {
-          fetchedUsers.push({
-            id: key,
-            ...response.data[key],
-          });
-        }
         console.log(fetchedUsers);
-        setUsers(fetchedUsers);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error);
-        setLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/bookings")
-      .then((response) => {
-        // Convert Firebase data to array (as it comes as an object)
-        const fetchedBooking = [];
-        for (let key in response.data) {
-          fetchedBooking.push({
-            id: key,
-            ...response.data[key],
-          });
-        }
         console.log(fetchedBooking);
+
+        setSalons(fetchedSalons);
+        setUsers(fetchedUsers);
         setBooking(fetchedBooking);
-        setLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         setError(error);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -99,7 +81,7 @@ export default function EnhancedAboutPage() {
               dir="rtl"
               className="text-5xl md:text-6xl font-bold mb-4 text-white"
             >
-              حول <span style={{ color: "#B58152" }}>GlamBook</span>
+              حول <span style={{ color: "#B58152" }}>بيوتي</span>
             </h1>
             <div
               className="w-24 h-1 mx-auto my-6"
@@ -109,7 +91,7 @@ export default function EnhancedAboutPage() {
               الطريقة الذكية لحجز صالونات التجميل
             </p>
             <p className="text-lg max-w-2xl mx-auto text-white">
-              اكتشف أفضل تجارب الجمال والعافية في منطقتك بنقرات قليلة.
+              اكتشف أفضل تجارب الجمال والعناية في منطقتك بنقرات قليلة.
             </p>
           </div>
         </div>
@@ -130,7 +112,7 @@ export default function EnhancedAboutPage() {
               style={{ backgroundColor: "#a0714f" }}
             ></div>
             <p dir="rtl" className="text-lg mb-6" style={{ color: "#a0714f" }}>
-              GlamBook يحدث ثورة في طريقة اكتشافك وحجزك لخدمات التجميل. تربطك
+              بيوتي يحدث ثورة في طريقة اكتشافك وحجزك لخدمات التجميل. تربطك
               منصتنا المنسقة بأفضل الصالونات والمنتجعات، مقدمةً تجربة حجز سلسة
               تضع الجمال في متناول يديك.
             </p>
@@ -144,22 +126,8 @@ export default function EnhancedAboutPage() {
             <div className="relative flex">
               <div className="rounded-lg overflow-hidden shadow-xl">
                 <img
-                  src="https://i.pinimg.com/474x/61/be/fd/61befd88356e76dc848601cb47a555c1.jpg"
+                  src="../../public/بيـــــــــوتي.png"
                   alt="تجربة الصالون"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -bottom-6 -left-6 w-40 h-40 rounded-lg shadow-lg overflow-hidden">
-                <img
-                  src="https://i.pinimg.com/474x/0f/68/d7/0f68d7456cd87786ee9c3122ea993f12.jpg"
-                  alt="علاج تجميلي"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -top-6 -right-6 w-40 h-40 rounded-lg shadow-lg overflow-hidden">
-                <img
-                  src="https://i.pinimg.com/474x/31/f4/70/31f4708378280a6c9adfed5d13a9c379.jpg"
-                  alt="جلسة مكياج"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -183,7 +151,7 @@ export default function EnhancedAboutPage() {
               style={{ backgroundColor: "#a0714f" }}
             ></div>
             <p dir="rtl" className="text-lg" style={{ color: "#a0714f" }}>
-              في GlamBook، نؤمن بأن خدمات التجميل يجب أن تكون متاحة وشفافة
+              في بيوتي، نؤمن بأن خدمات التجميل يجب أن تكون متاحة وشفافة
               واستثنائية. نحن ملتزمون بإنشاء منصة يمكن للعملاء من خلالها العثور
               على وجهتهم المثالية للجمال، ويمكن للصالونات عرض مواهبهم الفريدة.
             </p>
@@ -276,7 +244,7 @@ export default function EnhancedAboutPage() {
             className="text-4xl font-bold mb-6"
             style={{ color: "#B58152" }}
           >
-            كيف يعمل GlamBook
+            كيف يعمل بيوتي
           </h2>
           <div
             className="w-24 h-1 mx-auto mb-8"
@@ -383,7 +351,7 @@ export default function EnhancedAboutPage() {
                 style={{ color: "#a0714f" }}
               >
                 انضم إلى شبكتنا المتنامية من محترفي التجميل وغيّر طريقة إدارتك
-                لعملك. يوفر GlamBook أدوات قوية لعرض خدماتك، وتبسيط الحجوزات،
+                لعملك. يوفر بيوتي أدوات قوية لعرض خدماتك، وتبسيط الحجوزات،
                 وزيادة قاعدة عملائك.
               </p>
 
@@ -489,7 +457,7 @@ export default function EnhancedAboutPage() {
         <div className="container mx-auto px-6 relative z-10">
           <div dir="rtl" className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-6 text-white">
-              مجتمع GlamBook
+              مجتمع بيوتي
             </h2>
             <div
               className="w-24 h-1 mx-auto mb-8"
@@ -562,7 +530,7 @@ export default function EnhancedAboutPage() {
                 style={{ backgroundColor: "#a0714f" }}
               ></div>
               <p className="text-lg mb-10" style={{ color: "#a0714f" }}>
-                لديك أسئلة حول GlamBook ؟ يسرنا الاستماع إليك! فريقنا مستعد
+                لديك أسئلة حول بيوتي ؟ يسرنا الاستماع إليك! فريقنا مستعد
                 لمساعدتك في البدء، سواء كنت عميلاً تريد الحجز أو صالوناً مهتماً
                 بالانضمام إلى منصتنا.
               </p>
