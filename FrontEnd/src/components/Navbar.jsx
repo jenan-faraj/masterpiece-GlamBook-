@@ -109,7 +109,7 @@ const Navbar = () => {
 
   return (
     <header className="w-full bg-[#F9F3F1] shadow-md">
-      <nav className="container lg:px-20 mx-auto px-4" dir="rtl">
+      <nav className="container xl:px-20 mx-auto px-4" dir="rtl">
         <div className="flex justify-between items-center h-16">
           {/* الشعار */}
           <img

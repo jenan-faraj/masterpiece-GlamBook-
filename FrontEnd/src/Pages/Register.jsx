@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-// Import SweetAlert2
-import Swal from 'sweetalert2';
+import { useNavigate, useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function Register() {
   const [username, setUsername] = useState("");
@@ -10,60 +9,67 @@ function Register() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/users/register",
-        {
-          username,
-          email,
-          password,
-        },
-        { withCredentials: true }
-      );
-      
-      // Show success message with Sweet Alert
-      Swal.fire({
-        title: "Success!",
-        text: "Registration successful! 🥳",
-        icon: "success",
-        confirmButtonText: "Continue",
-        confirmButtonColor: "#a0714f"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/");
-        }
-      });
-      
-    } catch (error) {
-      console.error("Error registering", error);
-      
-      // Show error message with Sweet Alert
-      setError(error.response?.data?.message || "Registration failed");
-      Swal.fire({
-        title: "Error!",
-        text: error.response?.data?.message || "Registration failed, please try again.",
-        icon: "error",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#a0714f"
-      });
+const handleRegister = async (e) => {
+  e.preventDefault();
+  try {
+    const response = await axios.post(
+      "http://localhost:3000/api/users/register",
+      {
+        username,
+        email,
+        password,
+      },
+      { withCredentials: true }
+    );
+
+    if (response.status === 201) {
+      navigate(-2, { replace: true });
+      location.reload(); // إذا بدك يتحدث تلقائياً بعد التسجيل
     }
-  };
+  } catch (error) {
+    console.error("Error registering", error);
+
+    // Show error message with Sweet Alert
+    setError(error.response?.data?.message || "فشل التسجيل");
+    Swal.fire({
+      title: "خطأ!",
+      text:
+        error.response?.data?.message || "فشل التسجيل، يرجى المحاولة مرة أخرى.",
+      icon: "error",
+      confirmButtonText: "حسناً",
+      confirmButtonColor: "#a0714f",
+    });
+  }
+};
+
 
   return (
-    <div className="min-h-screen bg-amber-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div
+      dir="rtl"
+      className="min-h-screen bg-amber-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+    >
       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-xl border border-amber-100">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-serif font-medium" style={{ color: '#B58152' }}>Welcome</h2>
-          <p className="mt-2" style={{ color: '#c4a484' }}>Create your account</p>
+          <h2
+            className="text-3xl font-serif font-medium"
+            style={{ color: "#B58152" }}
+          >
+            مرحباً بك
+          </h2>
+          <p className="mt-2" style={{ color: "#c4a484" }}>
+            أنشئ حسابك الجديد
+          </p>
         </div>
-        
+
         <form onSubmit={handleRegister} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium mb-1" style={{ color: '#c4a484' }}>
-              Username
+            <label
+              className="block text-sm font-medium mb-1"
+              style={{ color: "#c4a484" }}
+            >
+              اسم المستخدم
             </label>
             <input
               type="text"
@@ -71,13 +77,16 @@ function Register() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              placeholder="Enter your username"
+              placeholder="أدخل اسم المستخدم"
             />
           </div>
-          
+
           <div>
-            <label className="block text-sm font-medium mb-1" style={{ color: '#c4a484' }}>
-              Email
+            <label
+              className="block text-sm font-medium mb-1"
+              style={{ color: "#c4a484" }}
+            >
+              البريد الإلكتروني
             </label>
             <input
               type="email"
@@ -85,13 +94,16 @@ function Register() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="Enter your email"
+              placeholder="أدخل بريدك الإلكتروني"
             />
           </div>
-          
+
           <div>
-            <label className="block text-sm font-medium mb-1" style={{ color: '#c4a484' }}>
-              Password
+            <label
+              className="block text-sm font-medium mb-1"
+              style={{ color: "#c4a484" }}
+            >
+              كلمة المرور
             </label>
             <input
               type="password"
@@ -99,29 +111,36 @@ function Register() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="Create a password"
+              placeholder="أنشئ كلمة مرور"
             />
           </div>
-          
+
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
               {error}
             </div>
           )}
-          
+
           <div>
             <button
               type="submit"
               className="w-full py-3 px-4 rounded-md text-white font-medium shadow-md hover:opacity-90 transition duration-300"
-              style={{ backgroundColor: '#a0714f' }}
+              style={{ backgroundColor: "#a0714f" }}
             >
-              Create Account
+              إنشاء حساب
             </button>
           </div>
-          
+
           <div className="text-center mt-4">
-            <p className="text-sm" style={{ color: '#c4a484' }}>
-              Already have an account? <a href="/login" className="font-medium" style={{ color: '#B58152' }}>Sign in</a>
+            <p className="text-sm" style={{ color: "#c4a484" }}>
+              لديك حساب بالفعل؟{" "}
+              <a
+                href="/login"
+                className="font-medium"
+                style={{ color: "#B58152" }}
+              >
+                تسجيل الدخول
+              </a>
             </p>
           </div>
         </form>

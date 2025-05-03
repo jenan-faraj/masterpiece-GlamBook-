@@ -1,13 +1,12 @@
-"use client";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,32 +18,22 @@ export default function LoginForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // مهم عشان الكوكي تنحفظ بالمتصفح
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Login failed");
+        setError(data.message || "فشل تسجيل الدخول");
         return;
       }
 
-      Swal.fire({
-        title: "Success!",
-        text: "Login successful! 🥳",
-        icon: "success",
-        confirmButtonText: "Continue",
-        confirmButtonColor: "#a0714f",
-      }).then((result) => {
-        // سيتم تنفيذ هذه الكتلة فقط بعد أن يضغط المستخدم على زر التأكيد
-        if (result.isConfirmed && res.ok) {
-          navigate("/"); // Redirect to the home page or dashboard
-          location.reload();
-        }
-      });
+      // توجيه المستخدم للمكان اللي كان فيه
+      navigate(-1, { replace: true });
+      location.reload(); // إذا بدك يتحدث تلقائياً بعد تسجيل الدخول
     } catch (err) {
-      setError("Something went wrong, please try again later.");
+      setError("حدث خطأ ما، يرجى المحاولة لاحقاً.");
     }
   };
 
@@ -56,10 +45,10 @@ export default function LoginForm() {
             className="text-3xl font-serif font-medium"
             style={{ color: "#B58152" }}
           >
-            Welcome Back
+            أهلاً بعودتك
           </h2>
           <p className="mt-2" style={{ color: "#c4a484" }}>
-            Sign in to your salon account
+            سجّلي الدخول إلى حساب الصالون
           </p>
         </div>
 
@@ -69,7 +58,7 @@ export default function LoginForm() {
               className="block text-sm font-medium mb-1"
               style={{ color: "#c4a484" }}
             >
-              Email
+              البريد الإلكتروني
             </label>
             <input
               type="email"
@@ -77,7 +66,7 @@ export default function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="Enter your email"
+              placeholder="أدخلي بريدك الإلكتروني"
             />
           </div>
 
@@ -86,7 +75,7 @@ export default function LoginForm() {
               className="block text-sm font-medium mb-1"
               style={{ color: "#c4a484" }}
             >
-              Password
+              كلمة المرور
             </label>
             <input
               type="password"
@@ -94,7 +83,7 @@ export default function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="Enter your password"
+              placeholder="أدخلي كلمة المرور"
             />
           </div>
 
@@ -110,19 +99,19 @@ export default function LoginForm() {
               className="w-full py-3 px-4 rounded-md text-white font-medium shadow-md hover:opacity-90 transition duration-300"
               style={{ backgroundColor: "#a0714f" }}
             >
-              Sign In
+              تسجيل الدخول
             </button>
           </div>
 
           <div className="text-center mt-4">
             <p className="text-sm" style={{ color: "#c4a484" }}>
-              Don't have an account?{" "}
+              ما عندِك حساب؟{" "}
               <a
                 href="/register"
                 className="font-medium"
                 style={{ color: "#B58152" }}
               >
-                Create account
+                أنشئي حساب جديد
               </a>
             </p>
             <a
@@ -130,7 +119,7 @@ export default function LoginForm() {
               className="block mt-2 text-sm font-medium"
               style={{ color: "#B58152" }}
             >
-              Forgot your password?
+              نسيتي كلمة المرور؟
             </a>
           </div>
         </form>
