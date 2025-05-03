@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   Facebook,
   Instagram,
@@ -18,13 +19,15 @@ export default function Footer() {
   return (
     <footer dir="rtl" className="bg-stone-900 text-stone-200">
       {/* القسم الرئيسي للمعلومات */}
-      <div className="container lg:px-20 mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-12 lg:px-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* قسم عن الموقع */}
           <div>
-            <h3 className="text-xl font-bold mb-4" style={{ color: logoColor }}>
-              GlamBook
-            </h3>
+            <div className="h-16 mb-4">
+              <h2 className="text-2xl font-bold" style={{ color: logoColor }}>
+                بيــــــوتي
+              </h2>
+            </div>
             <p className="mb-6" style={{ color: textColor }}>
               نقدم أفضل خدمات العناية بالجمال والشعر مع خبراء متخصصين وأحدث
               التقنيات لنضمن لكِ تجربة فريدة ومميزة.
@@ -37,24 +40,28 @@ export default function Footer() {
               روابط سريعة
             </h3>
             <ul className="space-y-3">
-              {["الرئيسية", "الصالونات", "اضم إلينا", "اتصل بنا", "من نحن"].map(
-                (item) => (
-                  <li key={item}>
-                    <a
-                      href="#"
-                      className="hover:pr-2 transition-all duration-300 flex items-center"
-                      style={{ color: textColor }}
-                    >
-                      <ChevronRight
-                        size={16}
-                        className="ml-1"
-                        style={{ color: buttonColor }}
-                      />
-                      {item}
-                    </a>
-                  </li>
-                )
-              )}
+              {[
+                { name: "الرئيسية", path: "/" },
+                { name: "الصالونات", path: "/categories" },
+                { name: "اضم إلينا", path: "/RegisterSalon" },
+                { name: "اتصل بنا", path: "/ContactUs" },
+                { name: "من نحن", path: "/aboutUs" },
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link
+                    to={item.path}
+                    className="hover:pr-2 transition-all duration-300 flex items-center"
+                    style={{ color: textColor }}
+                  >
+                    <ChevronRight
+                      size={16}
+                      className="ml-1"
+                      style={{ color: buttonColor }}
+                    />
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -65,51 +72,75 @@ export default function Footer() {
             </h3>
             <ul className="space-y-4">
               <li
-                className="flex items-start space-x-3 rtl:space-x-reverse"
+                className="flex items-start rtl:space-x-reverse"
                 style={{ color: textColor }}
               >
                 <MapPin
                   size={20}
                   style={{ color: buttonColor }}
-                  className="mt-1 shrink-0"
+                  className="mt-1 ml-2 shrink-0"
                 />
-                <span>
+                <a
+                  href="https://maps.google.com/?q=الأردن,+عمان،+شارع+الملكة+رانيا+العبدالله"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: textColor }}
+                  className="hover:underline"
+                >
                   الأردن, عمان، شارع الملكة رانيا العبدالله، مبنى رقم 123
-                </span>
+                </a>
               </li>
               <li
-                className="flex items-center space-x-3 rtl:space-x-reverse"
+                className="flex items-center rtl:space-x-reverse"
                 style={{ color: textColor }}
               >
                 <Phone
                   size={20}
                   style={{ color: buttonColor }}
-                  className="shrink-0"
+                  className="shrink-0 ml-2"
                 />
-                <span>+962 780 798 572</span>
+                <a
+                  href="tel:+962780798572"
+                  style={{ color: textColor }}
+                  className="hover:underline"
+                >
+                  +962 780 798 572
+                </a>
               </li>
               <li
-                className="flex items-center space-x-3 rtl:space-x-reverse"
+                className="flex items-center rtl:space-x-reverse"
                 style={{ color: textColor }}
               >
                 <Mail
                   size={20}
                   style={{ color: buttonColor }}
-                  className="shrink-0"
+                  className="shrink-0 ml-2"
                 />
-                <span>jenan.faraj4@gmail.com</span>
+                <a
+                  href="mailto:jenan.faraj4@gmail.com"
+                  style={{ color: textColor }}
+                  className="hover:underline"
+                >
+                  jenan.faraj4@gmail.com
+                </a>
               </li>
             </ul>
           </div>
         </div>
 
         {/* وسائل التواصل الاجتماعي */}
-        <div className="flex justify-center space-x-6 rtl:space-x-reverse mt-10 pt-6 border-t border-stone-700">
-          {[Facebook, Instagram, Twitter].map((Icon, index) => (
+        <div className="flex justify-center mt-10 pt-6 border-t border-stone-700">
+          {[
+            { Icon: Facebook, url: "https://facebook.com" },
+            { Icon: Instagram, url: "https://instagram.com" },
+            { Icon: Twitter, url: "https://twitter.com" },
+          ].map(({ Icon, url }, index) => (
             <a
               key={index}
-              href="#"
-              className="bg-stone-800 p-3 rounded-full hover:bg-opacity-80 transition-all duration-300"
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-full hover:bg-opacity-80 transition-all duration-300 mx-2"
               style={{ backgroundColor: buttonColor }}
             >
               <Icon size={20} color="white" />
