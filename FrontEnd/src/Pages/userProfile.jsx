@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import { Camera, Star } from "lucide-react";
-import { toast } from "react-toastify"; // للتوست
+import { toast } from "react-toastify";
 
 const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -19,11 +19,9 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [expandedReviews, setExpandedReviews] = useState({});
-  // حالات التصفية
-  const [dateFilter, setDateFilter] = useState("all"); // "all", "upcoming", "past"
-  const [statusFilter, setStatusFilter] = useState("all"); // "all", "active", "canceled", "completed"
+  const [dateFilter, setDateFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
 
-  // تنسيق التاريخ بشكل أكثر قابلية للقراءة
   const formatDate = (dateString) => {
     const options = {
       weekday: "long",
@@ -34,16 +32,13 @@ const UserProfile = () => {
     return new Date(dateString).toLocaleDateString("ar-SA", options);
   };
 
-  // تصفية الحجوزات بناءً على الفلاتر المحددة
   const filteredBookings = user.book?.filter((booking) => {
-    // فلتر التاريخ
     const bookingDate = new Date(booking.date);
     const today = new Date();
 
     if (dateFilter === "upcoming" && bookingDate < today) return false;
     if (dateFilter === "past" && bookingDate >= today) return false;
 
-    // فلتر الحالة
     if (
       statusFilter === "active" &&
       (booking.isCompleted || booking.isCanceled)
@@ -54,9 +49,6 @@ const UserProfile = () => {
 
     return true;
   });
-
-  // افتراض أن بيانات المراجعة تحتوي على معلومات الصالون
-  // في حالة عدم وجود بيانات الصالون في user.reviews، يجب جلبها من الخادم
 
   const toggleReviewExpansion = (reviewId) => {
     setExpandedReviews((prev) => ({
@@ -89,7 +81,7 @@ const UserProfile = () => {
       setUser(response.data);
       setLoading(false);
     } catch (err) {
-      setError("Failed to fetch user data");
+      setError("فشل في جلب بيانات المستخدم");
       setLoading(false);
     }
   };
@@ -98,7 +90,18 @@ const UserProfile = () => {
   }, []);
 
   const handleCancelBooking = async (bookingId) => {
-    if (window.confirm("Are you sure you want to cancel this booking?")) {
+    const result = await Swal.fire({
+      title: "هل أنت متأكد؟",
+      text: "هل تريد حقاً إلغاء هذا الحجز؟",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#a0714f",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "نعم، ألغِ الحجز",
+      cancelButtonText: "تراجع",
+    });
+
+    if (result.isConfirmed) {
       try {
         setLoading(true);
         setError(null);
@@ -108,15 +111,16 @@ const UserProfile = () => {
         );
 
         if (response.data.success) {
-          // Option 3: Reload data
           fetchUserData();
-
-          // Show success message
-          alert(response.data.message);
+          await Swal.fire("تم الإلغاء!", response.data.message, "success");
         }
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to cancel booking");
-        alert(err.response?.data?.message || "Failed to cancel booking");
+        setError(err.response?.data?.message || "فشل في إلغاء الحجز");
+        await Swal.fire(
+          "خطأ!",
+          err.response?.data?.message || "فشل في إلغاء الحجز",
+          "error"
+        );
       } finally {
         setLoading(false);
       }
@@ -124,21 +128,27 @@ const UserProfile = () => {
   };
 
   const handleDeleteReview = async (reviewId) => {
-    if (window.confirm("هل أنت متأكد من رغبتك في حذف هذا التعليق؟")) {
+    const result = await Swal.fire({
+      title: "هل أنت متأكد؟",
+      text: "هل تريد حقاً حذف هذا التعليق؟",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#a0714f",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "نعم، احذفه",
+      cancelButtonText: "تراجع",
+    });
+
+    if (result.isConfirmed) {
       try {
         await axios.delete(`http://localhost:3000/api/reviews/${reviewId}`);
-        toast.success("تم حذف التعليق بنجاح");
+        await Swal.fire("تم الحذف!", "تم حذف التعليق بنجاح", "success");
         fetchUserData();
       } catch (err) {
         console.error("Error deleting review:", err);
-        toast.error("فشل في حذف التعليق");
+        await Swal.fire("خطأ!", "فشل في حذف التعليق", "error");
       }
     }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -162,18 +172,27 @@ const UserProfile = () => {
         username: user.username,
         email: user.email,
       }));
-      setIsEditing(false);
+      await Swal.fire("تم التحديث!", "تم تحديث الملف الشخصي بنجاح", "success");
     } catch (err) {
       console.error("Update error details:", err);
-      setError(err.response?.data?.message || "Failed to update profile");
+      setError(err.response?.data?.message || "فشل في تحديث الملف الشخصي");
+      await Swal.fire(
+        "خطأ!",
+        err.response?.data?.message || "فشل في تحديث الملف الشخصي",
+        "error"
+      );
     }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUser({ ...user, [name]: value });
   };
 
   const handleImageUpload = async (event, fieldName) => {
     const file = event.target.files[0];
 
     if (file && user._id) {
-      // تأكد من وجود user._id
       setUploading(true);
 
       try {
@@ -191,14 +210,12 @@ const UserProfile = () => {
         );
 
         if (response.data?.url) {
-          // Update user in database
           await axios.put(
             `http://localhost:3000/api/users/me/${user._id}`,
             { [fieldName]: response.data.url },
             { withCredentials: true }
           );
 
-          // Update local state
           setUser((prev) => ({
             ...prev,
             [fieldName]: response.data.url,
@@ -222,15 +239,17 @@ const UserProfile = () => {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-2xl">Loading...</p>
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-2xl">جاري التحميل...</p>
       </div>
     );
 
   if (error)
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-2xl text-red-500">Error fetching salon details.</p>
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-2xl text-red-500">
+          حدث خطأ أثناء جلب بيانات المستخدم.
+        </p>
       </div>
     );
 
@@ -262,15 +281,12 @@ const UserProfile = () => {
             {user.username}
           </h2>
           <p className="text-gray-600 mb-1">{user.email}</p>
-          <p className="text-gray-500 text-sm mb-6">
-            Account type: {user.role}
-          </p>
 
           <button
             className="bg-[#a0714f] hover:bg-[#8a5936] text-white font-medium py-2 px-6 rounded-lg transition-all duration-300 shadow hover:shadow-md"
             onClick={() => setIsEditing(true)}
           >
-            Edit Profile
+            تعديل الملف الشخصي
           </button>
 
           <div className="flex justify-center gap-8 mt-8 w-full max-w-md">
@@ -278,26 +294,26 @@ const UserProfile = () => {
               <span className="text-2xl font-bold text-[#a0714f]">
                 {user.favoriteList?.length || 0}
               </span>
-              <span className="text-sm text-gray-600">Favorites</span>
+              <span className="text-sm text-gray-600">المفضلة</span>
             </div>
             <div className="flex flex-col items-center bg-gray-50 p-4 rounded-lg w-full">
               <span className="text-2xl font-bold text-[#a0714f]">
                 {reviews?.length || 0}
               </span>
-              <span className="text-sm text-gray-600">Reviews</span>
+              <span className="text-sm text-gray-600">التعليقات</span>
             </div>
             <div className="flex flex-col items-center bg-gray-50 p-4 rounded-lg w-full">
               <span className="text-2xl font-bold text-[#a0714f]">
                 {user.book?.length || 0}
               </span>
-              <span className="text-sm text-gray-600">Bookings</span>
+              <span className="text-sm text-gray-600">الحجوزات</span>
             </div>
           </div>
         </div>
       ) : (
         <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-md">
           <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-            Edit Profile
+            تعديل الملف الشخصي
           </h2>
 
           {error && (
@@ -312,7 +328,7 @@ const UserProfile = () => {
                 className="block text-gray-700 text-sm font-medium mb-2"
                 htmlFor="username"
               >
-                Username
+                اسم المستخدم
               </label>
               <input
                 type="text"
@@ -330,7 +346,7 @@ const UserProfile = () => {
                 className="block text-gray-700 text-sm font-medium mb-2"
                 htmlFor="email"
               >
-                Email
+                البريد الإلكتروني
               </label>
               <input
                 type="email"
@@ -349,13 +365,13 @@ const UserProfile = () => {
                 onClick={() => setIsEditing(false)}
                 className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-all duration-300"
               >
-                Cancel
+                إلغاء
               </button>
               <button
                 type="submit"
                 className="flex-1 bg-[#a0714f] hover:bg-[#8a5936] text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 shadow hover:shadow-md"
               >
-                Save Changes
+                حفظ التغييرات
               </button>
             </div>
           </form>
@@ -365,7 +381,6 @@ const UserProfile = () => {
   );
 
   const renderBookingsTab = () => {
-    // Format date to a more readable format
     const formatDate = (dateString) => {
       const options = {
         weekday: "long",
@@ -373,28 +388,34 @@ const UserProfile = () => {
         month: "long",
         day: "numeric",
       };
-      return new Date(dateString).toLocaleDateString(undefined, options);
+      return new Date(dateString).toLocaleDateString("ar-SA", options);
     };
 
     return (
-        <div className="py-8 px-4" dir="rtl">
+      <div className="py-8 px-4" dir="rtl">
         <h2 className="text-2xl font-bold mb-6 text-center text-amber-800">
           حجوزاتك
         </h2>
-  
+
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md">
             {error}
           </div>
         )}
-  
-        {/* أدوات التصفية */}
+
         <div className="max-w-2xl mx-auto mb-6 bg-amber-50 rounded-lg p-4 border border-amber-100">
-          <h3 className="text-amber-800 font-semibold mb-3 text-center">تصفية الحجوزات</h3>
-          
+          <h3 className="text-amber-800 font-semibold mb-3 text-center">
+            تصفية الحجوزات
+          </h3>
+
           <div className="flex flex-wrap gap-4 justify-center">
             <div className="flex flex-col sm:flex-row gap-2 items-center">
-              <label htmlFor="dateFilter" className="text-sm font-medium text-amber-800">التاريخ:</label>
+              <label
+                htmlFor="dateFilter"
+                className="text-sm font-medium text-amber-800"
+              >
+                التاريخ:
+              </label>
               <select
                 id="dateFilter"
                 value={dateFilter}
@@ -406,9 +427,14 @@ const UserProfile = () => {
                 <option value="past">المواعيد السابقة</option>
               </select>
             </div>
-            
+
             <div className="flex flex-col sm:flex-row gap-2 items-center">
-              <label htmlFor="statusFilter" className="text-sm font-medium text-amber-800">الحالة:</label>
+              <label
+                htmlFor="statusFilter"
+                className="text-sm font-medium text-amber-800"
+              >
+                الحالة:
+              </label>
               <select
                 id="statusFilter"
                 value={statusFilter}
@@ -421,21 +447,35 @@ const UserProfile = () => {
                 <option value="canceled">ملغي</option>
               </select>
             </div>
-            
+
             {(dateFilter !== "all" || statusFilter !== "all") && (
-              <button 
-                onClick={() => {setDateFilter("all"); setStatusFilter("all");}} 
+              <button
+                onClick={() => {
+                  setDateFilter("all");
+                  setStatusFilter("all");
+                }}
                 className="text-sm px-4 py-2 rounded-md bg-white border border-amber-300 text-amber-800 hover:bg-amber-100 transition-colors flex items-center"
               >
-                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                <svg
+                  className="w-4 h-4 ml-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  ></path>
                 </svg>
                 إزالة الفلاتر
               </button>
             )}
           </div>
         </div>
-  
+
         {user.book?.length ? (
           <div className="space-y-5 max-w-2xl mx-auto">
             {filteredBookings.length > 0 ? (
@@ -486,7 +526,7 @@ const UserProfile = () => {
                         </p>
                       </div>
                     </div>
-  
+
                     <div>
                       {booking.isCompleted && (
                         <span className="bg-green-50 text-green-700 text-xs font-medium px-3 py-1 rounded-full border border-green-200">
@@ -505,7 +545,7 @@ const UserProfile = () => {
                       )}
                     </div>
                   </div>
-  
+
                   {!booking.isCompleted && !booking.isCanceled && (
                     <div className="flex justify-start mt-4 space-x-reverse space-x-3">
                       <button className="text-sm px-4 py-2 rounded-full flex items-center bg-amber-100 text-amber-800 hover:bg-amber-200 transition-colors">
@@ -573,11 +613,30 @@ const UserProfile = () => {
               ))
             ) : (
               <div className="text-center py-8 bg-white rounded-lg border border-amber-200 shadow-md">
-                <svg className="w-12 h-12 mx-auto text-amber-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                <svg
+                  className="w-12 h-12 mx-auto text-amber-300 mb-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
                 </svg>
-                <p className="text-gray-600 mb-3">لا توجد حجوزات تطابق عوامل التصفية المحددة.</p>
-                <button onClick={() => {setDateFilter("all"); setStatusFilter("all");}} className="bg-amber-700 hover:bg-amber-800 text-white px-6 py-2 rounded-md transition-colors">
+                <p className="text-gray-600 mb-3">
+                  لا توجد حجوزات تطابق عوامل التصفية المحددة.
+                </p>
+                <button
+                  onClick={() => {
+                    setDateFilter("all");
+                    setStatusFilter("all");
+                  }}
+                  className="bg-amber-700 hover:bg-amber-800 text-white px-6 py-2 rounded-md transition-colors"
+                >
                   عرض جميع الحجوزات
                 </button>
               </div>
@@ -585,8 +644,19 @@ const UserProfile = () => {
           </div>
         ) : (
           <div className="text-center py-8 bg-white rounded-lg border border-amber-200 shadow-md">
-            <svg className="w-12 h-12 mx-auto text-amber-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            <svg
+              className="w-12 h-12 mx-auto text-amber-300 mb-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              ></path>
             </svg>
             <p className="text-gray-600 mb-3">ليس لديك أي حجوزات بعد.</p>
             <button className="bg-amber-700 hover:bg-amber-800 text-white px-6 py-2 rounded-md transition-colors">
@@ -668,73 +738,71 @@ const UserProfile = () => {
   };
 
   const renderFavoritesTab = () => (
-    <div className="text-center py-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-2">Your Favorites</h2>
+    <div className="text-center py-6 min-h-[300px]">
+      <h2 className="text-2xl font-bold text-gray-800 mb-2">قائمتك المفضلة</h2>
       {user.favoriteList?.length ? (
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           {user.favoriteList.map((fav, index) => (
             <li
               key={index}
-              className="bg-gray-100 p-4 rounded-lg shadow-md text-left"
+              className="bg-gray-100 p-4 rounded-lg shadow-md text-right"
             >
               {typeof fav === "string" ? fav : JSON.stringify(fav)}
             </li>
           ))}
         </ul>
       ) : (
-        <p className="text-gray-600">You have no favorite items yet.</p>
+        <p className="text-gray-600">لا توجد عناصر في قائمتك المفضلة بعد.</p>
       )}
     </div>
   );
 
-  if (loading) return <div className="text-center py-10">Loading...</div>;
-
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="flex justify-center mb-6">
+    <div className="max-w-4xl mx-auto px-4 py-8 min-h-screen">
+      <div dir="rtl" className="flex justify-center mb-6">
         <button
           onClick={() => setActiveTab("profile")}
-          className={`px-6 py-2 rounded-l-full ${
+          className={`px-6 py-2 rounded-r-full hover:cursor-pointer ${
             activeTab === "profile"
               ? "bg-[#a0714f] text-white"
-              : "bg-gray-200 text-gray-700"
+              : "bg-gray-200 hover:bg-[#eaceb6] text-gray-700"
           }`}
         >
-          Profile
+          الملف الشخصي
         </button>
         <button
           onClick={() => setActiveTab("bookings")}
-          className={`px-6 py-2 ${
+          className={`px-6 py-2 hover:cursor-pointer ${
             activeTab === "bookings"
               ? "bg-[#a0714f] text-white"
-              : "bg-gray-200 text-gray-700"
+              : "bg-gray-200 hover:bg-[#eaceb6] text-gray-700"
           }`}
         >
-          Bookings
+          الحجوزات
         </button>
         <button
           onClick={() => setActiveTab("reviews")}
-          className={`px-6 py-2 ${
+          className={`px-6 py-2 hover:cursor-pointer ${
             activeTab === "reviews"
               ? "bg-[#a0714f] text-white"
-              : "bg-gray-200 text-gray-700"
+              : "bg-gray-200 hover:bg-[#eaceb6] text-gray-700"
           }`}
         >
-          Reviews
+          التقييمات
         </button>
         <button
           onClick={() => setActiveTab("favorites")}
-          className={`px-6 py-2 rounded-r-full ${
+          className={`px-6 py-2 rounded-l-full hover:cursor-pointer ${
             activeTab === "favorites"
               ? "bg-[#a0714f] text-white"
-              : "bg-gray-200 text-gray-700"
+              : "bg-gray-200 hover:bg-[#eaceb6] text-gray-700"
           }`}
         >
-          Favorites
+          المفضلة
         </button>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="bg-white p-6 rounded-lg shadow-md min-h-[500px]">
         {activeTab === "profile" && renderProfileTab()}
         {activeTab === "bookings" && renderBookingsTab()}
         {activeTab === "reviews" && renderReviewsTab()}
