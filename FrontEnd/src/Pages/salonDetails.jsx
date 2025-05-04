@@ -86,12 +86,6 @@ function SalonDetails() {
         "Error fetching profile:",
         error.response?.data || error.message
       );
-      Swal.fire({
-        title: "خطأ!",
-        text: "حدث خطأ أثناء جلب ملف المستخدم الشخصي",
-        icon: "error",
-        confirmButtonText: "حسناً",
-      });
       return null;
     }
   };

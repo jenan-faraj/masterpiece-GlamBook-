@@ -23,10 +23,10 @@ export default function SalonInfo({ salon }) {
     saturday: "السبت",
     sunday: "الأحد",
   };
-  
+
   return (
-    <>
-      {/* Title and Buttons Section */}
+    <div dir="rtl">
+      {/* قسم العنوان والأزرار */}
       <div className="mt-24 flex flex-col md:flex-row justify-between items-start md:items-center px-6 md:px-10 mb-8">
         <div>
           <div className="flex items-center">
@@ -35,18 +35,18 @@ export default function SalonInfo({ salon }) {
             </h1>
           </div>
           <div className="flex items-center mt-2">
-            <MapPin size={18} className="text-gray-500 mr-1" />
+            <MapPin size={18} className="text-gray-500 ml-1" />
             <span className="text-gray-600">{salon.location}</span>
 
-            <div className="flex items-center ml-4">
+            <div className="flex items-center mr-4">
               <Star
                 size={18}
-                className="text-yellow-500 mr-1"
+                className="text-yellow-500 ml-1"
                 fill="currentColor"
               />
               <span className="font-medium">{salon.rating}</span>
-              <span className="text-gray-500 ml-1">
-                ({salon.visitors} visitors)
+              <span className="text-gray-500 mr-1">
+                ({salon.visitors} زائر)
               </span>
             </div>
           </div>
@@ -54,35 +54,35 @@ export default function SalonInfo({ salon }) {
         <div className="space-x-4 mt-4 md:mt-0">
           <Link to={`/book/${salon._id}`}>
             <button className="bg-[var(--Logo-color)] text-white px-6 py-2 rounded-md hover:bg-[var(--button-color)] transition">
-              Book Now
+              احجز الآن
             </button>
           </Link>
         </div>
       </div>
 
-      {/* Salon Info Summary */}
+      {/* ملخص معلومات الصالون */}
       <div className="bg-white shadow-md rounded-lg mx-6 md:mx-10 p-6 mb-8">
         <div className="flex flex-col md:flex-row justify-between">
           <div className="md:w-2/3 mb-6 md:mb-0">
-            <h2 className="text-xl font-semibold mb-4">About {salon.name}</h2>
+            <h2 className="text-xl font-semibold mb-4">عن {salon.name}</h2>
             <p className="text-gray-700">{salon.longDescription}</p>
 
             <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Phone */}
+              {/* الهاتف */}
               <div className="flex items-center">
-                <Phone size={20} className="text-[var(--Logo-color)] mr-2" />
-                <span>{salon.phone}</span>
+                <Phone size={20} className="text-[var(--Logo-color)] ml-2" />
+                <span dir="ltr">{salon.phone}</span>
               </div>
 
-              {/* Email */}
+              {/* البريد الإلكتروني */}
               <div className="flex items-center">
-                <Mail size={20} className="text-[var(--Logo-color)] mr-2" />
+                <Mail size={20} className="text-[var(--Logo-color)] ml-2" />
                 <span>{salon.email}</span>
               </div>
 
               {/* سنة الافتتاح */}
               <div className="flex items-center">
-                <Award size={20} className="text-[var(--Logo-color)] mr-2" />
+                <Award size={20} className="text-[var(--Logo-color)] ml-2" />
                 <span className="capitalize">
                   تم الافتتاح عام {salon.openingYear}
                 </span>
@@ -138,32 +138,36 @@ export default function SalonInfo({ salon }) {
             </div>
           </div>
 
-          <div className="md:w-1/3 border-t md:border-t-0 md:border-l border-gray-200 pt-4 md:pt-0 md:pl-6">
-            <h3 className="text-lg font-medium mb-3">Salon Stats</h3>
+          <div className="md:w-1/3 border-t md:border-t-0 md:border-r border-gray-200 pt-4 md:pt-0 md:pr-6">
+            <h3 className="text-lg font-medium mb-3">إحصائيات الصالون</h3>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-600">Visitors</span>
+                <span className="text-gray-600">الزوار</span>
                 <span className="font-medium">{salon.visitors}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Services</span>
+                <span className="text-gray-600">الخدمات</span>
                 <span className="font-medium">
-                  {salon.services?.length || 0}
+                  {salon.services?.filter((service) => !service.isDeleted)
+                    .length || 0}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Special Offers</span>
-                <span className="font-medium">{salon.offers.length || 0}</span>
+                <span className="text-gray-600">العروض الخاصة</span>
+                <span className="font-medium">
+                  {salon.offers?.filter((offer) => !offer.isDeleted).length ||
+                    0}
+                </span>
               </div>
               {/* اسم المالك */}
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">Owner</span>
+                <span className="text-gray-600">المالك</span>
                 <span className="capitalize">{salon.ownerName}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

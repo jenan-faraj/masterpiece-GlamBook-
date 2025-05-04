@@ -466,7 +466,7 @@ export default function SalonRegistrationForm() {
             {/* Image Uploads */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1 text-right">
-                صور إثبات ملكية الصالون <span className="text-red-500">*</span>
+                صور إثبات مزاولة المهنة<span className="text-red-500">*</span>
               </label>
               <input
                 type="file"
