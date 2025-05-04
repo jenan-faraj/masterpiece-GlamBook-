@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ServicePopup from "../components/ServicesPopup";
 import { Trash2 } from "lucide-react";
+import Swal from "sweetalert2"; // إضافة مكتبة SweetAlert2
 
 const ServicesTab = ({ user, salon }) => {
   const [showModal, setShowModal] = useState(false);
@@ -92,7 +93,16 @@ const ServicesTab = ({ user, salon }) => {
         `http://localhost:3000/api/salons/${salon._id}`,
         { services: updatedServices }
       );
-      alert("Service added!");
+
+      // تغيير التنبيه إلى SweetAlert بالعربية
+      Swal.fire({
+        title: "تم بنجاح!",
+        text: "تمت إضافة الخدمة بنجاح",
+        icon: "success",
+        confirmButtonText: "حسناً",
+        confirmButtonColor: "#825c41",
+      });
+
       setShowModal(false);
       setService({
         title: "",
@@ -107,6 +117,14 @@ const ServicesTab = ({ user, salon }) => {
       setServices(updatedServices); // Update the state with the new services list
     } catch (error) {
       console.error("Error adding service:", error);
+      // تنبيه فشل العملية
+      Swal.fire({
+        title: "خطأ!",
+        text: "حدث خطأ أثناء إضافة الخدمة",
+        icon: "error",
+        confirmButtonText: "حسناً",
+        confirmButtonColor: "#825c41",
+      });
     } finally {
       setUploading(false);
     }
@@ -118,45 +136,107 @@ const ServicesTab = ({ user, salon }) => {
   };
 
   const handleDeleteService = async (serviceId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/salons/${salon._id}/services/${serviceId}/delete`,
-        {
-          method: "PATCH",
-        }
-      );
+    // استخدام SweetAlert للتأكيد قبل الحذف
+    Swal.fire({
+      title: "هل أنت متأكد؟",
+      text: "لن تتمكن من استرجاع هذه الخدمة!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#825c41",
+      confirmButtonText: "نعم، قم بالحذف!",
+      cancelButtonText: "إلغاء",
+      // تعديل الاتجاه ليناسب اللغة العربية
+      customClass: {
+        popup: "swal-rtl",
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(
+            `http://localhost:3000/api/salons/${salon._id}/services/${serviceId}/delete`,
+            {
+              method: "PATCH",
+            }
+          );
 
-      if (response.ok) {
-        // Update the services state by filtering out the deleted service
-        setServices(services.filter((service) => service._id !== serviceId));
+          if (response.ok) {
+            // Update the services state by filtering out the deleted service
+            setServices(
+              services.filter((service) => service._id !== serviceId)
+            );
+
+            // رسالة نجاح الحذف
+            Swal.fire({
+              title: "تم الحذف!",
+              text: "تم حذف الخدمة بنجاح",
+              icon: "success",
+              confirmButtonText: "حسناً",
+              confirmButtonColor: "#825c41",
+              customClass: {
+                popup: "swal-rtl",
+              },
+            });
+          }
+        } catch (error) {
+          console.error("Error deleting service:", error);
+          // رسالة خطأ
+          Swal.fire({
+            title: "خطأ!",
+            text: "حدث خطأ أثناء حذف الخدمة",
+            icon: "error",
+            confirmButtonText: "حسناً",
+            confirmButtonColor: "#825c41",
+            customClass: {
+              popup: "swal-rtl",
+            },
+          });
+        }
       }
-    } catch (error) {
-      console.error("Error deleting service:", error);
-    }
+    });
   };
 
   const closePopup = () => {
     setIsPopupOpen(false);
   };
 
+  // إضافة CSS لتحديد اتجاه SweetAlert للعربية
+  useEffect(() => {
+    // إضافة أنماط للـ SweetAlert باللغة العربية
+    const style = document.createElement("style");
+    style.innerHTML = `
+      .swal-rtl {
+        direction: rtl;
+        text-align: right;
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   return (
-    <div>
+    <div dir="rtl">
+      {" "}
+      {/* تغيير اتجاه الصفحة للعربية */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-y-auto">
           <div className="bg-white p-6 rounded-md w-full max-w-lg my-8">
-            <h2 className="text-lg font-semibold mb-4">Add New Service</h2>
+            <h2 className="text-lg font-semibold mb-4">إضافة خدمة جديدة</h2>
             <form onSubmit={handleSubmit} className="space-y-3">
               <input
                 type="text"
                 name="title"
-                placeholder="Title"
+                placeholder="عنوان الخدمة"
                 className="w-full p-2 border rounded"
                 onChange={handleChange}
                 required
               />
               <div className="border rounded p-3">
                 <label className="block text-sm font-medium mb-2">
-                  Service Images
+                  صور الخدمة
                 </label>
                 <input
                   type="file"
@@ -171,7 +251,7 @@ const ServicesTab = ({ user, salon }) => {
                       <div key={index} className="relative">
                         <img
                           src={src}
-                          alt={`Preview ${index}`}
+                          alt={`معاينة ${index}`}
                           className="w-full h-24 object-cover rounded"
                         />
                         <button
@@ -190,7 +270,7 @@ const ServicesTab = ({ user, salon }) => {
               <input
                 type="text"
                 name="category"
-                placeholder="Category"
+                placeholder="الفئة"
                 className="w-full p-2 border rounded"
                 onChange={handleChange}
                 required
@@ -198,21 +278,21 @@ const ServicesTab = ({ user, salon }) => {
               <input
                 type="text"
                 name="duration"
-                placeholder="Duration"
+                placeholder="المدة"
                 className="w-full p-2 border rounded"
                 onChange={handleChange}
                 required
               />
               <textarea
                 name="shortDescription"
-                placeholder="Short Description"
+                placeholder="وصف مختصر"
                 className="w-full p-2 border rounded"
                 onChange={handleChange}
                 required
               />
               <textarea
                 name="longDescription"
-                placeholder="Long Description"
+                placeholder="وصف مفصل"
                 className="w-full p-2 border rounded"
                 rows="4"
                 onChange={handleChange}
@@ -221,12 +301,19 @@ const ServicesTab = ({ user, salon }) => {
               <input
                 type="number"
                 name="price"
-                placeholder="Price"
+                placeholder="السعر"
                 className="w-full p-2 border rounded"
                 onChange={handleChange}
                 required
               />
               <div className="flex justify-between mt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="bg-red-500 text-white px-4 py-2 rounded"
+                >
+                  إلغاء
+                </button>
                 <button
                   type="submit"
                   disabled={uploading}
@@ -234,14 +321,7 @@ const ServicesTab = ({ user, salon }) => {
                     uploading ? "bg-gray-400" : "bg-green-500"
                   } text-white px-4 py-2 rounded flex items-center`}
                 >
-                  {uploading ? "Adding..." : "Add Service"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="bg-red-500 text-white px-4 py-2 rounded"
-                >
-                  Cancel
+                  {uploading ? "جاري الإضافة..." : "إضافة الخدمة"}
                 </button>
               </div>
             </form>
@@ -250,13 +330,13 @@ const ServicesTab = ({ user, salon }) => {
       )}
       <div className="bg-white shadow-md rounded-lg p-6">
         <div className="bg-white flex justify-between m-5 items-center">
-          <h2 className="text-xl font-semibold mb-6">Our Services</h2>
+          <h2 className="text-xl font-semibold mb-6">خدماتنا</h2>
           {user.email === salon.email && (
             <button
               onClick={() => setShowModal(true)}
               className="bg-[#825c41] hover:cursor-pointer hover:bg-[#a0714f] text-white px-4 py-2 rounded-md"
             >
-              + Add Service
+              + إضافة خدمة
             </button>
           )}
         </div>
@@ -273,8 +353,8 @@ const ServicesTab = ({ user, salon }) => {
                   {user.email === salon.email && (
                     <button
                       onClick={() => handleDeleteService(service._id)}
-                      className="absolute top-2 right-2 hover:cursor-pointer p-1 bg-red-600 rounded-2xl text-white hover:bg-red-700"
-                      title="Delete Service"
+                      className="absolute top-2 left-2 hover:cursor-pointer p-1 bg-red-600 rounded-2xl text-white hover:bg-red-700"
+                      title="حذف الخدمة"
                     >
                       <Trash2 size={20} />
                     </button>
@@ -289,10 +369,10 @@ const ServicesTab = ({ user, salon }) => {
                     />
                   </div>
                   <h3 className="text-lg font-medium">
-                    {service.title || "service name"}
+                    {service.title || "اسم الخدمة"}
                   </h3>
                   <p className="text-gray-600 mt-1">
-                    {service.shortDescription || "service description"}
+                    {service.shortDescription || "وصف الخدمة"}
                   </p>
                   <div className="flex justify-between items-center mt-4">
                     <span className="font-bold text-[var(--Logo-color)]">
@@ -305,7 +385,7 @@ const ServicesTab = ({ user, salon }) => {
           {(!services ||
             services.filter((service) => !service.isDeleted).length === 0) && (
             <p className="text-gray-500 col-span-3 text-center py-10">
-              No services available
+              لا توجد خدمات متاحة
             </p>
           )}
           <ServicePopup

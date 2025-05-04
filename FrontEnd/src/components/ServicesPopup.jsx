@@ -4,7 +4,7 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
   const [activeTab, setActiveTab] = useState("general");
   const [isPressing, setIsPressing] = useState(false);
 
-  // Close the popup when pressing Escape
+  // إغلاق النافذة المنبثقة عند الضغط على زر Escape
   useEffect(() => {
     const handleEscKey = (e) => {
       if (e.key === "Escape" && isOpen) onClose();
@@ -34,10 +34,10 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
         onMouseUp={() => setIsPressing(false)}
         onMouseLeave={() => setIsPressing(false)}
       >
-        {/* Header */}
-        <div className="bg-gradient-to-r from-[#ddc3a9] to-[#835a35] p-5 flex justify-between items-center">
+        {/* رأس النافذة */}
+        <div className="bg-gradient-to-l from-[#ddc3a9] to-[#835a35] p-5 flex justify-between items-center">
           <h2 className="text-xl font-bold text-[#5d3716]">
-            {service.title || "Service Details"}
+            {service.title || "تفاصيل الخدمة"}
           </h2>
           <button
             onClick={onClose}
@@ -59,9 +59,12 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
           </button>
         </div>
 
-        {/* Tabs */}
-        <div className="flex bg-gray-50 border-b border-gray-200 overflow-x-auto">
-          {["Overview", "Content"].map((tab, index) => {
+        {/* علامات التبويب */}
+        <div
+          className="flex bg-gray-50 border-b border-gray-200 overflow-x-auto"
+          dir="rtl"
+        >
+          {["نظرة عامة", "المحتوى"].map((tab, index) => {
             const tabId = ["general", "content"][index];
             const isActive = activeTab === tabId;
 
@@ -81,25 +84,28 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
           })}
         </div>
 
-        {/* Content */}
-        <div className="overflow-y-auto max-h-[calc(90vh-180px)] p-6 bg-[#fafbfc]">
+        {/* المحتوى */}
+        <div
+          className="overflow-y-auto max-h-[calc(90vh-180px)] p-6 bg-[#fafbfc]"
+          dir="rtl"
+        >
           {activeTab === "general" && (
-            <div className="space-y-6 text-left">
+            <div className="space-y-6 text-right">
               {[
-                { label: "Service Name", value: service.title },
-                { label: "Category", value: service.category },
-                { label: "Duration", value: service.duration },
-                { label: "Price", value: "$" + service.price },
+                { label: "اسم الخدمة", value: service.title },
+                { label: "الفئة", value: service.category },
+                { label: "المدة", value: service.duration },
+                { label: "السعر", value: "$" + service.price },
               ].map((item, index) => (
                 <div
                   key={index}
-                  className="p-4 ltr bg-white rounded-lg shadow-sm border border-gray-100 hover:border-[var(--primary-color)] transition-colors"
+                  className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 hover:border-[var(--primary-color)] transition-colors"
                 >
-                  <div className="flex ltr gap-2 items-center">
+                  <div className="flex gap-2 items-center">
                     <span className="text-[var(--primary-color)] font-bold">
                       {item.label}:
                     </span>
-                    <span className="ltr text-gray-700">{item.value}</span>
+                    <span className="text-gray-700">{item.value}</span>
                   </div>
                 </div>
               ))}
@@ -107,36 +113,36 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
           )}
 
           {activeTab === "content" && (
-            <div className="space-y-6 text-left">
+            <div className="space-y-6 text-right">
               <div className="p-5 bg-white rounded-lg shadow-sm border border-gray-100">
-                <h3 className="text-lg font-semibold text-[var(--primary-color)] mb-4 border-l-4 border-[var(--primary-color)] pl-3 ltr">
-                  Service Content
+                <h3 className="text-lg font-semibold text-[var(--primary-color)] mb-4 border-r-4 border-[var(--primary-color)] pr-3">
+                  محتوى الخدمة
                 </h3>
                 <div
-                  className="service-container p-6 bg-white rounded-lg shadow-md space-y-6 ltr"
-                  dir="ltr"
+                  className="service-container p-6 bg-white rounded-lg shadow-md space-y-6"
+                  dir="rtl"
                 >
                   <>
-                    {/* Service Title */}
+                    {/* عنوان الخدمة */}
                     {hasContent(service.title) && (
-                      <h2 className="text-2xl ltr font-bold text-gray-900">
+                      <h2 className="text-2xl font-bold text-gray-900">
                         {service.title}
                       </h2>
                     )}
 
-                    {/* Service Description */}
+                    {/* وصف الخدمة */}
                     {hasContent(service.shortDescription) && (
-                      <div className="text-gray-700 ltr leading-relaxed">
+                      <div className="text-gray-700 leading-relaxed">
                         <h2>{service.shortDescription}</h2>
                         <h1>{service.longDescription}</h1>
                       </div>
                     )}
 
-                    {/* Images Section */}
+                    {/* قسم الصور */}
                     {service.images && service.images.length > 0 && (
                       <div className="section-container bg-gray-50 p-4 rounded-md">
                         <h4 className="text-lg font-semibold text-gray-900 mb-3">
-                          Service Images
+                          صور الخدمة
                         </h4>
                         <div className="columns-2 gap-4">
                           {service.images.map((img, index) => (
@@ -146,10 +152,10 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
                             >
                               <img
                                 src={img}
-                                alt={`Service Image ${index + 1}`}
+                                alt={`صورة الخدمة ${index + 1}`}
                                 className="w-full rounded-md shadow-md"
                               />
-                              {/* Optional: Add caption below image */}
+                              {/* اختياري: إضافة وصف توضيحي أسفل الصورة */}
                               {img.caption && (
                                 <p className="text-sm text-gray-600 mt-1">
                                   {img.caption}
@@ -161,11 +167,11 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
                       </div>
                     )}
 
-                    {/* Requirements Section */}
+                    {/* قسم المتطلبات */}
                     {hasContent(service.requirements) && (
                       <div className="section-container bg-gray-50 p-4 rounded-md">
                         <h4 className="text-lg font-semibold text-gray-900 mb-3">
-                          Service Requirements
+                          متطلبات الخدمة
                         </h4>
                         <p className="text-gray-700 leading-relaxed">
                           {service.requirements}
@@ -173,11 +179,11 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
                       </div>
                     )}
 
-                    {/* Additional Info Section */}
+                    {/* قسم المعلومات الإضافية */}
                     {hasContent(service.additionalInfo) && (
                       <div className="section-container bg-gray-50 p-4 rounded-md">
                         <h4 className="text-lg font-semibold text-gray-900 mb-3">
-                          Additional Information
+                          معلومات إضافية
                         </h4>
                         <p className="text-gray-700 leading-relaxed">
                           {service.additionalInfo}
