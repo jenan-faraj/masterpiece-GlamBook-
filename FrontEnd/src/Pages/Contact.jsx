@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -61,6 +62,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen lg:px-20" dir="rtl">
+      <ScrollToTopButton />
       {/* Decorative elements */}
       <div className="mt-10 absolute top-0 left-0 w-full h-full overflow-hidden z-0">
         <motion.div

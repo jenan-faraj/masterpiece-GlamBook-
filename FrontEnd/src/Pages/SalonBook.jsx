@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import { Link } from "react-router-dom";
 import PaymentForm from "../Pages/Payment";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 
 const BookingForm = () => {
   const { id } = useParams();
@@ -642,6 +643,7 @@ const BookingForm = () => {
 
   return (
     <div className="container mx-auto py-8 px-4">
+      <ScrollToTopButton />
       <div className="max-w-3xl mx-auto">
         {/* Progress bar */}
         <div className="mb-8">

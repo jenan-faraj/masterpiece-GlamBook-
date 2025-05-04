@@ -10,6 +10,7 @@ import SalonInfo from "../components/SalonInfo";
 import SpecialOffers from "../components/offers";
 import SalonBookings from "../components/SalonBookings";
 import Swal from "sweetalert2";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 
 function SalonDetails() {
   const { id } = useParams();
@@ -180,6 +181,7 @@ function SalonDetails() {
 
   return (
     <div dir="rtl" className="bg-gray-50 min-h-screen pb-12">
+      <ScrollToTopButton />
       {/* رأس الصفحة مع صورة الملف الشخصي */}
       <div className="relative h-90">
         {salon.bgImage ? (

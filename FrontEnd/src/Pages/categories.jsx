@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Star, Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 
 // مكون تقييم النجوم لعرض النجوم بناءً على التقييم
 const StarRating = ({ rating }) => {
@@ -158,6 +159,7 @@ function Categories() {
 
   return (
     <>
+      <ScrollToTopButton />
       {/* قسم البحث والتصفية */}
       <div
         dir="rtl"

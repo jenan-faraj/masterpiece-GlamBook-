@@ -6,6 +6,7 @@ import ProfileTab from "./../components/ProfileTab";
 import BookingsTab from "./../components/BookingsTab";
 import ReviewsTab from "./../components/ProfileReviewsTab";
 import FavoritesTab from "./../components/FavoritesTab";
+import ScrollToTopButton from "./../components/ScrollToTopButton";
 
 const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -55,6 +56,7 @@ const UserProfile = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 min-h-screen">
+      <ScrollToTopButton />
       <div dir="rtl" className="flex justify-center mb-6">
         <button
           onClick={() => setActiveTab("profile")}

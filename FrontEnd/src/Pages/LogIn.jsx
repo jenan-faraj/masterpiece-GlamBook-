@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function LoginForm() {
@@ -7,6 +7,38 @@ export default function LoginForm() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    fetchUserAuth();
+  }, []);
+
+  const fetchUserAuth = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/users/me", {
+        method: "GET",
+        credentials: "include", // مهم للكوكيز
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    } catch (error) {
+      console.log("تعذر الاتصال بالخادم للتحقق من حالة تسجيل الدخول");
+      setIsLoggedIn(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn]);
 
   const handleLogin = async (e) => {
     e.preventDefault();

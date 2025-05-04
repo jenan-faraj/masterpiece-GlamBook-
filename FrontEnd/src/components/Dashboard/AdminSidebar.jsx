@@ -5,6 +5,7 @@ import UsersListPage from "./UsersListPage";
 import AddUserPage from "./AddUserPage";
 import BookingsAllPage from "./BookingsAllPage";
 import ReportsPage from "./ReportsPage";
+import { useNavigate } from "react-router-dom";
 
 // مكون الشريط الجانبي
 const AdminSidebar = ({
@@ -15,6 +16,43 @@ const AdminSidebar = ({
   expandedMenus,
   toggleMenu,
 }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetchUserAuth();
+  }, []);
+
+  const fetchUserAuth = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/users/me", {
+        method: "GET",
+        credentials: "include", // مهم للكوكيز
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data);
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    } catch (error) {
+      console.log("تعذر الاتصال بالخادم للتحقق من حالة تسجيل الدخول");
+      setIsLoggedIn(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user && user.role !== "admin") {
+      navigate("/");
+    }
+  }, [user]);
+
   const menuItems = [
     {
       id: "dashboard",
@@ -356,9 +394,7 @@ const AdminPanel = () => {
   const renderActivePage = () => {
     switch (activeItem) {
       case "dashboard":
-        return (
-          <DashboardPage/>
-        );
+        return <DashboardPage />;
       case "users-list":
         return <UsersListPage />;
       case "users":

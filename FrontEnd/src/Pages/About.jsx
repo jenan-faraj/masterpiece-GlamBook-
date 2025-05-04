@@ -12,6 +12,7 @@ import {
   Shield,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 
 export default function EnhancedAboutPage() {
   const [loading, setLoading] = useState(true);
@@ -70,6 +71,7 @@ export default function EnhancedAboutPage() {
 
   return (
     <div className="bg-white min-h-screen">
+      <ScrollToTopButton />
       {/* Hero Section with Background Image */}
       <div className="relative bg-[#B58152] py-24">
         {/* Background image overlay */}
@@ -456,9 +458,7 @@ export default function EnhancedAboutPage() {
         <div className="absolute inset-0 bg-[#753600] opacity-70 z-0"></div>
         <div className="container mx-auto px-6 relative z-10">
           <div dir="rtl" className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6 text-white">
-              مجتمع بيوتي
-            </h2>
+            <h2 className="text-4xl font-bold mb-6 text-white">مجتمع بيوتي</h2>
             <div
               className="w-24 h-1 mx-auto mb-8"
               style={{ backgroundColor: "#B58152" }}
