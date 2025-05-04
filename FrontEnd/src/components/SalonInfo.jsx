@@ -11,7 +11,7 @@ import {
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
 
-export default function SalonInfo({ salon }) {
+export default function SalonInfo({ salon, user }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const daysTranslation = {
@@ -52,11 +52,26 @@ export default function SalonInfo({ salon }) {
           </div>
         </div>
         <div className="space-x-4 mt-4 md:mt-0">
-          <Link to={`/book/${salon._id}`}>
-            <button className="bg-[var(--Logo-color)] text-white px-6 py-2 rounded-md hover:bg-[var(--button-color)] transition">
-              احجز الآن
-            </button>
-          </Link>
+          <div className="group relative inline-block">
+            <Link to={`/book/${salon._id}`}>
+              <button
+                className={`px-6 py-2 rounded-md transition ${
+                  user?.role === "salon"
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-[var(--Logo-color)] hover:bg-[var(--button-color)] text-white"
+                }`}
+                disabled={user?.role === "salon"}
+              >
+                احجز الآن
+              </button>
+            </Link>
+
+            {user?.role === "salon" && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap z-10">
+                لا يمكن لأصحاب الصالونات الحجز
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

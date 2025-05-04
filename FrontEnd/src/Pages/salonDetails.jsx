@@ -233,7 +233,7 @@ function SalonDetails() {
         </div>
       </div>
 
-      <SalonInfo salon={salon} />
+      <SalonInfo salon={salon} user={user} />
 
       {/* تبويب التنقل */}
       <div className="mx-6 md:mx-10 mb-4">

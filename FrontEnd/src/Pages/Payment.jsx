@@ -180,24 +180,6 @@ const PaymentForm = ({
       {/* PayPal Payment Form */}
       {paymentMethod === "paypal" && (
         <div className="mb-6">
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">
-              البريد الإلكتروني
-            </label>
-            <div className="relative">
-              <Mail className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--Logo-color)]" />
-              <input
-                type="email"
-                name="email"
-                value={customer.email}
-                onChange={handleInputChange}
-                placeholder="أدخل بريدك الإلكتروني"
-                className="w-full p-3 pr-10 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--Logo-color)]"
-                required
-              />
-            </div>
-          </div>
-
           <div className="mt-6">
             <PayPalScriptProvider
               options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID }}
