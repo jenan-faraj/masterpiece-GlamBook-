@@ -44,6 +44,36 @@ exports.getAllBookings = async (req, res) => {
   }
 };
 
+// تحديث حالة الحجز
+exports.updateBookingStatus = async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+    const { isCompleted } = req.body;
+
+    const booking = await Book.findById(bookingId);
+
+    if (!booking) {
+      return res.status(404).json({ message: "الحجز غير موجود" });
+    }
+
+    booking.isCompleted = isCompleted;
+    await booking.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "تم تحديث حالة الحجز بنجاح",
+      booking,
+    });
+  } catch (error) {
+    console.error("خطأ في تحديث حالة الحجز:", error);
+    return res.status(500).json({
+      success: false,
+      message: "حدث خطأ أثناء تحديث حالة الحجز",
+      error: error.message,
+    });
+  }
+};
+
 // ✅ Get Bookings by User ID
 exports.getBookingsByUser = async (req, res) => {
   const userId = req.params.userId;

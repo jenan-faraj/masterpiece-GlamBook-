@@ -10,6 +10,7 @@ const {
   getCompletedBookingsByUser,
   getCompletedBookingsBySalon,
   getSalonBookings,
+  updateBookingStatus,
 } = require("../controller/bookController");
 
 // Route to create a booking
@@ -18,6 +19,7 @@ router.get("/", getAllBookings); // جلب كل الحجوزات
 router.delete("/:id", deleteBooking); // حذف حجز معيّن
 router.get("/user/:userId", getBookingsByUser);
 router.put("/cancel/:id", cancelBooking);
+router.put("/completed/:bookingId", updateBookingStatus);
 // Route to get all completed bookings
 router.get("/completed", getCompletedBookings);
 // Route to get bookings for a specific salon
