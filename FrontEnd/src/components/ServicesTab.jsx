@@ -360,7 +360,7 @@ const ServicesTab = ({ user, salon }) => {
                     </button>
                   )}
 
-                  <div className="h-40 overflow-hidden rounded-md mb-4">
+                  <div className="h-55 overflow-hidden rounded-md mb-4">
                     <img
                       onClick={() => handleServiceClick(service)}
                       src={service.images[0]}
@@ -376,7 +376,7 @@ const ServicesTab = ({ user, salon }) => {
                   </p>
                   <div className="flex justify-between items-center mt-4">
                     <span className="font-bold text-[var(--Logo-color)]">
-                      ${service.price || 100}
+                      د.أ {service.price || 100}
                     </span>
                   </div>
                 </div>

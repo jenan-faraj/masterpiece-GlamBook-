@@ -48,7 +48,7 @@ const SpecialOffers = ({ salon, user }) => {
         { offers: updatedOffers }
       );
 
-      Swal.fire("Success", "Special offer added successfully!", "success");
+      Swal.fire("تم بنجاح", "تمت إضافة العرض الخاص بنجاح!", "success");
       setShowOffersModal(false);
       setOffer({
         title: "",
@@ -61,10 +61,10 @@ const SpecialOffers = ({ salon, user }) => {
       setOfferPreviewImages([]);
       setOffers(updatedOffers);
     } catch (error) {
-      console.error("Error adding special offer:", error);
+      console.error("خطأ في إضافة العرض الخاص:", error);
       Swal.fire(
-        "Error",
-        "Failed to add special offer. Please try again.",
+        "خطأ",
+        "فشل في إضافة العرض الخاص. يرجى المحاولة مرة أخرى.",
         "error"
       );
     } finally {
@@ -75,13 +75,14 @@ const SpecialOffers = ({ salon, user }) => {
   // Delete offer
   const handleDeleteOffer = async (offerId) => {
     const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to delete this offer?",
+      title: "هل أنت متأكد؟",
+      text: "هل تريد حذف هذا العرض؟",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "نعم، قم بالحذف!",
+      cancelButtonText: "إلغاء",
     });
 
     if (result.isConfirmed) {
@@ -95,18 +96,14 @@ const SpecialOffers = ({ salon, user }) => {
 
         if (response.ok) {
           setOffers(offers.filter((offer) => offer._id !== offerId));
-          Swal.fire("Deleted!", "Offer deleted successfully.", "success");
+          Swal.fire("تم الحذف!", "تم حذف العرض بنجاح.", "success");
         } else {
           const errorData = await response.json();
-          Swal.fire(
-            "Failed",
-            `Failed to delete offer: ${errorData.message}`,
-            "error"
-          );
+          Swal.fire("فشل", `فشل في حذف العرض: ${errorData.message}`, "error");
         }
       } catch (error) {
-        console.error("Error deleting offer:", error);
-        Swal.fire("Error", "Error deleting offer", "error");
+        console.error("خطأ في حذف العرض:", error);
+        Swal.fire("خطأ", "خطأ في حذف العرض", "error");
       }
     }
   };
@@ -168,7 +165,7 @@ const SpecialOffers = ({ salon, user }) => {
 
         uploadedUrls.push(response.data.url);
       } catch (error) {
-        console.error("Error uploading image:", error);
+        console.error("خطأ في رفع الصورة:", error);
       }
     }
 
@@ -199,25 +196,25 @@ const SpecialOffers = ({ salon, user }) => {
   const visibleOffers = offers.filter((offer) => !offer.isDeleted);
 
   return (
-    <div className="my-8">
+    <div className="my-8" dir="rtl">
       <div className="flex justify-between items-center mb-5">
-        <h2 className="text-2xl font-bold">Special Offers</h2>
+        <h2 className="text-2xl text-[#825c41] font-bold">العروض الخاصة</h2>
         {user && user.email === salon.email && (
           <button
             className="bg-[#825c41] hover:cursor-pointer hover:bg-[#a0714f] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={() => setShowOffersModal(true)}
           >
-            Add Special Offer
+            إضافة عرض خاص
           </button>
         )}
       </div>
 
       {/* Special Offers Modal */}
       {showOffersModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg p-6 w-11/12 max-w-2xl max-h-90vh overflow-y-auto">
+        <div className="fixed inset-0 bg-[#000000ae] bg-opacity-70 flex justify-center items-center z-50">
+          <div className="bg-white max-h-[96vh] rounded-lg overflow-auto p-6 w-11/12 max-w-2xl max-h-90vh overflow-y-auto">
             <div className="flex justify-between items-center mb-5">
-              <h3 className="text-xl font-bold">Add Special Offer</h3>
+              <h3 className="text-xl font-bold">إضافة عرض خاص</h3>
               <button
                 className="text-2xl focus:outline-none"
                 onClick={handleCloseModal}
@@ -229,7 +226,7 @@ const SpecialOffers = ({ salon, user }) => {
             <form onSubmit={handleOfferSubmit}>
               <div className="mb-4">
                 <label htmlFor="title" className="block font-bold mb-1">
-                  Title
+                  العنوان
                 </label>
                 <input
                   type="text"
@@ -238,14 +235,14 @@ const SpecialOffers = ({ salon, user }) => {
                   value={offer.title}
                   onChange={handleOfferChange}
                   required
-                  placeholder="Enter offer title"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  placeholder="أدخل عنوان العرض"
+                  className="w-full p-2 border border-gray-300 rounded text-right"
                 />
               </div>
 
               <div className="mb-4">
                 <label htmlFor="images" className="block font-bold mb-1">
-                  Images
+                  الصور
                 </label>
                 <input
                   type="file"
@@ -260,7 +257,7 @@ const SpecialOffers = ({ salon, user }) => {
                     <div key={index} className="relative w-24 h-24">
                       <img
                         src={preview}
-                        alt={`Preview ${index + 1}`}
+                        alt={`معاينة ${index + 1}`}
                         className="w-full h-full object-cover rounded"
                       />
                       <button
@@ -277,7 +274,7 @@ const SpecialOffers = ({ salon, user }) => {
 
               <div className="mb-4">
                 <label htmlFor="description" className="block font-bold mb-1">
-                  Description
+                  الوصف
                 </label>
                 <textarea
                   id="description"
@@ -285,15 +282,15 @@ const SpecialOffers = ({ salon, user }) => {
                   value={offer.description}
                   onChange={handleOfferChange}
                   required
-                  placeholder="Enter offer description"
+                  placeholder="أدخل وصف العرض"
                   rows="4"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 rounded text-right"
                 />
               </div>
 
               <div className="mb-4">
                 <label htmlFor="endDate" className="block font-bold mb-1">
-                  End Date
+                  تاريخ الانتهاء
                 </label>
                 <input
                   type="date"
@@ -313,7 +310,7 @@ const SpecialOffers = ({ salon, user }) => {
                     htmlFor="originalPrice"
                     className="block font-bold mb-1"
                   >
-                    Original Price
+                    السعر الأصلي
                   </label>
                   <input
                     type="number"
@@ -324,7 +321,7 @@ const SpecialOffers = ({ salon, user }) => {
                     required
                     min="0"
                     step="0.01"
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded text-right"
                   />
                 </div>
 
@@ -333,7 +330,7 @@ const SpecialOffers = ({ salon, user }) => {
                     htmlFor="discountPrice"
                     className="block font-bold mb-1"
                   >
-                    Discount Price
+                    سعر الخصم
                   </label>
                   <input
                     type="number"
@@ -344,19 +341,12 @@ const SpecialOffers = ({ salon, user }) => {
                     required
                     min="0"
                     step="0.01"
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded text-right"
                   />
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 mt-6">
-                <button
-                  type="button"
-                  onClick={handleCloseModal}
-                  className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
-                >
-                  Cancel
-                </button>
+              <div className="flex justify-start gap-3 mt-6">
                 <button
                   type="submit"
                   className={`px-4 py-2 bg-green-500 text-white rounded ${
@@ -366,7 +356,14 @@ const SpecialOffers = ({ salon, user }) => {
                   }`}
                   disabled={uploadingOffer}
                 >
-                  {uploadingOffer ? "Adding..." : "Add Offer"}
+                  {uploadingOffer ? "جاري الإضافة..." : "إضافة العرض"}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCloseModal}
+                  className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+                >
+                  إلغاء
                 </button>
               </div>
             </form>
@@ -377,17 +374,17 @@ const SpecialOffers = ({ salon, user }) => {
       {/* Offers List */}
       <div className="mt-5">
         {loading ? (
-          <p className="text-center py-8 text-gray-500">Loading offers...</p>
+          <p className="text-center py-8 text-gray-500">جاري تحميل العروض...</p>
         ) : error ? (
           <p className="text-center py-8 text-red-500">
-            Error loading offers. Please try again.
+            خطأ في تحميل العروض. يرجى المحاولة مرة أخرى.
           </p>
         ) : visibleOffers && visibleOffers.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5">
             {visibleOffers.map((offerItem, index) => (
               <div
                 key={index}
-                className="relative border rounded-lg p-4 hover:shadow-md transition-shadow bg-gradient-to-r from-pink-50 to-white cursor-pointer"
+                className="relative border rounded-lg p-4 hover:shadow-md transition-shadow bg-gradient-to-l from-pink-50 to-white cursor-pointer"
                 onClick={() => handleOfferClick(offerItem)}
               >
                 {/* Delete button */}
@@ -397,8 +394,8 @@ const SpecialOffers = ({ salon, user }) => {
                       e.stopPropagation();
                       handleDeleteOffer(offerItem._id);
                     }}
-                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 transition-colors"
-                    title="Delete offer"
+                    className="absolute top-2 left-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 transition-colors"
+                    title="حذف العرض"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -417,8 +414,36 @@ const SpecialOffers = ({ salon, user }) => {
                   </button>
                 )}
 
-                <div className="flex">
-                  <div className="w-1/3 pr-4">
+                <div className="flex flex-row-reverse">
+                  <div className="w-2/3 text-right">
+                    <div className="bg-[#fff5eb] border border-[#B58152] text-[#B58152] font-bold rounded-full px-3 py-1 text-xs inline-block mb-2">
+                      عرض خاص
+                    </div>
+                    <h3 className="text-lg font-medium text-[#B58152]">
+                      {offerItem.title}
+                    </h3>
+                    <p className="text-gray-600 text-sm mt-1">
+                      {offerItem.description}
+                    </p>
+                    <div className="mt-2 flex justify-between items-center">
+                      <div className="flex items-center text-sm text-gray-500">
+                        <Calendar size={14} className="ml-1" />
+                        <span>
+                          ينتهي{" "}
+                          {new Date(offerItem.endDate).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="line-through text-gray-500 text-sm">
+                          {offerItem.originalPrice} د.أ
+                        </span>
+                        <span className="text-[#B58152] font-bold mr-2">
+                          {offerItem.discountPrice} د.أ
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-1/3 pl-4">
                     <div className="h-32 rounded-md overflow-hidden">
                       <img
                         src={
@@ -431,51 +456,26 @@ const SpecialOffers = ({ salon, user }) => {
                       />
                     </div>
                   </div>
-                  <div className="w-2/3">
-                    <div className="bg-[#fff5eb] border border-[#B58152] text-[#B58152] font-bold rounded-full px-3 py-1 text-xs inline-block mb-2">
-                      Special offer
-                    </div>
-                    <h3 className="text-lg font-medium text-[#B58152]">
-                      {offerItem.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mt-1">
-                      {offerItem.description}
-                    </p>
-                    <div className="mt-2 flex justify-between items-center">
-                      <div>
-                        <span className="line-through text-gray-500 text-sm">
-                          ${offerItem.originalPrice}
-                        </span>
-                        <span className="text-[#B58152] font-bold ml-2">
-                          ${offerItem.discountPrice}
-                        </span>
-                      </div>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Calendar size={14} className="mr-1" />
-                        <span>
-                          Ends{" "}
-                          {new Date(offerItem.endDate).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
           <p className="text-center py-8 text-gray-500">
-            No special offers available.
+            لا توجد عروض خاصة متاحة.
           </p>
         )}
       </div>
 
       {/* Offer Details Popup */}
       {isOfferPopupOpen && selectedOffer && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg p-6 w-11/12 max-w-3xl max-h-90vh overflow-y-auto relative">
+        <div className="fixed inset-0 bg-[#000000ae] bg-opacity-80 flex justify-center items-center z-50">
+          <div
+            className="bg-white rounded-lg p-6 w-11/12 max-w-3xl max-h-90vh overflow-y-auto relative"
+            dir="rtl"
+          >
             <button
-              className="absolute top-3 right-3 text-2xl focus:outline-none"
+              className="absolute top-3 left-3 text-2xl focus:outline-none"
               onClick={() => setIsOfferPopupOpen(false)}
             >
               ×
@@ -489,7 +489,7 @@ const SpecialOffers = ({ salon, user }) => {
                   <img
                     key={i}
                     src={img}
-                    alt={`${selectedOffer.title} image ${i + 1}`}
+                    alt={`صورة ${selectedOffer.title} ${i + 1}`}
                     className="h-64 object-cover rounded"
                   />
                 ))}
@@ -502,31 +502,31 @@ const SpecialOffers = ({ salon, user }) => {
 
             <div className="bg-gray-50 p-4 rounded mb-3">
               <p className="mb-2">
-                Valid until:{" "}
+                صالح حتى:{" "}
                 <strong>
                   {new Date(selectedOffer.endDate).toLocaleDateString()}
                 </strong>
               </p>
               <div className="mt-3">
                 <p>
-                  Original Price:{" "}
+                  السعر الأصلي:{" "}
                   <span className="line-through text-gray-500">
-                    ${selectedOffer.originalPrice}
+                    {selectedOffer.originalPrice} د.أ
                   </span>
                 </p>
                 <p>
-                  Discount Price:{" "}
+                  سعر الخصم:{" "}
                   <span className="font-bold text-red-600">
-                    ${selectedOffer.discountPrice}
+                    {selectedOffer.discountPrice} د.أ
                   </span>
                 </p>
                 <p>
-                  You save:{" "}
+                  التوفير:{" "}
                   <span className="font-bold text-green-600">
-                    $
                     {(
                       selectedOffer.originalPrice - selectedOffer.discountPrice
-                    ).toFixed(2)}
+                    ).toFixed(2)}{" "}
+                    د.أ
                   </span>
                 </p>
               </div>

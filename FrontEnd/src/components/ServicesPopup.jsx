@@ -95,7 +95,7 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
                 { label: "اسم الخدمة", value: service.title },
                 { label: "الفئة", value: service.category },
                 { label: "المدة", value: service.duration },
-                { label: "السعر", value: "$" + service.price },
+                { label: "السعر", value: "د.أ " + service.price },
               ].map((item, index) => (
                 <div
                   key={index}
