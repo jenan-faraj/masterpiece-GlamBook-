@@ -20,6 +20,7 @@ import ContactUs from "./Pages/Contact";
 import UserProfile from "./Pages/userProfile";
 import AdminSidebar from "./components/Dashboard/AdminSidebar";
 import Footer from "./components/Footer";
+import NotFound from "./components/NotFound";
 // هاد الكمبوننت بنفصل فيه النافبار بناءً على المسار
 const AppContent = () => {
   const location = useLocation();
@@ -44,14 +45,7 @@ const AppContent = () => {
         <Route path="/ContactUs" element={<ContactUs />} />
         <Route path="/userProfile" element={<UserProfile />} />
         <Route path="/dashboard" element={<AdminSidebar />} />
-        <Route
-          path="*"
-          element={
-            <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
-              asdasdasdasdas
-            </main>
-          }
-        />
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
       {!hideNavbarRoutes.includes(location.pathname) && <Footer />}
