@@ -370,7 +370,7 @@ export default function ArabicHomePage() {
                   <div className="z-10 group-hover:-translate-y-10 bg-[#ffffff74] p-2 rounded-2xl transition-all duration-500">
                     <span className="text-2xl font-semibold">{salon.name}</span>
                     {/* Replace the plain rating text with star rating component */}
-                    <div className="flex flex-col items-center">
+                    <div dir="ltr" className="flex flex-col items-center">
                       <StarRating rating={salon.rating} />
                     </div>
                   </div>
@@ -380,7 +380,7 @@ export default function ArabicHomePage() {
                     className="bg-[var(--Logo-color)] px-4 py-1 text-slate-50 rounded-md z-10 hover:scale-125 transition-all duration-500 hover:bg-[var(--button-color)]"
                     to={`/salonDetails/${salon._id}`}
                   >
-                    visit
+                    زيارة
                   </Link>
                 </div>
               );

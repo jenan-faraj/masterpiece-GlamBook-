@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,6 +8,7 @@ const Navbar = () => {
   const [userId, setUserId] = useState("");
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); // إضافة استخدام الموقع الحالي
 
   useEffect(() => {
     // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
@@ -103,6 +104,17 @@ const Navbar = () => {
     { title: "انضم إلينا", path: "/RegisterSalon" },
   ];
 
+  // دالة للتحقق ما إذا كان الرابط نشطاً
+  const isActive = (path) => {
+    if (path === "/" && location.pathname === "/") {
+      return true;
+    }
+    return (
+      location.pathname === path ||
+      (path !== "/" && location.pathname.startsWith(path))
+    );
+  };
+
   return (
     <>
       {/* إضافة عنصر وهمي للحفاظ على مساحة التمرير عندما يكون Navbar ثابتًا */}
@@ -129,7 +141,11 @@ const Navbar = () => {
                   <li key={link.path}>
                     <Link
                       to={link.path}
-                      className="px-3 py-2 rounded hover:bg-[#f5e6e1] transition-colors"
+                      className={`px-3 py-2 rounded transition-colors ${
+                        isActive(link.path)
+                          ? "bg-[#B58152] text-white font-bold" // الرابط النشط
+                          : "hover:bg-[#f5e6e1]" // الروابط الأخرى
+                      }`}
                     >
                       {link.title}
                     </Link>
@@ -145,7 +161,11 @@ const Navbar = () => {
                   <li>
                     <Link
                       to="/userProfile"
-                      className="flex items-center gap-2 px-3 py-2 rounded hover:bg-[#f5e6e1] transition-colors"
+                      className={`flex items-center gap-2 px-3 py-2 rounded transition-colors ${
+                        isActive("/userProfile")
+                          ? "bg-[#B58152] text-white font-bold"
+                          : "hover:bg-[#f5e6e1]"
+                      }`}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -190,7 +210,11 @@ const Navbar = () => {
                   <li>
                     <Link
                       to="/login"
-                      className="px-4 py-2 bg-[#B58152] text-white rounded-md hover:bg-[#a37245] transition-colors shadow-sm"
+                      className={`px-4 py-2 rounded-md transition-colors shadow-sm ${
+                        isActive("/login")
+                          ? "bg-[#a37245] text-white font-bold"
+                          : "bg-[#B58152] text-white hover:bg-[#a37245]"
+                      }`}
                     >
                       تسجيل الدخول
                     </Link>
@@ -217,7 +241,11 @@ const Navbar = () => {
                   <li key={link.path} className="border-b border-[#e6d8d3]">
                     <Link
                       to={link.path}
-                      className="block py-3 px-4 hover:bg-[#f5e6e1] transition-colors"
+                      className={`block py-3 px-4 transition-colors ${
+                        isActive(link.path)
+                          ? "bg-[#B58152] text-white font-bold"
+                          : "hover:bg-[#f5e6e1]"
+                      }`}
                       onClick={toggleMenu}
                     >
                       {link.title}
@@ -230,7 +258,11 @@ const Navbar = () => {
                     <li className="border-b border-[#e6d8d3]">
                       <Link
                         to="/userProfile"
-                        className="flex items-center justify-between py-3 px-4 hover:bg-[#f5e6e1] transition-colors"
+                        className={`flex items-center justify-between py-3 px-4 transition-colors ${
+                          isActive("/userProfile")
+                            ? "bg-[#B58152] text-white font-bold"
+                            : "hover:bg-[#f5e6e1]"
+                        }`}
                         onClick={toggleMenu}
                       >
                         <span>{username}</span>
@@ -275,7 +307,11 @@ const Navbar = () => {
                   <li className="py-3 px-4">
                     <Link
                       to="/login"
-                      className="block w-full text-center px-4 py-2 bg-[#B58152] text-white rounded-md hover:bg-[#a37245] transition-colors shadow-sm"
+                      className={`block w-full text-center px-4 py-2 rounded-md transition-colors shadow-sm ${
+                        isActive("/login")
+                          ? "bg-[#a37245] text-white font-bold"
+                          : "bg-[#B58152] text-white hover:bg-[#a37245]"
+                      }`}
                       onClick={toggleMenu}
                     >
                       تسجيل الدخول
