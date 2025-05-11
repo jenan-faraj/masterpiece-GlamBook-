@@ -272,8 +272,8 @@ export default function ContactMessages() {
                   onClick={() => setActiveMessage(null)}
                   className="flex items-center hover:cursor-pointer text-[#8a5936] hover:underline"
                 >
-                  <Inbox className="mr-1 h-4 w-4 hover:cursor-pointer" /> Back
-                  to messages
+                  <Inbox className="mr-1 h-4 w-4 hover:cursor-pointer" /> 
+                  العودة إلى قائمة الرسائل
                 </button>
                 <span
                   className={`px-3 py-1 text-xs rounded-full ${
@@ -306,11 +306,11 @@ export default function ContactMessages() {
               </div>
 
               <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <h3 className="font-bold text-[#8a5936] mb-3">Send Reply</h3>
+                <h3 className="font-bold text-[#8a5936] mb-3">إرسال رد</h3>
                 <textarea
                   className="w-full border rounded p-3 mb-4 focus:border-[#a0714f] focus:ring focus:ring-[#a0714f]/20 outline-none"
                   rows="6"
-                  placeholder="Type your reply message here..."
+                  placeholder="أكتب الرد هنا ..."
                   value={replyMessage}
                   onChange={(e) => setReplyMessage(e.target.value)}
                 ></textarea>
@@ -319,7 +319,7 @@ export default function ContactMessages() {
                     onClick={() => handleReply(activeMessage.email)}
                     className="bg-[#a0714f] hover:cursor-pointer text-[#f4e5d6] px-6 py-2 rounded-md hover:bg-[#8a5936] transition-colors flex items-center"
                   >
-                    <Send className="mr-2 h-4 w-4" /> Send Reply
+                    <Send className="mr-2 h-4 w-4" /> إرسال رد
                   </button>
                 </div>
               </div>

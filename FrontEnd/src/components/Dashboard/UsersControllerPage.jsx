@@ -11,11 +11,11 @@ const UsersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // فلترات جديدة
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
-  
+
   // Color theme variables
   const logoColor = "#8a5936";
   const buttonColor = "#a0714f";
@@ -40,48 +40,28 @@ const UsersPage = () => {
     };
     fetchData();
   }, [currentPage]);
-  
+
   // تطبيق الفلترة عند تغيير search query أو role filter
   useEffect(() => {
     let result = [...users];
-    
+
     // فلترة حسب الدور
     if (roleFilter !== "all") {
-      result = result.filter(user => user.role === roleFilter);
+      result = result.filter((user) => user.role === roleFilter);
     }
-    
+
     // فلترة حسب البحث (الاسم أو البريد الإلكتروني)
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
-        user => 
-          user.username.toLowerCase().includes(query) || 
+        (user) =>
+          user.username.toLowerCase().includes(query) ||
           user.email.toLowerCase().includes(query)
       );
     }
-    
+
     setFilteredUsers(result);
   }, [searchQuery, roleFilter, users]);
-
-  // حذف مستخدم
-  const handleDeleteUser = async (userId) => {
-    if (window.confirm("هل أنت متأكد من رغبتك في حذف هذا المستخدم؟")) {
-      try {
-        await axios.patch(
-          `http://localhost:3000/api/users/delete/${userId}`,
-          {},
-          {
-            withCredentials: true,
-          }
-        );
-        const updatedUsers = users.filter((user) => user._id !== userId);
-        setUsers(updatedUsers);
-      } catch (err) {
-        setError("حدث خطأ أثناء حذف المستخدم");
-        console.error(err);
-      }
-    }
-  };
 
   // حفظ تعديل دور المستخدم
   const saveRoleChange = async (userId) => {
@@ -141,12 +121,15 @@ const UsersPage = () => {
             </span>
           </div>
         </div>
-        
+
         {/* فلاتر البحث الجديدة */}
         <div className="bg-white p-4 rounded-lg shadow-sm mb-6 border border-[#f4e5d6]">
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1">
-              <label className="block text-sm font-medium mb-1" style={{ color: logoColor }}>
+              <label
+                className="block text-sm font-medium mb-1"
+                style={{ color: logoColor }}
+              >
                 البحث
               </label>
               <input
@@ -158,9 +141,12 @@ const UsersPage = () => {
                 style={{ borderColor: textColor, direction: "rtl" }}
               />
             </div>
-            
+
             <div className="w-full lg:w-64">
-              <label className="block text-sm font-medium mb-1" style={{ color: logoColor }}>
+              <label
+                className="block text-sm font-medium mb-1"
+                style={{ color: logoColor }}
+              >
                 فلترة حسب الدور
               </label>
               <select
@@ -177,7 +163,7 @@ const UsersPage = () => {
                 ))}
               </select>
             </div>
-            
+
             <div className="flex items-end">
               <button
                 onClick={resetFilters}
@@ -311,16 +297,6 @@ const UsersPage = () => {
                             ) : (
                               <>
                                 <button
-                                  onClick={() => handleDeleteUser(user._id)}
-                                  className="ml-2 px-3 py-1 rounded text-white transition-all duration-300 hover:opacity-80 focus:ring-2 focus:outline-none"
-                                  style={{
-                                    backgroundColor: "#EF4444",
-                                    boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
-                                  }}
-                                >
-                                  حذف
-                                </button>
-                                <button
                                   onClick={() => startEditRole(user)}
                                   className="px-3 py-1 rounded text-white transition-all duration-300 hover:opacity-80 focus:ring-2 focus:outline-none"
                                   style={{
@@ -409,13 +385,6 @@ const UsersPage = () => {
                     ) : (
                       <div className="flex justify-end space-x-2">
                         <button
-                          onClick={() => handleDeleteUser(user._id)}
-                          className="ml-2 px-3 py-2 rounded text-white w-24 transition-all duration-300 hover:opacity-80"
-                          style={{ backgroundColor: "#EF4444" }}
-                        >
-                          حذف
-                        </button>
-                        <button
                           onClick={() => startEditRole(user)}
                           className="px-3 py-2 rounded text-white w-24 transition-all duration-300 hover:opacity-80"
                           style={{ backgroundColor: buttonColor }}
@@ -439,8 +408,8 @@ const UsersPage = () => {
                   لا يوجد مستخدمين
                 </h3>
                 <p className="text-gray-500">
-                  {searchQuery || roleFilter !== "all" 
-                    ? "لم يتم العثور على مستخدمين مطابقين للفلترة" 
+                  {searchQuery || roleFilter !== "all"
+                    ? "لم يتم العثور على مستخدمين مطابقين للفلترة"
                     : "لم يتم العثور على بيانات للعرض"}
                 </p>
                 {(searchQuery || roleFilter !== "all") && (

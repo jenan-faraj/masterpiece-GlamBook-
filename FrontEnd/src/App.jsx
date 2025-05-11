@@ -18,18 +18,35 @@ import Payment from "./Pages/Payment";
 import AboutPage from "./Pages/About";
 import ContactUs from "./Pages/Contact";
 import UserProfile from "./Pages/userProfile";
-import AdminSidebar from "./components/Dashboard/AdminSidebar";
+import AdminPanel from "./components/Dashboard/AdminSidebar";
 import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
-// هاد الكمبوننت بنفصل فيه النافبار بناءً على المسار
+
+// هذا المكون يفصل النافبار والفوتر بناءً على المسار
 const AppContent = () => {
   const location = useLocation();
-  const hideNavbarRoutes = ["/login", "/signup", "/dashboard"];
-  const hideFooterRoutes = ["/login", "/signup", "/dashboard"];
+
+  // تحقق إذا كان المسار الحالي هو من المسارات التي نريد إخفاء الـ navbar فيها
+  const shouldHideNavbar = () => {
+    return (
+      location.pathname === "/login" ||
+      location.pathname === "/signup" ||
+      location.pathname.startsWith("/admin") // هذا سيتحقق من كل المسارات التي تبدأ بـ /admin
+    );
+  };
+
+  // تحقق إذا كان المسار الحالي هو من المسارات التي نريد إخفاء الـ footer فيها
+  const shouldHideFooter = () => {
+    return (
+      location.pathname === "/login" ||
+      location.pathname === "/signup" ||
+      location.pathname.startsWith("/admin") // هذا سيتحقق من كل المسارات التي تبدأ بـ /admin
+    );
+  };
 
   return (
     <>
-      {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
+      {!shouldHideNavbar() && <Navbar />}
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -44,11 +61,11 @@ const AppContent = () => {
         <Route path="/aboutUs" element={<AboutPage />} />
         <Route path="/ContactUs" element={<ContactUs />} />
         <Route path="/userProfile" element={<UserProfile />} />
-        <Route path="/dashboard" element={<AdminSidebar />} />
+        <Route path="/admin/*" element={<AdminPanel />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {!hideNavbarRoutes.includes(location.pathname) && <Footer />}
+      {!shouldHideFooter() && <Footer />}
     </>
   );
 };

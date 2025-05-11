@@ -17,7 +17,7 @@ router.post("/send", async (req, res) => {
 
   try {
     await transporter.sendMail({
-      from: `"GlamBook" <${process.env.EMAIL_USER}>`,
+      from: `"Beauty" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       text: message,

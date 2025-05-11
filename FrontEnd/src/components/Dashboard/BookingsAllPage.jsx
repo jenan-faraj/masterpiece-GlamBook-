@@ -94,12 +94,12 @@ const BookingsAllPage = () => {
     } else if (booking.isCompleted) {
       return {
         text: "مكتمل",
-        className: "bg-blue-100 text-blue-800",
+        className: "bg-green-100 text-green-800",
       };
     } else {
       return {
-        text: "مؤكد",
-        className: "bg-green-100 text-green-800",
+        text: "غير مكتمل",
+        className: "bg-blue-100 text-blue-800",
       };
     }
   };
@@ -235,18 +235,26 @@ const BookingsAllPage = () => {
         ? `#${booking._id.substring(booking._id.length - 5)}`
         : `#${index + 1}`;
       const status = getBookingStatus(booking);
-      const totalPrice = booking.services && booking.services.length > 0
-        ? booking.services.reduce(
-            (total, service) => total + service.servicePrice,
-            0
-          )
-        : 0;
+      const totalPrice =
+        booking.services && booking.services.length > 0
+          ? booking.services.reduce(
+              (total, service) => total + service.servicePrice,
+              0
+            )
+          : 0;
 
       return (
-        <div 
-          key={bookingId} 
+        <div
+          key={bookingId}
           className="bg-white rounded-lg shadow-md p-4 mb-4 border-r-4 hover:bg-[#f4e5d6]/50 transition-colors"
-          style={{ borderRightColor: status.text === "ملغي" ? "#f87171" : status.text === "مكتمل" ? "#60a5fa" : "#4ade80" }}
+          style={{
+            borderRightColor:
+              status.text === "ملغي"
+                ? "#f87171"
+                : status.text === "مكتمل"
+                ? "#60a5fa"
+                : "#4ade80",
+          }}
         >
           <div className="flex justify-between items-start mb-2">
             <span className="font-bold text-lg">{displayId}</span>
@@ -256,7 +264,7 @@ const BookingsAllPage = () => {
               {status.text}
             </span>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-2 mb-3">
             <div>
               <p className="text-xs text-gray-500">الصالون</p>
@@ -275,7 +283,7 @@ const BookingsAllPage = () => {
               </p>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-2 mb-3">
             <div>
               <p className="text-xs text-gray-500">التاريخ</p>
@@ -286,7 +294,7 @@ const BookingsAllPage = () => {
               <p>{booking.time || "غير متوفر"}</p>
             </div>
           </div>
-          
+
           <div className="mt-2 text-left">
             <p className="text-sm font-bold text-[#8a5936]">
               المبلغ: {totalPrice} د.أ
@@ -365,11 +373,11 @@ const BookingsAllPage = () => {
     // محاولة إظهار 3 صفحات حول الصفحة الحالية للشاشات الصغيرة، 5 للكبيرة
     const pagesAround = window.innerWidth < 640 ? 1 : 2;
     let startPage = Math.max(1, currentPage - pagesAround);
-    let endPage = Math.min(totalPages, startPage + (pagesAround * 2));
+    let endPage = Math.min(totalPages, startPage + pagesAround * 2);
 
     // تعديل نقطة البداية إذا كنا في نهاية قائمة الصفحات
-    if (endPage - startPage < (pagesAround * 2)) {
-      startPage = Math.max(1, endPage - (pagesAround * 2));
+    if (endPage - startPage < pagesAround * 2) {
+      startPage = Math.max(1, endPage - pagesAround * 2);
     }
 
     for (let i = startPage; i <= endPage; i++) {
@@ -593,9 +601,7 @@ const BookingsAllPage = () => {
               </div>
 
               {/* عرض بطاقات للشاشات الصغيرة */}
-              <div className="md:hidden p-4">
-                {renderBookingCards()}
-              </div>
+              <div className="md:hidden p-4">{renderBookingCards()}</div>
             </>
           )}
 

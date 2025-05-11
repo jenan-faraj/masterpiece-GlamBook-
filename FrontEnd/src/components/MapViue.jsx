@@ -7,7 +7,7 @@ const MapComponent = ({ location }) => {
   const position = [location.lat, location.lng]; // استخراج الإحداثيات
 
   return (
-    <MapContainer center={position} zoom={13} style={{ height: "400px", width: "100%" }}>
+    <MapContainer center={position} zoom={13} style={{ height: "400px", width: "100%" , zIndex: 0 }}>
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <Marker position={position}>
         <Popup>📍 الموقع هنا!</Popup>
