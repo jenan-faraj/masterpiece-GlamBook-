@@ -87,6 +87,8 @@ const UserProfile = () => {
         <p className="text-2xl">جاري التوجيه إلى صفحة الصالون...</p>
       </div>
     );
+  } else if (user.role === "admin") {
+      navigate("/admin");
   }
 
   return (

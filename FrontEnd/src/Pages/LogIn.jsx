@@ -54,16 +54,36 @@ export default function LoginForm() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
-
       if (!res.ok) {
-        setError(data.message || "فشل تسجيل الدخول");
+        const errorData = await res.json();
+        setError(errorData.message || "فشل تسجيل الدخول");
         return;
       }
 
-      // توجيه المستخدم للمكان اللي كان فيه
-      navigate(-1, { replace: true });
-      location.reload(); // إذا بدك يتحدث تلقائياً بعد تسجيل الدخول
+      // ✅ بعدها منجيب بيانات المستخدم
+      const userRes = await fetch("http://localhost:3000/api/users/me", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const userData = await userRes.json();
+
+      if (!userRes.ok) {
+        setError("فشل في جلب بيانات المستخدم بعد تسجيل الدخول.");
+        return;
+      }
+
+      // ✅ نوجّه بناءً على الدور
+      if (userData.role === "admin") {
+        navigate("/admin", { replace: true });
+      } else {
+        navigate(-1, { replace: true });
+      }
+
+      location.reload(); // لتحديث الحالة بعد تسجيل الدخول
     } catch (err) {
       setError("حدث خطأ ما، يرجى المحاولة لاحقاً.");
     }
