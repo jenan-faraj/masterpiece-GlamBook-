@@ -6,9 +6,8 @@ import {
   Search,
   Users,
   Star,
-  ArrowRight,
-  Scissors,
-  Heart,
+  ChevronLeft,
+  MapPin,
   Sparkles,
   MessageSquare,
   Clock,
@@ -18,7 +17,7 @@ import {
 } from "lucide-react";
 import HeroSection from "../components/HeroSection";
 import ScrollToTopButton from "../components/ScrollToTopButton";
-// مكون تقييم النجوم لعرض النجوم بناءً على التقييم
+
 const StarRating = ({ rating }) => {
   const numRating = parseFloat(rating);
   const fullStars = Math.floor(numRating);
@@ -26,30 +25,32 @@ const StarRating = ({ rating }) => {
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
   return (
-    <div className="flex justify-center">
-      {/* النجوم الكاملة */}
+    <div className="flex items-center">
+      {/* نجوم كاملة */}
       {[...Array(fullStars)].map((_, i) => (
         <Star
           key={`full-${i}`}
-          className="text-yellow-400 fill-yellow-400"
-          size={16}
+          className="text-amber-400 fill-amber-400"
+          size={18}
         />
       ))}
 
       {/* نصف نجمة */}
       {hasHalfStar && (
-        <div className="relative">
-          <Star className="text-yellow-400" size={16} />
+        <div dir="ltr" className="relative">
+          <Star className="text-amber-400" size={18} />
           <div className="absolute top-0 left-0 w-1/2 overflow-hidden">
-            <Star className="text-yellow-400 fill-yellow-400" size={16} />
+            <Star className="text-amber-400 fill-amber-400" size={18} />
           </div>
         </div>
       )}
 
-      {/* النجوم الفارغة */}
+      {/* نجوم فارغة */}
       {[...Array(emptyStars)].map((_, i) => (
-        <Star key={`empty-${i}`} className="text-yellow-400" size={16} />
+        <Star key={`empty-${i}`} className="text-amber-400" size={18} />
       ))}
+
+      <span className="ml-1 text-sm text-gray-600">{numRating.toFixed(1)}</span>
     </div>
   );
 };
@@ -176,6 +177,12 @@ export default function ArabicHomePage() {
       iconColor: "#B58152",
     },
   ];
+
+  // استخراج عدد الخدمات المتوفرة للصالون
+  const getServiceCount = (salon) => {
+    if (!salon.services) return 0;
+    return salon.services.filter((service) => !service.isDeleted).length;
+  };
 
   return (
     <div className="bg-white min-h-screen" dir="rtl" lang="ar">
@@ -325,7 +332,7 @@ export default function ArabicHomePage() {
           </p>
         </div>
 
-        <div className="flex lg:px-20 flex-wrap justify-evenly gap-5 mb-20 my-10">
+        <div className="flex lg:px-20 flex-wrap justify-evenly gap-5 my-10">
           {loading ? (
             <div className="w-full text-center py-8">Loading salons...</div>
           ) : error ? (
@@ -341,51 +348,108 @@ export default function ArabicHomePage() {
               return (
                 <div
                   key={salon._id}
-                  className="group relative w-80 h-72 bg-slate-50 flex flex-col items-center justify-center gap-2 text-center rounded-2xl overflow-hidden shadow-md"
+                  className="w-full sm:w-80 bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:translate-y-[-5px]"
                 >
-                  {/* Background image instead of gradient div */}
-                  <div className="absolute top-0 w-80 h-24 rounded-t-2xl overflow-hidden transition-all duration-500 group-hover:h-72 group-hover:w-80 group-hover:rounded-b-2xl">
+                  {/* صورة خلفية الصالون */}
+                  <div className="h-48 overflow-hidden relative">
                     <img
                       src={
                         salon.bgImage ||
                         "https://i.pinimg.com/474x/81/3a/27/813a2759cb59a7e7def1f5f8e7fe6992.jpg"
                       }
-                      alt="Profile background"
+                      alt={`صورة صالون ${salon.name}`}
                       className="w-full h-full object-cover"
                     />
+
+                    {/* علامة ترويجية إذا كان هناك عروض */}
+                    {salon.offers && salon.offers.length > 0 && (
+                      <div className="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                        عروض خاصة
+                      </div>
+                    )}
+
+                    {/* شارة الاشتراك إذا كان مميز */}
+                    {salon.subscription && salon.subscription !== "non" && (
+                      <div className="absolute top-3 right-3 bg-[#8a5936] text-white px-3 py-1 rounded-full text-xs font-bold">
+                        صالون مميز
+                      </div>
+                    )}
                   </div>
 
-                  {/* Profile picture instead of blue circle */}
-                  <div className="w-28 h-28 mt-8 rounded-full border-4 border-slate-50 z-10 overflow-hidden group-hover:scale-150 group-hover:-translate-x-24 group-hover:-translate-y-20 transition-all duration-500">
-                    <img
-                      src={
-                        salon.profileImage ||
-                        "https://i.pinimg.com/474x/81/3a/27/813a2759cb59a7e7def1f5f8e7fe6992.jpg"
-                      }
-                      alt="George Johnson"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  <div className="relative px-5 pt-12 pb-5" dir="rtl">
+                    {/* صورة الملف الشخصي */}
+                    <div className="absolute w-20 h-20 rounded-full border-4 border-white shadow-md overflow-hidden -top-10 right-5">
+                      <img
+                        src={
+                          salon.profileImage ||
+                          "https://i.pinimg.com/474x/81/3a/27/813a2759cb59a7e7def1f5f8e7fe6992.jpg"
+                        }
+                        alt={`شعار صالون ${salon.name}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
 
-                  <div className="z-10 group-hover:-translate-y-10 bg-[#ffffff74] p-2 rounded-2xl transition-all duration-500">
-                    <span className="text-2xl font-semibold">{salon.name}</span>
-                    {/* Replace the plain rating text with star rating component */}
-                    <div dir="ltr" className="flex flex-col items-center">
-                      <StarRating rating={salon.rating} />
+                    {/* معلومات الصالون */}
+                    <div className="mb-4">
+                      <h3 className="text-xl font-bold text-gray-800 mb-1">
+                        {salon.name}
+                      </h3>
+                      <div className="mb-2">
+                        <StarRating rating={salon.rating} />
+                      </div>
+                      <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                        {salon.shortDescription ||
+                          "صالون متميز يقدم خدمات عالية الجودة لعملائه"}
+                      </p>
+
+                      {/* معلومات إضافية */}
+                      <div className="flex flex-col gap-2 text-sm text-gray-600 mb-4">
+                        <div className="flex items-center gap-2">
+                          <MapPin size={16} className="text-[#a0714f]" />
+                          <span className="truncate">
+                            {salon.location || "غير متوفر"}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Calendar size={16} className="text-[#a0714f]" />
+                          <span>
+                            {salon.openingYear
+                              ? `تأسس في ${salon.openingYear}`
+                              : "غير متوفر"}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock size={16} className="text-[#a0714f]" />
+                          <span>{getServiceCount(salon)} خدمة متوفرة</span>
+                        </div>
+                      </div>
+
+                      {/* زر الزيارة */}
+                      <Link
+                        onClick={() => visitorsCount(salon)}
+                        className="block w-full text-center bg-[#8a5936] hover:bg-[#a0714f] text-white py-2.5 px-4 rounded-lg font-medium transition-colors duration-300"
+                        to={`/salonDetails/${salon._id}`}
+                      >
+                        زيارة الصالون
+                      </Link>
                     </div>
                   </div>
-
-                  <Link
-                    onClick={() => visitorsCount(salon)}
-                    className="bg-[var(--Logo-color)] px-4 py-1 text-slate-50 rounded-md z-10 hover:scale-125 transition-all duration-500 hover:bg-[var(--button-color)]"
-                    to={`/salonDetails/${salon._id}`}
-                  >
-                    زيارة
-                  </Link>
                 </div>
               );
             })
           )}
+        </div>
+        <div className="flex justify-center lg:mb-10 my-8">
+          <Link
+            className="group flex items-center gap-2 bg-gradient-to-r from-[#8a5936] to-[#a0714f] hover:from-[#a0714f] hover:to-[#8a5936] text-white py-3 px-6 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1"
+            to={`/categories`}
+          >
+            <span className="text-base">تصفح جميع الصالونات</span>
+            <ChevronLeft
+              size={20}
+              className="transition-transform duration-300 group-hover:translate-x-[-4px]"
+            />
+          </Link>
         </div>
       </div>
 
