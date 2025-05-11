@@ -1,10 +1,21 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { User, Phone, Scissors, Calendar, Check, Clock } from "lucide-react";
+import {
+  User,
+  Phone,
+  Mail,
+  Scissors,
+  Calendar,
+  Check,
+  Clock,
+  Trash,
+  CreditCard,
+} from "lucide-react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import PaymentForm from "../Pages/Payment";
 import ScrollToTopButton from "../components/ScrollToTopButton";
+import Swal from "sweetalert2";
 import NotFound from "../components/NotFound";
 
 const BookingForm = () => {
@@ -30,6 +41,7 @@ const BookingForm = () => {
   const [errors, setErrors] = useState({});
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [userRole, setUserRole] = useState(false);
 
   useEffect(() => {
     // Fetch salon details
@@ -49,23 +61,19 @@ const BookingForm = () => {
     // Fetch user authentication
     const fetchUserAuth = async () => {
       try {
-        const response = await fetch("http://localhost:3000/get_token", {
+        const response = await fetch("http://localhost:3000/api/users/me", {
           method: "GET",
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
         });
-
         if (response.ok) {
           const data = await response.json();
-          if (data.token) {
-            const decodedToken = JSON.parse(atob(data.token.split(".")[1]));
-            if (decodedToken.userId) {
-              setUserId(decodedToken.userId);
-              setFormData((prev) => ({ ...prev, userId: decodedToken.userId }));
-            }
-          }
+          setUserId(data._id);
+          setUserRole(data.role);
+          console.log("User role:", data.role);
+          setFormData((prev) => ({ ...prev, userId: data._id }));
         }
       } catch (error) {
         console.error("Error fetching token:", error);
@@ -75,6 +83,19 @@ const BookingForm = () => {
     fetchSalon();
     fetchUserAuth();
   }, [id]);
+
+  useEffect(() => {
+    if (userRole === "salon") {
+      Swal.fire({
+        icon: "error",
+        title: "خطأ",
+        text: "لا يمكنك حجز موعد كصالون",
+        confirmButtonText: "حسناً",
+      }).then(() => {
+        navigate(-1, { replace: true });
+      });
+    }
+  }, [userRole, navigate]);
 
   // Calculate total amount when services change
   useEffect(() => {
