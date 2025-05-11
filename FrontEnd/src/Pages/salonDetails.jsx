@@ -11,6 +11,7 @@ import SpecialOffers from "../components/offers";
 import SalonBookings from "../components/SalonBookings";
 import Swal from "sweetalert2";
 import ScrollToTopButton from "../components/ScrollToTopButton";
+import NotFound from "../components/NotFound";
 
 function SalonDetails() {
   const { id } = useParams();
@@ -32,12 +33,6 @@ function SalonDetails() {
       .catch((error) => {
         setError(error);
         setLoading(false);
-        Swal.fire({
-          title: "خطأ!",
-          text: "حدث خطأ أثناء جلب بيانات الصالون",
-          icon: "error",
-          confirmButtonText: "حسناً",
-        });
       });
   }, [id]);
 
@@ -170,14 +165,7 @@ function SalonDetails() {
       </div>
     );
 
-  if (error)
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-2xl text-red-500">
-          حدث خطأ أثناء جلب تفاصيل الصالون.
-        </p>
-      </div>
-    );
+  if (error) return <NotFound />;
 
   return (
     <div dir="rtl" className="bg-gray-50 min-h-screen pb-12">

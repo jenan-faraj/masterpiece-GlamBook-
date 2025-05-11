@@ -1,20 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  User,
-  Phone,
-  Mail,
-  Scissors,
-  Calendar,
-  Check,
-  Clock,
-  Trash,
-  CreditCard,
-} from "lucide-react";
+import { User, Phone, Scissors, Calendar, Check, Clock } from "lucide-react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import PaymentForm from "../Pages/Payment";
 import ScrollToTopButton from "../components/ScrollToTopButton";
+import NotFound from "../components/NotFound";
 
 const BookingForm = () => {
   const { id } = useParams();
@@ -257,25 +248,7 @@ const BookingForm = () => {
   }
 
   if (error) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-gray-50">
-        <div className="text-center bg-white p-8 rounded-lg shadow-lg max-w-md">
-          <div className="text-red-500 mb-4">
-            <Trash className="w-16 h-16 mx-auto" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">حدث خطأ</h2>
-          <p className="text-gray-600 mb-4">
-            لم نتمكن من تحميل بيانات الصالون. يرجى المحاولة مرة أخرى.
-          </p>
-          <button
-            onClick={() => navigate("/")}
-            className="px-6 py-2 bg-[var(--Logo-color)] text-white rounded-lg hover:bg-[var(--button-color)] transition-colors"
-          >
-            العودة للصفحة الرئيسية
-          </button>
-        </div>
-      </div>
-    );
+    return <NotFound />;
   }
 
   const renderStepContent = () => {
@@ -550,7 +523,7 @@ const BookingForm = () => {
           <PaymentForm
             totalAmount={totalAmount}
             onPaymentSuccess={handlePaymentSuccess}
-            selectedServices={formData.services.map(s => s.serviceName)}
+            selectedServices={formData.services.map((s) => s.serviceName)}
             salon={salon._id}
             user={userId}
           />
@@ -589,7 +562,7 @@ const BookingForm = () => {
                   <div className="flex justify-between">
                     <span className="text-gray-500">الخدمات:</span>
                     <span className="font-medium">
-                      {formData.services.map(s => s.serviceName).join(", ")}
+                      {formData.services.map((s) => s.serviceName).join(", ")}
                     </span>
                   </div>
                   <div className="flex justify-between">
