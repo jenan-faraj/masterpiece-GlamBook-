@@ -161,11 +161,7 @@ const Navbar = () => {
                   <li>
                     <Link
                       to="/userProfile"
-                      className={`flex items-center gap-2 px-3 py-2 rounded transition-colors ${
-                        isActive("/userProfile")
-                          ? "bg-[#B58152] text-white font-bold"
-                          : "hover:bg-[#f5e6e1]"
-                      }`}
+                      className={`flex items-center gap-2 px-3 py-2 rounded transition-colors hover:bg-[#f5e6e1]`}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -258,11 +254,7 @@ const Navbar = () => {
                     <li className="border-b border-[#e6d8d3]">
                       <Link
                         to="/userProfile"
-                        className={`flex items-center justify-between py-3 px-4 transition-colors ${
-                          isActive("/userProfile")
-                            ? "bg-[#B58152] text-white font-bold"
-                            : "hover:bg-[#f5e6e1]"
-                        }`}
+                        className={`flex items-center justify-between py-3 px-4 transition-colors hover:bg-[#f5e6e1]`}
                         onClick={toggleMenu}
                       >
                         <span>{username}</span>

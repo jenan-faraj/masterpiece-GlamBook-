@@ -1,4 +1,3 @@
-// UserProfile.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -7,8 +6,10 @@ import BookingsTab from "./../components/BookingsTab";
 import ReviewsTab from "./../components/ProfileReviewsTab";
 import FavoritesTab from "./../components/FavoritesTab";
 import ScrollToTopButton from "./../components/ScrollToTopButton";
+import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("profile");
   const [user, setUser] = useState({
     username: "",
@@ -17,6 +18,7 @@ const UserProfile = () => {
     favoriteList: [],
     reviews: [],
     book: [],
+    role: "",
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -27,6 +29,32 @@ const UserProfile = () => {
         withCredentials: true,
       });
       setUser(response.data);
+
+      // إذا كان المستخدم من نوع صالون، قم بتوجيهه مباشرة إلى صفحة الصالون
+      if (response.data.role === "salon") {
+        try {
+          const salonsResponse = await axios.get(
+            "http://localhost:3000/api/salons",
+            {
+              withCredentials: true,
+            }
+          );
+
+          const matchedSalon = salonsResponse.data.find(
+            (salon) => salon.email === response.data.email
+          );
+
+          if (matchedSalon) {
+            navigate(`/salonDetails/${matchedSalon._id}`);
+            return; // توقف عن تنفيذ باقي الكود
+          } else {
+            console.error("ما تم العثور على صالون بهالإيميل");
+          }
+        } catch (err) {
+          console.error("فشل في جلب بيانات الصالونات", err);
+        }
+      }
+
       setLoading(false);
     } catch (err) {
       setError("فشل في جلب بيانات المستخدم");
@@ -48,11 +76,18 @@ const UserProfile = () => {
   if (error)
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="text-2xl text-red-500">
-          حدث خطأ أثناء جلب بيانات المستخدم.
-        </p>
+        <p className="text-2xl text-red-500">{error}</p>
       </div>
     );
+
+  // لا تعرض واجهة المستخدم إذا كان دوره صالون - هذا لمنع العرض المؤقت قبل التوجيه
+  if (user.role === "salon") {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-2xl">جاري التوجيه إلى صفحة الصالون...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 min-h-screen">

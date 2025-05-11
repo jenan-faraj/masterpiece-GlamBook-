@@ -60,7 +60,7 @@ const AppContent = () => {
         <Route path="/payment" element={<Payment />} />
         <Route path="/aboutUs" element={<AboutPage />} />
         <Route path="/ContactUs" element={<ContactUs />} />
-        <Route path="/userProfile" element={<UserProfile />} />
+        <Route path="/userProfile/*" element={<UserProfile />} />
         <Route path="/admin/*" element={<AdminPanel />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
