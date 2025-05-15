@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -14,7 +13,6 @@ export default function SalonSetting({ salon: initialSalon }) {
     description: false,
     security: false,
   });
-  const { id } = useParams();
 
   const toggleSection = (section) => {
     setExpandedSections((prev) => ({
@@ -93,7 +91,6 @@ export default function SalonSetting({ salon: initialSalon }) {
     sunday: "الأحد",
   };
 
-  // Helper function to render edit buttons
   const renderEditButtons = () => (
     <div className="flex space-x-2 mt-2 rtl:space-x-reverse">
       <button
@@ -117,7 +114,6 @@ export default function SalonSetting({ salon: initialSalon }) {
         إعدادات الصالون
       </h2>
 
-      {/* Basic Information Section */}
       <div className="border-b border-gray-200 pb-4 mb-4">
         <div
           className="flex justify-between items-center cursor-pointer"
@@ -212,7 +208,6 @@ export default function SalonSetting({ salon: initialSalon }) {
         )}
       </div>
 
-      {/* Contact Information Section */}
       <div className="border-b border-gray-200 pb-4 mb-4">
         <div
           className="flex justify-between items-center cursor-pointer"
@@ -265,7 +260,6 @@ export default function SalonSetting({ salon: initialSalon }) {
         )}
       </div>
 
-      {/* Business Hours Section */}
       <div className="border-b border-gray-200 pb-4 mb-4">
         <div
           className="flex justify-between items-center cursor-pointer"
@@ -375,7 +369,6 @@ export default function SalonSetting({ salon: initialSalon }) {
         )}
       </div>
 
-      {/* Salon Description Section */}
       <div className="border-b border-gray-200 pb-4 mb-4">
         <div
           className="flex justify-between items-center cursor-pointer"
@@ -413,7 +406,6 @@ export default function SalonSetting({ salon: initialSalon }) {
         )}
       </div>
 
-      {/* Security Section */}
       <div className="pb-4">
         <div
           className="flex justify-between items-center cursor-pointer"

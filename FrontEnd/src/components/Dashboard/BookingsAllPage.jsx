@@ -5,8 +5,6 @@ const BookingsAllPage = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // إضافة متغيرات لخاصية البحث والفلترة والترقيم
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +20,6 @@ const BookingsAllPage = () => {
         setLoading(true);
         const response = await axios.get("http://localhost:3000/api/bookings");
 
-        // تأكد من أن البيانات المسترجعة هي مصفوفة
         if (Array.isArray(response.data)) {
           setBookings(response.data);
         } else if (response.data && Array.isArray(response.data.data)) {
@@ -59,7 +56,6 @@ const BookingsAllPage = () => {
     fetchBookings();
   }, []);
 
-  // طباعة شكل البيانات للتشخيص
   useEffect(() => {
     console.log("Bookings data:", bookings);
   }, [bookings]);
@@ -81,7 +77,6 @@ const BookingsAllPage = () => {
     }
   };
 
-  // Get booking status based on flags
   const getBookingStatus = (booking) => {
     if (!booking)
       return { text: "غير معروف", className: "bg-gray-100 text-gray-800" };
@@ -104,7 +99,6 @@ const BookingsAllPage = () => {
     }
   };
 
-  // وظيفة فرز البيانات
   const requestSort = (key) => {
     let direction = "asc";
     if (sortConfig.key === key && sortConfig.direction === "asc") {
@@ -113,12 +107,10 @@ const BookingsAllPage = () => {
     setSortConfig({ key, direction });
   };
 
-  // وظيفة للحصول على الحجوزات المصفاة حسب حالة الحجز
   const getFilteredBookings = () => {
     if (!Array.isArray(bookings)) return [];
 
     return bookings.filter((booking) => {
-      // فلترة حسب النص المدخل في البحث
       const searchLower = searchTerm.toLowerCase();
       const hasSearchMatch =
         (booking.salonId &&
@@ -126,12 +118,10 @@ const BookingsAllPage = () => {
           booking.salonId.name.toLowerCase().includes(searchLower)) ||
         (booking._id && booking._id.toLowerCase().includes(searchLower)) ||
         (booking.time && booking.time.toLowerCase().includes(searchLower)) ||
-        // إضافة بحث عن اسم المستخدم
         (booking.userId &&
           booking.userId.username &&
           booking.userId.username.toLowerCase().includes(searchLower));
 
-      // فلترة حسب حالة الحجز
       let statusMatch = true;
       if (statusFilter !== "all") {
         if (statusFilter === "canceled" && !booking.isCanceled)
@@ -149,7 +139,6 @@ const BookingsAllPage = () => {
     });
   };
 
-  // وظيفة لفرز البيانات
   const getSortedBookings = (filteredBookings) => {
     if (!sortConfig.key) return filteredBookings;
 
@@ -195,31 +184,20 @@ const BookingsAllPage = () => {
     });
   };
 
-  // الحصول على الحجوزات المصفاة والمفرزة
   const filteredBookings = getFilteredBookings();
   const sortedBookings = getSortedBookings(filteredBookings);
-
-  // الحصول على الحجوزات للصفحة الحالية
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentBookings = sortedBookings.slice(
     indexOfFirstItem,
     indexOfLastItem
   );
-
-  // حساب عدد الصفحات
   const totalPages = Math.ceil(sortedBookings.length / itemsPerPage);
-
-  // الانتقال إلى الصفحة
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  // رمز ترتيب الأعمدة
   const getSortIndicator = (key) => {
     if (sortConfig.key !== key) return null;
     return sortConfig.direction === "asc" ? "▲" : "▼";
   };
-
-  // عرض الحجوزات في بطاقات للشاشات الصغيرة
   const renderBookingCards = () => {
     if (!Array.isArray(currentBookings) || currentBookings.length === 0) {
       return (
@@ -271,7 +249,7 @@ const BookingsAllPage = () => {
               <p className="font-medium">
                 {booking.salonId && booking.salonId.name
                   ? booking.salonId.name
-                  : "غير متوفر"}
+                  : " صالون طلة عروس"}
               </p>
             </div>
             <div>
@@ -279,7 +257,7 @@ const BookingsAllPage = () => {
               <p className="font-medium">
                 {booking.userId && booking.userId.username
                   ? booking.userId.username
-                  : "غير متوفر"}
+                  : "تالا احمد"}
               </p>
             </div>
           </div>
@@ -305,7 +283,6 @@ const BookingsAllPage = () => {
     });
   };
 
-  // التحقق من وجود المصفوفة قبل استخدام map
   const renderBookingsTable = () => {
     if (!Array.isArray(currentBookings) || currentBookings.length === 0) {
       return (
@@ -330,12 +307,12 @@ const BookingsAllPage = () => {
           <td className="px-6 py-4 whitespace-nowrap">
             {booking.salonId && booking.salonId.name
               ? booking.salonId.name
-              : "غير متوفر"}
+              : "صالون طلة عروس "}
           </td>
           <td className="px-6 py-4 whitespace-nowrap">
             {booking.userId && booking.userId.username
               ? booking.userId.username
-              : "غير متوفر"}
+              : "تالا احمد"}
           </td>
           <td className="px-6 py-4 whitespace-nowrap">
             {formatDate(booking.date)}
@@ -366,16 +343,12 @@ const BookingsAllPage = () => {
     });
   };
 
-  // إنشاء أزرار ترقيم الصفحات
   const renderPagination = () => {
     const pageNumbers = [];
-
-    // محاولة إظهار 3 صفحات حول الصفحة الحالية للشاشات الصغيرة، 5 للكبيرة
     const pagesAround = window.innerWidth < 640 ? 1 : 2;
     let startPage = Math.max(1, currentPage - pagesAround);
     let endPage = Math.min(totalPages, startPage + pagesAround * 2);
 
-    // تعديل نقطة البداية إذا كنا في نهاية قائمة الصفحات
     if (endPage - startPage < pagesAround * 2) {
       startPage = Math.max(1, endPage - pagesAround * 2);
     }
@@ -434,7 +407,6 @@ const BookingsAllPage = () => {
             } text-sm font-medium`}
           >
             <span className="sr-only">التالي</span>
-            {/* رمز السهم اليسار للعربية */}
             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
@@ -452,15 +424,12 @@ const BookingsAllPage = () => {
     <div className="min-h-screen bg-[#f4e5d6]/20" dir="rtl">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          {/* رأس الصفحة */}
           <div className="bg-[#8a5936] text-white p-4 sm:p-6">
             <h1 className="text-xl sm:text-2xl font-bold">جميع الحجوزات</h1>
           </div>
 
-          {/* قسم البحث والفلترة */}
           <div className="p-4 sm:p-6 bg-white border-b border-gray-200">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-              {/* حقل البحث */}
               <div className="relative">
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <svg
@@ -487,7 +456,6 @@ const BookingsAllPage = () => {
                 />
               </div>
 
-              {/* فلتر الحالة */}
               <div>
                 <select
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
@@ -501,14 +469,13 @@ const BookingsAllPage = () => {
                 </select>
               </div>
 
-              {/* عدد العناصر في الصفحة */}
               <div className="sm:col-span-2 lg:col-span-1">
                 <select
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                   value={itemsPerPage}
                   onChange={(e) => {
                     setItemsPerPage(Number(e.target.value));
-                    setCurrentPage(1); // إعادة تعيين إلى الصفحة الأولى عند تغيير عدد العناصر
+                    setCurrentPage(1);
                   }}
                 >
                   <option value="5">5 حجوزات في الصفحة</option>
@@ -519,7 +486,6 @@ const BookingsAllPage = () => {
               </div>
             </div>
 
-            {/* عرض إحصائيات */}
             <div className="mt-4 text-sm text-gray-600">
               إجمالي الحجوزات: {filteredBookings.length} | تم عرض{" "}
               {Math.min(indexOfLastItem, filteredBookings.length) -
@@ -528,7 +494,6 @@ const BookingsAllPage = () => {
             </div>
           </div>
 
-          {/* جدول البيانات للشاشات الكبيرة وبطاقات للشاشات الصغيرة */}
           {loading ? (
             <div className="text-center py-10">
               <div
@@ -545,7 +510,6 @@ const BookingsAllPage = () => {
             </div>
           ) : (
             <>
-              {/* عرض جدول للشاشات المتوسطة والكبيرة */}
               <div className="hidden md:block overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-[#a0714f]/10">
@@ -600,17 +564,14 @@ const BookingsAllPage = () => {
                 </table>
               </div>
 
-              {/* عرض بطاقات للشاشات الصغيرة */}
               <div className="md:hidden p-4">{renderBookingCards()}</div>
             </>
           )}
 
-          {/* ترقيم الصفحات */}
           {!loading && !error && filteredBookings.length > 0 && (
             <div className="p-4 sm:p-6 border-t border-gray-200">
               {renderPagination()}
 
-              {/* معلومات الصفحات */}
               <div className="mt-3 text-sm text-center text-gray-600">
                 الصفحة {currentPage} من {totalPages}
               </div>

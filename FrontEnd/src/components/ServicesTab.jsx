@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import ServicePopup from "../components/ServicesPopup";
 import { Trash2 } from "lucide-react";
-import Swal from "sweetalert2"; // إضافة مكتبة SweetAlert2
+import Swal from "sweetalert2";
 
 const ServicesTab = ({ user, salon }) => {
   const [showModal, setShowModal] = useState(false);
@@ -19,7 +19,7 @@ const ServicesTab = ({ user, salon }) => {
   const [uploading, setUploading] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [services, setServices] = useState(salon.services || []); // إضافة حالة لتخزين الخدمات
+  const [services, setServices] = useState(salon.services || []);
 
   const handleChange = (e) => {
     setService({ ...service, [e.target.name]: e.target.value });
@@ -27,12 +27,9 @@ const ServicesTab = ({ user, salon }) => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-
-    // Create preview URLs for selected images
     const newPreviewImages = files.map((file) => URL.createObjectURL(file));
     setPreviewImages([...previewImages, ...newPreviewImages]);
 
-    // Store the file objects for upload
     const currentFiles = [...service.images, ...files];
     setService({ ...service, images: currentFiles });
   };
@@ -41,7 +38,6 @@ const ServicesTab = ({ user, salon }) => {
     const updatedPreviews = [...previewImages];
     const updatedImages = [...service.images];
 
-    // Release object URL to avoid memory leaks
     URL.revokeObjectURL(previewImages[index]);
 
     updatedPreviews.splice(index, 1);
@@ -88,20 +84,11 @@ const ServicesTab = ({ user, salon }) => {
     try {
       const imageUrls = await uploadImages(service.images);
       const newService = { ...service, images: imageUrls };
-      const updatedServices = [...services, newService]; // Update the services state
+      const updatedServices = [...services, newService];
       const response = await axios.put(
         `http://localhost:3000/api/salons/${salon._id}`,
         { services: updatedServices }
       );
-
-      // تغيير التنبيه إلى SweetAlert بالعربية
-      Swal.fire({
-        title: "تم بنجاح!",
-        text: "تمت إضافة الخدمة بنجاح",
-        icon: "success",
-        confirmButtonText: "حسناً",
-        confirmButtonColor: "#825c41",
-      });
 
       setShowModal(false);
       setService({
@@ -114,10 +101,10 @@ const ServicesTab = ({ user, salon }) => {
         price: "",
       });
       setPreviewImages([]);
-      setServices(updatedServices); // Update the state with the new services list
+      setServices(updatedServices);
     } catch (error) {
       console.error("Error adding service:", error);
-      // تنبيه فشل العملية
+
       Swal.fire({
         title: "خطأ!",
         text: "حدث خطأ أثناء إضافة الخدمة",
@@ -136,7 +123,6 @@ const ServicesTab = ({ user, salon }) => {
   };
 
   const handleDeleteService = async (serviceId) => {
-    // استخدام SweetAlert للتأكيد قبل الحذف
     Swal.fire({
       title: "هل أنت متأكد؟",
       text: "لن تتمكن من استرجاع هذه الخدمة!",
@@ -146,7 +132,6 @@ const ServicesTab = ({ user, salon }) => {
       cancelButtonColor: "#825c41",
       confirmButtonText: "نعم، قم بالحذف!",
       cancelButtonText: "إلغاء",
-      // تعديل الاتجاه ليناسب اللغة العربية
       customClass: {
         popup: "swal-rtl",
       },
@@ -161,12 +146,10 @@ const ServicesTab = ({ user, salon }) => {
           );
 
           if (response.ok) {
-            // Update the services state by filtering out the deleted service
             setServices(
               services.filter((service) => service._id !== serviceId)
             );
 
-            // رسالة نجاح الحذف
             Swal.fire({
               title: "تم الحذف!",
               text: "تم حذف الخدمة بنجاح",
@@ -180,7 +163,7 @@ const ServicesTab = ({ user, salon }) => {
           }
         } catch (error) {
           console.error("Error deleting service:", error);
-          // رسالة خطأ
+
           Swal.fire({
             title: "خطأ!",
             text: "حدث خطأ أثناء حذف الخدمة",
@@ -200,9 +183,7 @@ const ServicesTab = ({ user, salon }) => {
     setIsPopupOpen(false);
   };
 
-  // إضافة CSS لتحديد اتجاه SweetAlert للعربية
   useEffect(() => {
-    // إضافة أنماط للـ SweetAlert باللغة العربية
     const style = document.createElement("style");
     style.innerHTML = `
       .swal-rtl {
@@ -220,7 +201,6 @@ const ServicesTab = ({ user, salon }) => {
   return (
     <div dir="rtl">
       {" "}
-      {/* تغيير اتجاه الصفحة للعربية */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-y-auto">
           <div className="bg-white p-6 rounded-md w-full max-w-lg my-8">
@@ -362,6 +342,10 @@ const ServicesTab = ({ user, salon }) => {
 
                   <div className="h-55 overflow-hidden rounded-md mb-4">
                     <img
+                      onError={(e) => {
+                        e.target.src =
+                          "https://i.pinimg.com/736x/06/f1/e8/06f1e85337e93c10936339de6a38a922.jpg";
+                      }}
                       onClick={() => handleServiceClick(service)}
                       src={service.images[0]}
                       alt={service.name}

@@ -8,11 +8,11 @@ export default function ErrorPage({ navigate, userRole }) {
   }, [userRole, navigate]);
 
   const handleGoBack = () => {
-    navigate(-1); // للعودة للصفحة السابقة
+    navigate(-1); 
   };
 
   if (userRole !== "salon") {
-    return null; // لا تعرض شيئًا إذا لم يكن المستخدم صالون
+    return null; 
   }
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -16,7 +16,7 @@ function Register() {
     try {
       const response = await fetch("http://localhost:3000/api/users/me", {
         method: "GET",
-        credentials: "include", // مهم للكوكيز
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -55,12 +55,11 @@ function Register() {
 
       if (response.status === 201) {
         navigate(-2, { replace: true });
-        location.reload(); // إذا بدك يتحدث تلقائياً بعد التسجيل
+        location.reload();
       }
     } catch (error) {
       console.error("Error registering", error);
 
-      // Show error message with Sweet Alert
       setError(error.response?.data?.message || "فشل التسجيل");
       Swal.fire({
         title: "خطأ!",

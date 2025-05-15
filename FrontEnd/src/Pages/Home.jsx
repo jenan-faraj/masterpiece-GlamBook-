@@ -26,7 +26,6 @@ const StarRating = ({ rating }) => {
 
   return (
     <div className="flex items-center">
-      {/* نجوم كاملة */}
       {[...Array(fullStars)].map((_, i) => (
         <Star
           key={`full-${i}`}
@@ -35,7 +34,6 @@ const StarRating = ({ rating }) => {
         />
       ))}
 
-      {/* نصف نجمة */}
       {hasHalfStar && (
         <div dir="ltr" className="relative">
           <Star className="text-amber-400" size={18} />
@@ -45,7 +43,6 @@ const StarRating = ({ rating }) => {
         </div>
       )}
 
-      {/* نجوم فارغة */}
       {[...Array(emptyStars)].map((_, i) => (
         <Star key={`empty-${i}`} className="text-amber-400" size={18} />
       ))}
@@ -56,20 +53,14 @@ const StarRating = ({ rating }) => {
 };
 
 export default function ArabicHomePage() {
-  const [salons, setSalons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filteredSalons, setFilteredSalons] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [ratingFilter, setRatingFilter] = useState("");
   const [topRatedSalons, setTopRatedSalons] = useState([]);
 
-  // جلب البيانات من Firebase باستخدام Axios
   useEffect(() => {
     axios
       .get("http://localhost:3000/api/salons")
       .then((response) => {
-        // تحويل بيانات Firebase إلى مصفوفة (لأنها تأتي كائن)
         const fetchedSalons = [];
         for (let key in response.data) {
           fetchedSalons.push({
@@ -78,16 +69,12 @@ export default function ArabicHomePage() {
           });
         }
 
-        // ترتيب حسب التقييم من الأعلى للأقل
         const sortedByRating = [...fetchedSalons].sort(
           (a, b) => parseFloat(b.rating) - parseFloat(a.rating)
         );
 
-        // نأخذ أعلى 4 صالونات
         const topFour = sortedByRating.slice(0, 4);
 
-        setSalons(fetchedSalons);
-        setFilteredSalons(fetchedSalons);
         setTopRatedSalons(topFour);
         setLoading(false);
       })
@@ -96,26 +83,6 @@ export default function ArabicHomePage() {
         setLoading(false);
       });
   }, []);
-
-  // تطبيق البحث والتصفية عند تغيير أي منهما
-  useEffect(() => {
-    const filtered = salons.filter((salon) => {
-      // التحقق مما إذا كان اسم الصالون يتضمن مصطلح البحث (غير حساس لحالة الأحرف)
-      const nameMatch = salon.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-
-      // التحقق مما إذا كان تقييم الصالون يطابق الفلتر (إذا تم تعيينه)
-      const ratingMatch =
-        ratingFilter === "" ||
-        (parseFloat(salon.rating) >= parseFloat(ratingFilter) &&
-          parseFloat(salon.rating) < parseFloat(ratingFilter) + 1);
-
-      return nameMatch && ratingMatch;
-    });
-
-    setFilteredSalons(filtered);
-  }, [searchTerm, ratingFilter, salons]);
 
   async function visitorsCount(salon) {
     if (!salon || !salon._id) {
@@ -146,7 +113,6 @@ export default function ArabicHomePage() {
     }
   }
 
-  // ميزات الموقع (بدلاً من الفئات)
   const features = [
     {
       name: "حجز سريع وسهل",
@@ -178,7 +144,6 @@ export default function ArabicHomePage() {
     },
   ];
 
-  // استخراج عدد الخدمات المتوفرة للصالون
   const getServiceCount = (salon) => {
     if (!salon.services) return 0;
     return salon.services.filter((service) => !service.isDeleted).length;
@@ -186,12 +151,10 @@ export default function ArabicHomePage() {
 
   return (
     <div className="bg-white min-h-screen" dir="rtl" lang="ar">
-      {/* قسم الهيرو */}
       <HeroSection />
 
       <ScrollToTopButton />
 
-      {/* قسم الميزات */}
       <div className="py-20 container mx-auto lg:px-20">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-6" style={{ color: "#B58152" }}>
@@ -237,7 +200,6 @@ export default function ArabicHomePage() {
         </div>
       </div>
 
-      {/* قسم كيف يعمل التطبيق */}
       <div style={{ backgroundColor: "#fdf6f0" }} className="py-20 lg:px-20">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
@@ -317,7 +279,6 @@ export default function ArabicHomePage() {
         </div>
       </div>
 
-      {/* بطاقات الصالونات */}
       <div className="py-14 container mx-auto ">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-6" style={{ color: "#B58152" }}>
@@ -350,7 +311,6 @@ export default function ArabicHomePage() {
                   key={salon._id}
                   className="w-full sm:w-80 bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:translate-y-[-5px]"
                 >
-                  {/* صورة خلفية الصالون */}
                   <div className="h-48 overflow-hidden relative">
                     <img
                       src={
@@ -361,14 +321,12 @@ export default function ArabicHomePage() {
                       className="w-full h-full object-cover"
                     />
 
-                    {/* علامة ترويجية إذا كان هناك عروض */}
                     {salon.offers && salon.offers.length > 0 && (
                       <div className="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
                         عروض خاصة
                       </div>
                     )}
 
-                    {/* شارة الاشتراك إذا كان مميز */}
                     {salon.subscription && salon.subscription !== "non" && (
                       <div className="absolute top-3 right-3 bg-[#8a5936] text-white px-3 py-1 rounded-full text-xs font-bold">
                         صالون مميز
@@ -377,7 +335,6 @@ export default function ArabicHomePage() {
                   </div>
 
                   <div className="relative px-5 pt-12 pb-5" dir="rtl">
-                    {/* صورة الملف الشخصي */}
                     <div className="absolute w-20 h-20 rounded-full border-4 border-white shadow-md overflow-hidden -top-10 right-5">
                       <img
                         src={
@@ -389,7 +346,6 @@ export default function ArabicHomePage() {
                       />
                     </div>
 
-                    {/* معلومات الصالون */}
                     <div className="mb-4">
                       <h3 className="text-xl font-bold text-gray-800 mb-1">
                         {salon.name}
@@ -402,7 +358,6 @@ export default function ArabicHomePage() {
                           "صالون متميز يقدم خدمات عالية الجودة لعملائه"}
                       </p>
 
-                      {/* معلومات إضافية */}
                       <div className="flex flex-col gap-2 text-sm text-gray-600 mb-4">
                         <div className="flex items-center gap-2">
                           <MapPin size={16} className="text-[#a0714f]" />
@@ -424,7 +379,6 @@ export default function ArabicHomePage() {
                         </div>
                       </div>
 
-                      {/* زر الزيارة */}
                       <Link
                         onClick={() => visitorsCount(salon)}
                         className="block w-full text-center bg-[#8a5936] hover:bg-[#a0714f] text-white py-2.5 px-4 rounded-lg font-medium transition-colors duration-300"
@@ -453,7 +407,6 @@ export default function ArabicHomePage() {
         </div>
       </div>
 
-      {/* انضم كشريك صالون */}
       <div style={{ backgroundColor: "#fdf6f0" }} className="py-20 lg:px-20">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-6" style={{ color: "#B58152" }}>
@@ -548,7 +501,6 @@ export default function ArabicHomePage() {
         </div>
       </div>
 
-      {/* دعوة للتصرف */}
       <div className="bg-gradient-to-r from-[#703603] to-[#B58152] py-16 px-6">
         <div className="container mx-auto text-center">
           <h2 className="text-4xl font-bold mb-6 text-white">

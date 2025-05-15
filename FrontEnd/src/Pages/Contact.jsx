@@ -13,7 +13,6 @@ export default function ContactPage() {
   const [loading, setLoading] = useState(false);
   const [floating, setFloating] = useState({});
 
-  // Animation for floating elements
   useEffect(() => {
     const interval = setInterval(() => {
       setFloating({
@@ -34,7 +33,6 @@ export default function ContactPage() {
     setLoading(true);
 
     try {
-      // Here you would typically send the data to your backend
       const res = await fetch("http://localhost:3000/api/contacts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -46,7 +44,7 @@ export default function ContactPage() {
 
       if (data.success) {
         setIsSubmitted(true);
-        // Reset form after 3 seconds
+
         setTimeout(() => {
           setIsSubmitted(false);
           setFormData({ name: "", email: "", message: "" });
@@ -63,7 +61,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen lg:px-20" dir="rtl">
       <ScrollToTopButton />
-      {/* Decorative elements */}
+
       <div className="mt-10 absolute top-0 left-0 w-full h-full overflow-hidden z-0">
         <motion.div
           className="absolute w-32 h-32 rounded-full bg-[#a0714f] opacity-10 top-20 left-20"
@@ -83,7 +81,6 @@ export default function ContactPage() {
       </div>
 
       <div className="container mx-auto px-4 py-16 relative z-10">
-        {/* Header */}
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: -20 }}
@@ -108,7 +105,6 @@ export default function ContactPage() {
         </motion.div>
 
         <div className="flex flex-col lg:flex-row gap-16 items-center">
-          {/* Contact Form */}
           <motion.div
             className="w-full lg:w-1/2"
             initial={{ opacity: 0, x: 30 }}
@@ -207,7 +203,6 @@ export default function ContactPage() {
             </div>
           </motion.div>
 
-          {/* Contact Info */}
           <motion.div
             className="w-full lg:w-1/2 text-right"
             initial={{ opacity: 0, x: -30 }}

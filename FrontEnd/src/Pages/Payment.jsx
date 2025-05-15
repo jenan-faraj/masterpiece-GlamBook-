@@ -1,6 +1,6 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { User, CreditCard, Check, DollarSign, Phone, Mail } from "lucide-react";
+import { Check, DollarSign, Phone, Mail } from "lucide-react";
 import axios from "axios";
 
 const PaymentForm = ({
@@ -177,7 +177,6 @@ const PaymentForm = ({
         </div>
       </div>
 
-      {/* PayPal Payment Form */}
       {paymentMethod === "paypal" && (
         <div className="mb-6">
           <div className="mt-6">
@@ -211,7 +210,6 @@ const PaymentForm = ({
         </div>
       )}
 
-      {/* CLIQ Payment Form */}
       {paymentMethod === "cliq" && (
         <div className="mb-6">
           <div className="mb-4">

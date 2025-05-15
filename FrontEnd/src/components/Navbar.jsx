@@ -5,16 +5,13 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
-  const [userId, setUserId] = useState("");
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation(); // إضافة استخدام الموقع الحالي
+  const location = useLocation();
 
   useEffect(() => {
-    // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
     fetchUserAuth();
 
-    // إضافة مستمع لحدث التمرير
     const handleScroll = () => {
       if (window.scrollY > 10) {
         setScrolled(true);
@@ -25,18 +22,16 @@ const Navbar = () => {
 
     window.addEventListener("scroll", handleScroll);
 
-    // تنظيف المستمع عند إزالة المكون
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-  // دالة للحصول على التوكن من الخادم
   const fetchUserAuth = async () => {
     try {
       const response = await fetch("http://localhost:3000/api/users/me", {
         method: "GET",
-        credentials: "include", // مهم للكوكيز
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -60,51 +55,40 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      // استدعاء نقطة نهاية تسجيل الخروج
       const response = await fetch("http://localhost:3000/api/users/logout", {
         method: "POST",
-        credentials: "include", // إرسال الكوكيز مع الطلب
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
       });
 
-      // بغض النظر عن الاستجابة، نقوم بتسجيل الخروج محليًا
       setIsLoggedIn(false);
-      setUserId("");
       setUsername("");
 
-      // إغلاق القائمة في حالة الشاشات الصغيرة
       if (isOpen) {
         setIsOpen(false);
       }
 
-      // إعلام المستخدم بنجاح تسجيل الخروج
-      if (response.ok) {
-        // يمكنك إضافة إشعار نجاح هنا إذا كنت تستخدم مكتبة إشعارات
-      } else {
+      if (!response.ok) {
         console.log("تم تسجيل الخروج محليًا، ولكن هناك مشكلة في الخادم");
       }
     } catch (error) {
-      // تسجيل الخروج محليًا حتى في حالة حدوث خطأ
       setIsLoggedIn(false);
-      setUserId("");
       setUsername("");
       console.log("تم تسجيل الخروج محليًا، ولكن تعذر الاتصال بالخادم");
       navigate("/");
     }
   };
 
-  // قائمة الروابط الرئيسية
   const navLinks = [
     { title: "الرئيسية", path: "/" },
     { title: "الصالونات", path: "/categories" },
     { title: "من نحن", path: "/aboutUs" },
-    { title: "اتصل بنا", path: "/contactUs" },
+    { title: "تواصل معنا", path: "/contactUs" },
     { title: "انضم إلينا", path: "/RegisterSalon" },
   ];
 
-  // دالة للتحقق ما إذا كان الرابط نشطاً
   const isActive = (path) => {
     if (path === "/" && location.pathname === "/") {
       return true;
@@ -117,7 +101,6 @@ const Navbar = () => {
 
   return (
     <>
-      {/* إضافة عنصر وهمي للحفاظ على مساحة التمرير عندما يكون Navbar ثابتًا */}
       <div className="h-16"></div>
 
       <header
@@ -127,14 +110,12 @@ const Navbar = () => {
       >
         <nav className="container xl:px-20 mx-auto px-4" dir="rtl">
           <div className="flex justify-between items-center h-16">
-            {/* الشعار */}
             <img
               className=" h-14 object-cover"
               src="../../public/بيـــــــــوتي.png"
               alt="بيوتي"
             />
 
-            {/* قائمة التنقل للشاشات الكبيرة */}
             <div className="hidden lg:flex items-center justify-between flex-1 mx-8">
               <ul className="flex items-center text-lg space-x-reverse space-x-3 text-[#B58152] font-medium">
                 {navLinks.map((link) => (
@@ -143,8 +124,8 @@ const Navbar = () => {
                       to={link.path}
                       className={`px-3 py-2 rounded transition-colors ${
                         isActive(link.path)
-                          ? "bg-[#B58152] text-white font-bold" // الرابط النشط
-                          : "hover:bg-[#f5e6e1]" // الروابط الأخرى
+                          ? "bg-[#B58152] text-white font-bold"
+                          : "hover:bg-[#f5e6e1]"
                       }`}
                     >
                       {link.title}
@@ -154,7 +135,6 @@ const Navbar = () => {
               </ul>
             </div>
 
-            {/* أزرار تسجيل الدخول/الخروج للشاشات الكبيرة */}
             <div className="hidden lg:flex items-center space-x-reverse space-x-4">
               {isLoggedIn ? (
                 <ul className="flex items-center text-lg space-x-reverse space-x-3 text-[#B58152] font-medium">
@@ -219,7 +199,6 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* زر القائمة للشاشات الصغيرة */}
             <button
               className="lg:hidden text-[#B58152] text-2xl p-2 focus:outline-none"
               onClick={toggleMenu}
@@ -229,7 +208,6 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* قائمة التنقل للشاشات الصغيرة */}
           {isOpen && (
             <div className="lg:hidden bg-[#F9F3F1] border-t border-[#e6d8d3] py-2">
               <ul className="text-[#B58152]">

@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import Register from "./Pages/Register";
 import Login from "./Pages/LogIn";
-import Profile from "./Pages/Profile";
 import Home from "./Pages/Home";
 import Navbar from "./components/Navbar";
 import Categories from "./Pages/categories";
@@ -22,11 +21,9 @@ import AdminPanel from "./components/Dashboard/AdminSidebar";
 import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
 
-// هذا المكون يفصل النافبار والفوتر بناءً على المسار
 const AppContent = () => {
   const location = useLocation();
 
-  // تحقق إذا كان المسار الحالي هو من المسارات التي نريد إخفاء الـ navbar فيها
   const shouldHideNavbar = () => {
     return (
       location.pathname === "/login" ||
@@ -35,12 +32,11 @@ const AppContent = () => {
     );
   };
 
-  // تحقق إذا كان المسار الحالي هو من المسارات التي نريد إخفاء الـ footer فيها
   const shouldHideFooter = () => {
     return (
       location.pathname === "/login" ||
       location.pathname === "/signup" ||
-      location.pathname.startsWith("/admin") // هذا سيتحقق من كل المسارات التي تبدأ بـ /admin
+      location.pathname.startsWith("/admin")
     );
   };
 
@@ -53,7 +49,6 @@ const AppContent = () => {
         <Route path="/categories" element={<Categories />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />} />
         <Route path="/book/:id" element={<Book />} />
         <Route path="/salonDetails/:id" element={<SalonDetails />} />
         <Route path="/RegisterSalon" element={<SalonRegistrationForm />} />

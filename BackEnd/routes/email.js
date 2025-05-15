@@ -10,8 +10,8 @@ router.post("/send", async (req, res) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: process.env.EMAIL_USER, // الإيميل اللي بدك ترسلي منه
-      pass: process.env.EMAIL_PASS, // app password مش الباسورد العادي
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 

@@ -17,17 +17,13 @@ export default function SalonRegistrationForm() {
   const [message, setMessage] = useState({ text: "", type: "" });
   const [currentStep, setCurrentStep] = useState(1);
   const [registrationCompleted, setRegistrationCompleted] = useState(false);
-
-  // Preview images for UI display
   const [previewImages, setPreviewImages] = useState({
     salonOwnershipImages: [],
     identityImages: [],
   });
 
-  // Clean up object URLs when component unmounts
   useEffect(() => {
     return () => {
-      // Clean up all preview URLs
       Object.values(previewImages)
         .flat()
         .forEach((preview) => {
@@ -49,16 +45,13 @@ export default function SalonRegistrationForm() {
     const files = Array.from(e.target.files);
 
     if (files.length > 0) {
-      // Create preview URLs for the images
       const newPreviewImages = files.map((file) => URL.createObjectURL(file));
 
-      // Update preview images for UI display
       setPreviewImages((prevPreviews) => ({
         ...prevPreviews,
         [name]: [...prevPreviews[name], ...newPreviewImages],
       }));
 
-      // Store the file objects for upload
       setFormData((prevData) => ({
         ...prevData,
         [name]: [...prevData[name], ...files],
@@ -67,10 +60,8 @@ export default function SalonRegistrationForm() {
   };
 
   const removeImage = (type, index) => {
-    // Release object URL to avoid memory leaks
     URL.revokeObjectURL(previewImages[type][index]);
 
-    // Remove the image from previews and formData
     setPreviewImages((prevPreviews) => ({
       ...prevPreviews,
       [type]: prevPreviews[type].filter((_, i) => i !== index),
@@ -118,7 +109,6 @@ export default function SalonRegistrationForm() {
   };
 
   const goToHomePage = () => {
-    // Replace with your actual homepage navigation logic
     window.location.href = "/";
   };
 
@@ -147,7 +137,6 @@ export default function SalonRegistrationForm() {
     setLoading(true);
     setMessage({ text: "", type: "" });
 
-    // التحقق من وجود الصور المطلوبة
     if (formData.salonOwnershipImages.length === 0) {
       setMessage({
         text: "يجب إرفاق صور إثبات ملكية الصالون",
@@ -168,14 +157,12 @@ export default function SalonRegistrationForm() {
 
     try {
       setUploading(true);
-      // أولا: رفع جميع الصور
       const salonOwnershipUrls = await uploadImages(
         formData.salonOwnershipImages
       );
       const identityImageUrls = await uploadImages(formData.identityImages);
       setUploading(false);
 
-      // التحقق من نجاح رفع الصور
       if (salonOwnershipUrls.length === 0 || identityImageUrls.length === 0) {
         setMessage({
           text: "حدث خطأ أثناء رفع الصور، يرجى المحاولة مرة أخرى",
@@ -185,7 +172,6 @@ export default function SalonRegistrationForm() {
         return;
       }
 
-      // تجهيز بيانات النموذج مع روابط الصور المرفوعة
       const submitData = {
         name: formData.name,
         ownerName: formData.ownerName,
@@ -197,9 +183,6 @@ export default function SalonRegistrationForm() {
         identityImagePreview: identityImageUrls,
       };
 
-      console.log("تقديم بيانات النموذج", submitData);
-
-      // إرسال البيانات للخادم
       const response = await fetch("http://localhost:3000/api/salons", {
         method: "POST",
         headers: {
@@ -212,7 +195,6 @@ export default function SalonRegistrationForm() {
         setMessage({ text: "تم تسجيل الصالون بنجاح!", type: "success" });
         setRegistrationCompleted(true);
 
-        // إعادة تعيين النموذج بعد التقديم الناجح
         setFormData({
           name: "",
           ownerName: "",
@@ -246,7 +228,6 @@ export default function SalonRegistrationForm() {
     }
   };
 
-  // Show success message and home button if registration completed
   if (registrationCompleted) {
     return (
       <div
@@ -298,7 +279,7 @@ export default function SalonRegistrationForm() {
             <h3 className="text-lg font-medium text-gray-700 mb-4 text-right">
               معلومات الصالون الأساسية
             </h3>
-            {/* Salon Name */}
+
             <div>
               <label
                 htmlFor="name"
@@ -318,7 +299,6 @@ export default function SalonRegistrationForm() {
               />
             </div>
 
-            {/* Owner Name */}
             <div>
               <label
                 htmlFor="ownerName"
@@ -338,7 +318,6 @@ export default function SalonRegistrationForm() {
               />
             </div>
 
-            {/* Email */}
             <div>
               <label
                 htmlFor="email"
@@ -358,7 +337,6 @@ export default function SalonRegistrationForm() {
               />
             </div>
 
-            {/* Password */}
             <div>
               <label
                 htmlFor="password"
@@ -399,7 +377,7 @@ export default function SalonRegistrationForm() {
             <h3 className="text-lg font-medium text-gray-700 mb-4 text-right">
               معلومات الاتصال والموقع
             </h3>
-            {/* Phone */}
+
             <div>
               <label
                 htmlFor="phone"
@@ -419,7 +397,6 @@ export default function SalonRegistrationForm() {
               />
             </div>
 
-            {/* Location */}
             <div>
               <label
                 htmlFor="location"
@@ -463,7 +440,7 @@ export default function SalonRegistrationForm() {
             <h3 className="text-lg font-medium text-gray-700 mb-4 text-right">
               المستندات والإثباتات
             </h3>
-            {/* Image Uploads */}
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1 text-right">
                 صور إثبات مزاولة المهنة<span className="text-red-500">*</span>

@@ -1,12 +1,9 @@
-// components/Hero.jsx
-
-import React from "react";
 import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
     <div className="relative h-[91vh] w-full overflow-hidden">
-      {/* الخلفية: الفيديو */}
+ 
       <video
         className="absolute top-0 left-0 w-full h-full object-cover"
         src="../../public/beauty-hero-section.mp4"
@@ -16,7 +13,6 @@ const Hero = () => {
         playsInline
       />
 
-      {/* محتوى الهيرو فوق الفيديو */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
         <h1 className="text-4xl md:text-6xl font-bold mb-4 text-center text-outline">
           مرحباً بك في بيوتي

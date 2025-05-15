@@ -7,12 +7,14 @@ const {
   deleteSalon,
   softDeleteService,
   softDeleteOffer,
+  getAllSalonsForAdmin,
 } = require("../controller/SalonController");
 
 const router = express.Router();
 
 // Routes
 router.get("/", getAllSalons);
+router.get("/Admin", getAllSalonsForAdmin);
 router.get("/:id", getSalonById);
 router.post("/", createSalon);
 router.put("/:id", updateSalon);

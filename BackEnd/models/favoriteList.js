@@ -1,15 +1,15 @@
-import mongoose from 'mongoose';
+const mongoose = require("mongoose");
 
 const favoriteListSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     salon: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Salon',
+      ref: "Salon",
       required: true,
     },
     isDeleted: {
@@ -18,9 +18,9 @@ const favoriteListSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // بضيف createdAt و updatedAt تلقائياً
+    timestamps: true,
   }
 );
 
-const FavoriteList = mongoose.model('FavoriteList', favoriteListSchema);
-export default FavoriteList;
+const FavoriteList = mongoose.model("FavoriteList", favoriteListSchema);
+module.exports = FavoriteList;

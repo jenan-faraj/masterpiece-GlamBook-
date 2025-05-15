@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Users,
@@ -20,7 +20,7 @@ export default function EnhancedAboutPage() {
   const [salons, setSalons] = useState([]);
   const [users, setUsers] = useState([]);
   const [booking, setBooking] = useState([]);
-  // Fetch data from Firebase using Axios
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -30,7 +30,6 @@ export default function EnhancedAboutPage() {
           axios.get("http://localhost:3000/api/bookings"),
         ]);
 
-        // تحويل البيانات من object إلى array
         const fetchedSalons = Object.entries(salonsRes.data).map(
           ([key, value]) => ({
             id: key,
@@ -72,9 +71,8 @@ export default function EnhancedAboutPage() {
   return (
     <div className="bg-white min-h-screen">
       <ScrollToTopButton />
-      {/* Hero Section with Background Image */}
+
       <div className="relative bg-[#B58152] py-24">
-        {/* Background image overlay */}
         <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
 
         <div className="container mx-auto px-6 relative z-10">
@@ -99,7 +97,6 @@ export default function EnhancedAboutPage() {
         </div>
       </div>
 
-      {/* Elegant Introduction */}
       <div className="container mx-auto px-6 py-20">
         <div className="flex flex-col lg:flex-row justify-center items-center">
           <div dir="rtl" className="lg:w-1/2 mb-10 lg:mb-0 lg:pr-16">
@@ -138,7 +135,6 @@ export default function EnhancedAboutPage() {
         </div>
       </div>
 
-      {/* Our Mission Section with Color Blocks */}
       <div style={{ backgroundColor: "#fdf6f0" }} className="py-20">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -238,7 +234,6 @@ export default function EnhancedAboutPage() {
         </div>
       </div>
 
-      {/* How It Works - With Visual Timeline */}
       <div className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
           <h2
@@ -332,7 +327,6 @@ export default function EnhancedAboutPage() {
         </div>
       </div>
 
-      {/* For Salons - With Image */}
       <div dir="rtl" style={{ backgroundColor: "#fdf6f0" }} className="py-20">
         <div className=" mx-auto px-6">
           <div className="flex flex-col lg:flex-row items-center">
@@ -452,9 +446,7 @@ export default function EnhancedAboutPage() {
         </div>
       </div>
 
-      {/* Statistics Section */}
       <div className="py-20 bg-cover bg-center relative">
-        {/* Background image overlay */}
         <div className="absolute inset-0 bg-[#753600] opacity-70 z-0"></div>
         <div className="container mx-auto px-6 relative z-10">
           <div dir="rtl" className="text-center mb-16">
@@ -514,7 +506,6 @@ export default function EnhancedAboutPage() {
         </div>
       </div>
 
-      {/* Contact Section */}
       <div style={{ backgroundColor: "#fdf6f0" }} className="py-20">
         <div className=" mx-auto px-6">
           <div className="flex flex-col mx-20 lg:flex-row justify-between items-center">

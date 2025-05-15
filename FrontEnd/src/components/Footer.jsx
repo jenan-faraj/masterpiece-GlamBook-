@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import {
   Facebook,
@@ -11,17 +10,14 @@ import {
 } from "lucide-react";
 
 export default function Footer() {
-  // استخدام ألوان الموقع من المتغيرات
   const logoColor = "#8a5936";
   const buttonColor = "#a0714f";
   const textColor = "#c4a484";
 
   return (
     <footer dir="rtl" className="bg-stone-900 text-stone-200">
-      {/* القسم الرئيسي للمعلومات */}
       <div className="container mx-auto px-4 py-12 lg:px-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* قسم عن الموقع */}
           <div>
             <div className="h-16 mb-4">
               <h2 className="text-2xl font-bold" style={{ color: logoColor }}>
@@ -34,7 +30,6 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* قسم الروابط السريعة */}
           <div>
             <h3 className="text-xl font-bold mb-4" style={{ color: logoColor }}>
               روابط سريعة
@@ -65,7 +60,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* قسم الاتصال */}
           <div>
             <h3 className="text-xl font-bold mb-4" style={{ color: logoColor }}>
               اتصل بنا
@@ -128,7 +122,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* وسائل التواصل الاجتماعي */}
         <div className="flex justify-center mt-10 pt-6 border-t border-stone-700">
           {[
             { Icon: Facebook, url: "https://facebook.com" },
@@ -149,7 +142,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* شريط حقوق النشر */}
       <div
         className="bg-stone-950 py-4 text-center"
         style={{ color: textColor }}

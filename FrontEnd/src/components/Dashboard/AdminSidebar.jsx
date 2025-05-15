@@ -13,7 +13,6 @@ import SalonsControlerPage from "./SalonsControlerPage";
 import BookingsAllPage from "./BookingsAllPage";
 import ContactUsPage from "./ContactUsPage";
 
-// مكون الشريط الجانبي المحسن
 const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
   const [user, setUser] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -77,7 +76,6 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
     }
   };
 
-  // عناصر القائمة الرئيسية
   const menuItems = [
     {
       id: "dashboard",
@@ -188,7 +186,6 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
 
   return (
     <>
-      {/* زر الأيقونة للشاشات الصغيرة */}
       {isMobile && isCollapsed && (
         <button
           onClick={() => setIsCollapsed(false)}
@@ -212,14 +209,12 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
         </button>
       )}
 
-      {/* الشريط الجانبي */}
       <aside
         className={`fixed top-0 right-0 h-screen bg-[#c4a484] text-white transition-all duration-300 ${
           isCollapsed ? (isMobile ? "hidden" : "w-20") : "w-64"
         } z-40 shadow-xl`}
         dir="rtl"
       >
-        {/* رأس الشريط الجانبي مع الشعار */}
         <div className="flex items-center justify-between p-4 border-b border-[#a0714f]">
           {!isCollapsed && (
             <div className="flex items-center gap-2">
@@ -275,7 +270,6 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
             </button>
           )}
 
-          {/* زر الإغلاق للشاشات الصغيرة */}
           {isMobile && !isCollapsed && (
             <button
               onClick={() => setIsCollapsed(true)}
@@ -300,7 +294,6 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
           )}
         </div>
 
-        {/* عناصر القائمة الرئيسية */}
         <nav className="mt-5 px-2 space-y-1 overflow-y-auto max-h-[calc(100vh-180px)]">
           {menuItems.map((item) => (
             <Link
@@ -322,7 +315,6 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
           ))}
         </nav>
 
-        {/* ملف المستخدم */}
         <div className="absolute bottom-0 right-0 w-full border-t border-[#a0714f] p-4">
           <div
             className={`flex ${
@@ -374,7 +366,6 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
         </div>
       </aside>
 
-      {/* طبقة التعتيم للشاشات الصغيرة */}
       {isMobile && !isCollapsed && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30"
@@ -385,7 +376,6 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
   );
 };
 
-// مكون الحماية للمسارات الإدارية
 const AdminProtectedRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -434,7 +424,6 @@ const AdminProtectedRoute = ({ children }) => {
   return isAdmin ? children : null;
 };
 
-// المكون الرئيسي للوحة التحكم
 const AdminPanel = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 

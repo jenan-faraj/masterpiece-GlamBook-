@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import ProfileTab from "./../components/ProfileTab";
@@ -20,8 +20,27 @@ const UserProfile = () => {
     book: [],
     role: "",
   });
+  const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const fetchfavorites = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/favorites", {
+        withCredentials: true,
+      });
+      const favorites = response.data.filter((favorite) => !favorite.isDeleted);
+      setFavorites(favorites);
+    } catch (err) {
+      console.error("فشل في جلب بيانات المفضلة", err);
+      Swal.fire({
+        icon: "error",
+        title: "خطأ",
+        text: "فشل في جلب بيانات المفضلة",
+        confirmButtonText: "حسناً",
+      });
+    }
+  };
 
   const fetchUserData = async () => {
     try {
@@ -63,8 +82,24 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
+    fetchfavorites();
     fetchUserData();
   }, []);
+
+  const onRemoveFavorite = async (salonId) => {
+    try {
+      await axios.delete(`http://localhost:3000/api/favorites/${salonId}`, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      fetchfavorites();
+    } catch (error) {
+      console.error("خطأ:", error);
+    }
+  };
 
   if (loading)
     return (
@@ -73,12 +108,9 @@ const UserProfile = () => {
       </div>
     );
 
-  if (error)
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-2xl text-red-500">{error}</p>
-      </div>
-    );
+  if (error) {
+    navigate("/login");
+  }
 
   // لا تعرض واجهة المستخدم إذا كان دوره صالون - هذا لمنع العرض المؤقت قبل التوجيه
   if (user.role === "salon") {
@@ -88,7 +120,7 @@ const UserProfile = () => {
       </div>
     );
   } else if (user.role === "admin") {
-      navigate("/admin");
+    navigate("/admin");
   }
 
   return (
@@ -143,6 +175,7 @@ const UserProfile = () => {
             user={user}
             setUser={setUser}
             fetchUserData={fetchUserData}
+            favoriteList={favorites}
           />
         )}
         {activeTab === "bookings" && (
@@ -162,7 +195,10 @@ const UserProfile = () => {
           />
         )}
         {activeTab === "favorites" && (
-          <FavoritesTab favorites={user.favoriteList} />
+          <FavoritesTab
+            favorites={favorites}
+            onRemoveFavorite={onRemoveFavorite}
+          />
         )}
       </div>
     </div>

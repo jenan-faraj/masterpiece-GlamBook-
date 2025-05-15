@@ -11,12 +11,8 @@ const UsersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-
-  // فلترات جديدة
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
-
-  // Color theme variables
   const logoColor = "#8a5936";
   const buttonColor = "#a0714f";
   const textColor = "#c4a484";
@@ -41,16 +37,13 @@ const UsersPage = () => {
     fetchData();
   }, [currentPage]);
 
-  // تطبيق الفلترة عند تغيير search query أو role filter
   useEffect(() => {
     let result = [...users];
 
-    // فلترة حسب الدور
     if (roleFilter !== "all") {
       result = result.filter((user) => user.role === roleFilter);
     }
 
-    // فلترة حسب البحث (الاسم أو البريد الإلكتروني)
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
@@ -63,7 +56,6 @@ const UsersPage = () => {
     setFilteredUsers(result);
   }, [searchQuery, roleFilter, users]);
 
-  // حفظ تعديل دور المستخدم
   const saveRoleChange = async (userId) => {
     try {
       await axios.put(`http://localhost:3000/api/users/me/${userId}`, {
@@ -80,7 +72,6 @@ const UsersPage = () => {
     }
   };
 
-  // إلغاء تعديل دور المستخدم
   const cancelEdit = () => {
     setEditingUserId(null);
   };
@@ -90,7 +81,6 @@ const UsersPage = () => {
     setEditRole(user.role);
   };
 
-  // إعادة تعيين الفلاتر
   const resetFilters = () => {
     setSearchQuery("");
     setRoleFilter("all");
@@ -122,7 +112,6 @@ const UsersPage = () => {
           </div>
         </div>
 
-        {/* فلاتر البحث الجديدة */}
         <div className="bg-white p-4 rounded-lg shadow-sm mb-6 border border-[#f4e5d6]">
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1">
@@ -203,7 +192,6 @@ const UsersPage = () => {
           </div>
         ) : (
           <>
-            {/* عرض للشاشات المتوسطة والكبيرة */}
             <div className="hidden lg:block overflow-hidden shadow-md rounded-lg bg-white border border-[#f4e5d6]">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-amber-200">
@@ -317,7 +305,6 @@ const UsersPage = () => {
               </div>
             </div>
 
-            {/* عرض للشاشات الصغيرة */}
             <div className="lg:hidden space-y-4">
               {filteredUsers.map((user) => (
                 <div
@@ -424,7 +411,6 @@ const UsersPage = () => {
               </div>
             )}
 
-            {/* Pagination */}
             {totalPages > 1 && filteredUsers.length > 0 && (
               <div className="flex justify-center mt-6 mb-2">
                 <div className="inline-flex rounded-md shadow-sm">

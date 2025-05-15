@@ -27,7 +27,7 @@ const salonSchema = new mongoose.Schema(
       {
         title: { type: String, default: "" },
         images: { type: [String], default: [] },
-        category: { type: String, default: "" }, // خليها small letter عشان توحيد الأسماء
+        category: { type: String, default: "" },
         duration: { type: String, default: "" },
         shortDescription: { type: String, default: "" },
         longDescription: { type: String, default: "" },
@@ -37,13 +37,12 @@ const salonSchema = new mongoose.Schema(
     ],
     visitors: { type: Number, default: 0 },
     reviews: [
-      // هنا تم إضافة الحقل الذي سيحتوي على المراجعات
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Review", // استبدلي "Review" بالمودل المناسب للمراجعات
+        ref: "Review",
       },
     ],
-    book: [{ type: mongoose.Schema.Types.ObjectId, ref: "book" }],
+    book: [{ type: mongoose.Schema.Types.ObjectId, ref: "booking" }],
     payments: [
       {
         type: mongoose.Schema.Types.ObjectId,

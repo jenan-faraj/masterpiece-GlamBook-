@@ -32,7 +32,6 @@ export default function ContactMessages() {
   }, []);
 
   useEffect(() => {
-    // Apply filters whenever search term or status filter changes
     filterMessages();
   }, [messages, searchTerm, statusFilter]);
 
@@ -43,7 +42,6 @@ export default function ContactMessages() {
       setMessages(data.data || []);
       setFilteredMessages(data.data || []);
 
-      // Calculate stats
       const unreadCount = data.data.filter(
         (msg) => msg.status === "Unread"
       ).length;
@@ -63,7 +61,6 @@ export default function ContactMessages() {
   const filterMessages = () => {
     let filtered = [...messages];
 
-    // Apply search filter
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       filtered = filtered.filter(
@@ -73,7 +70,6 @@ export default function ContactMessages() {
       );
     }
 
-    // Apply status filter
     if (statusFilter !== "all") {
       filtered = filtered.filter((msg) => msg.status === statusFilter);
     }
@@ -83,7 +79,6 @@ export default function ContactMessages() {
 
   const updateMessageStatus = async (messageId) => {
     try {
-      // API call to update the message status in the database
       const res = await fetch(
         `http://localhost:3000/api/contacts/${messageId}`,
         {
@@ -118,7 +113,6 @@ export default function ContactMessages() {
     }
 
     try {
-      // Send the reply email
       const res = await fetch("http://localhost:3000/api/email/send", {
         method: "POST",
         headers: { "Content-Type": "application/json; charset=UTF-8" },
@@ -132,16 +126,13 @@ export default function ContactMessages() {
       const data = await res.json();
 
       if (data.success) {
-        // Find the message that was replied to
         const messageToUpdate = messages.find(
           (msg) => msg.email === email && msg.status === "Unread"
         );
 
         if (messageToUpdate) {
-          // Update status in database
           await updateMessageStatus(messageToUpdate._id);
 
-          // Update UI
           const updatedMessages = messages.map((msg) => {
             if (msg._id === messageToUpdate._id) {
               return { ...msg, status: "Read" };
@@ -151,7 +142,6 @@ export default function ContactMessages() {
 
           setMessages(updatedMessages);
 
-          // Update stats
           setStats((prevStats) => ({
             ...prevStats,
             unread: Math.max(prevStats.unread - 1, 0),
@@ -166,7 +156,6 @@ export default function ContactMessages() {
           confirmButtonText: "حسنًا",
           confirmButtonColor: "#8a5936",
         }).then(() => {
-          // Reset reply message and go back to the message list
           setReplyMessage("");
           setActiveMessage(null);
         });
@@ -213,7 +202,6 @@ export default function ContactMessages() {
   return (
     <div className="min-h-screen bg-[#f4e5d6]/10">
       <div className="max-w-7xl mx-auto p-6">
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="bg-white rounded-lg shadow p-4 border-r-4 border-[#8a5936]">
             <div className="flex items-center">
@@ -272,7 +260,7 @@ export default function ContactMessages() {
                   onClick={() => setActiveMessage(null)}
                   className="flex items-center hover:cursor-pointer text-[#8a5936] hover:underline"
                 >
-                  <Inbox className="mr-1 h-4 w-4 hover:cursor-pointer" /> 
+                  <Inbox className="mr-1 h-4 w-4 hover:cursor-pointer" />
                   العودة إلى قائمة الرسائل
                 </button>
                 <span
@@ -326,7 +314,6 @@ export default function ContactMessages() {
             </div>
           ) : (
             <div>
-              {/* Search and Filter Bar */}
               <div className="p-4 bg-gray-50 border-b">
                 <div className="flex flex-col md:flex-row items-center gap-4">
                   <div className="relative flex-grow">

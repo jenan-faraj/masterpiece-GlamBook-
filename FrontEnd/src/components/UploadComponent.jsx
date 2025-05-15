@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 
 export default function UploadComponent({ onUploadComplete }) {
@@ -12,20 +12,18 @@ export default function UploadComponent({ onUploadComplete }) {
     setUploading(true);
 
     try {
-      // الخطوة 1: اطلب رابط الرفع من API UploadThing
       const res = await axios.post("https://uploadthing.com/api/uploadFiles", {
         files: Array.from(files).map((file) => ({
           name: file.name,
           size: file.size,
           type: file.type,
         })),
-        uploader: "imageUploader", // اسم الendpoint
+        uploader: "imageUploader",
       });
 
       const { data } = res;
       const uploadedUrls = [];
 
-      // الخطوة 2: رفع الصور مباشرة باستخدام fetch
       for (let i = 0; i < files.length; i++) {
         const { url, fileKey } = data[i];
         await fetch(url, {

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Star, X, Plus, Loader2 } from "lucide-react";
-import { toast } from "react-toastify"; // للتوست
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const ReviewForm = () => {
@@ -54,22 +54,11 @@ const ReviewForm = () => {
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const response = await fetch("http://localhost:3000/get_token", {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
+        const response = await axios.get("http://localhost:3000/api/users/me", {
+          withCredentials: true,
         });
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data.token) {
-            const decodedToken = JSON.parse(atob(data.token.split(".")[1]));
-            if (decodedToken.userId) {
-              setUserId(decodedToken.userId);
-            }
-          }
+        if (response.data) {
+          setUserId(response.data._id);
         }
       } catch (error) {
         console.error("Error fetching token:", error);
@@ -102,7 +91,6 @@ const ReviewForm = () => {
       await axios.post("http://localhost:3000/api/reviews", reviewData);
       toast.success("تم إرسال التعليق بنجاح!");
 
-      // تحديث المراجعات والصالون
       fetchReviews(salonId);
       fetchSalon(salonId);
 
@@ -132,7 +120,7 @@ const ReviewForm = () => {
   };
 
   const setFilteredReviews = reviews.filter((review) => {
-    return !review.isDeleted; // تأكد من أن التعليق ليس محذوفًا
+    return !review.isDeleted;
   });
 
   if (loading) {
@@ -153,7 +141,6 @@ const ReviewForm = () => {
 
   return (
     <div className="bg-white shadow-lg rounded-xl p-6 max-w-4xl mx-auto">
-      {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b pb-4">
         <div>
           <h2 className="text-2xl font-bold text-[#5d4037]">تعليقات العملاء</h2>
@@ -198,7 +185,6 @@ const ReviewForm = () => {
         )}
       </div>
 
-      {/* Review Form */}
       {showForm && (
         <div className="bg-[#f5f5f5] rounded-xl p-6 mb-8 border border-[#e0e0e0] shadow-sm">
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -278,7 +264,6 @@ const ReviewForm = () => {
               className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300"
             >
               <div className="flex items-start gap-4">
-                {/* Avatar with first letter */}
                 <div className="flex-shrink-0">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-md">
                     {review.userId?.username

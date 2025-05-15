@@ -4,11 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 const NotFound = () => {
   const navigate = useNavigate();
 
-  // عد تنازلي للعودة للصفحة الرئيسية
   useEffect(() => {
     const redirectTimer = setTimeout(() => {
       navigate("/");
-    }, 10000); // توجيه تلقائي بعد 10 ثواني
+    }, 10000);
 
     return () => clearTimeout(redirectTimer);
   }, [navigate]);
@@ -19,19 +18,15 @@ const NotFound = () => {
       dir="rtl"
     >
       <div className="w-full max-w-lg bg-white rounded-lg shadow-xl overflow-hidden">
-        {/* شريط علوي بلون داكن */}
         <div className="h-2 bg-[#8a5936]"></div>
 
-        {/* محتوى الصفحة */}
         <div className="p-8">
-          {/* رمز الخطأ */}
           <div className="relative mb-8">
             <div className="absolute inset-0 flex items-center justify-center opacity-10">
               <div className="text-[240px] font-bold text-[#a0714f]">404</div>
             </div>
 
             <div className="relative flex flex-col items-center">
-              {/* أيقونة الحزن */}
               <div className="w-24 h-24 mb-4 flex items-center justify-center rounded-full bg-[#f4e5d6] text-[#8a5936]">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -47,17 +42,14 @@ const NotFound = () => {
                 </svg>
               </div>
 
-              {/* عنوان الخطأ */}
               <h1 className="text-4xl font-bold text-[#8a5936] mb-2">
                 الصفحة غير موجودة
               </h1>
 
-              {/* رسالة الخطأ */}
               <p className="text-center text-[#a0714f] text-lg mb-8">
                 عذراً، الصفحة التي تبحث عنها غير موجودة أو تم نقلها.
               </p>
 
-              {/* أزرار التنقل */}
               <div className="flex flex-col sm:flex-row gap-4 w-full max-w-xs">
                 <Link
                   to="/"
@@ -69,11 +61,10 @@ const NotFound = () => {
                   onClick={() => navigate(-1)}
                   className="flex-1 py-3 px-6 bg-[#a0714f] hover:bg-[#956a4a] text-white text-center rounded-md transition-colors duration-300 font-medium shadow-md"
                 >
-                  العودة للخلف
+                  العودة للصفحة السابقة
                 </button>
               </div>
 
-              {/* رسالة التوجيه التلقائي */}
               <p className="mt-8 text-sm text-[#a0714f] text-center">
                 سيتم توجيهك تلقائياً إلى الصفحة الرئيسية خلال 10 ثوانٍ
               </p>

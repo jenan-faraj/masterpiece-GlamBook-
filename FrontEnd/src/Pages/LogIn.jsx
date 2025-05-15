@@ -1,4 +1,4 @@
-import { use, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function LoginForm() {
@@ -17,7 +17,7 @@ export default function LoginForm() {
     try {
       const response = await fetch("http://localhost:3000/api/users/me", {
         method: "GET",
-        credentials: "include", // مهم للكوكيز
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -60,7 +60,6 @@ export default function LoginForm() {
         return;
       }
 
-      // ✅ بعدها منجيب بيانات المستخدم
       const userRes = await fetch("http://localhost:3000/api/users/me", {
         method: "GET",
         credentials: "include",
@@ -76,14 +75,13 @@ export default function LoginForm() {
         return;
       }
 
-      // ✅ نوجّه بناءً على الدور
       if (userData.role === "admin") {
         navigate("/admin", { replace: true });
       } else {
         navigate(-1, { replace: true });
       }
 
-      location.reload(); // لتحديث الحالة بعد تسجيل الدخول
+      location.reload();
     } catch (err) {
       setError("حدث خطأ ما، يرجى المحاولة لاحقاً.");
     }

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const contactSchema = new mongoose.Schema(
   {
@@ -10,6 +10,5 @@ const contactSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// استخدام module.exports بدلاً من export default
-const Contact = mongoose.model('Contact', contactSchema);
+const Contact = mongoose.model("Contact", contactSchema);
 module.exports = Contact;

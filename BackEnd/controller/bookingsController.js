@@ -1,4 +1,4 @@
-const Book = require("../models/book");
+const Book = require("../models/bookings");
 const User = require("../models/User");
 
 // ✅ Create Booking
@@ -6,9 +6,8 @@ exports.createBooking = async (req, res) => {
   try {
     const newBooking = new Book(req.body);
     await newBooking.save();
-    // نضيف الـ booking لحساب المستخدم
     await User.findByIdAndUpdate(newBooking.userId, {
-      $push: { book: newBooking._id }, // تأكدي من اسم الحقل!
+      $push: { book: newBooking._id },
     });
 
     res.status(201).json({
@@ -28,8 +27,8 @@ exports.createBooking = async (req, res) => {
 exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await Book.find({ isDeleted: false, isCanceled: false })
-      .populate("userId", "username email") // عرض بيانات المستخدم (اختياري)
-      .populate("salonId", "name location"); // عرض بيانات الصالون (اختياري)
+      .populate("userId", "username email")
+      .populate("salonId", "name location");
 
     res.status(200).json({
       success: true,
@@ -44,7 +43,7 @@ exports.getAllBookings = async (req, res) => {
   }
 };
 
-// تحديث حالة الحجز
+// update Booking Status
 exports.updateBookingStatus = async (req, res) => {
   try {
     const { bookingId } = req.params;
@@ -80,8 +79,8 @@ exports.getBookingsByUser = async (req, res) => {
 
   try {
     const bookings = await Book.find({ userId, isDeleted: false })
-      .populate("salonId", "name location") // إذا بتحبي تعرضي بيانات الصالون
-      .sort({ date: 1 }); // ترتيب حسب التاريخ
+      .populate("salonId", "name location")
+      .sort({ date: 1 });
 
     if (bookings.length === 0) {
       return res.status(404).json({

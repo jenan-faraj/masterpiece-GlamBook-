@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Phone, Mail, Calendar, Camera } from "lucide-react";
+import { Phone, Mail, Camera, Heart } from "lucide-react";
 import MapComponent from "../components/MapViue";
 import ReviewsTab from "../components/ReviewsTab";
 import AddServiceButton from "../components/ServicesTab";
@@ -20,8 +20,7 @@ function SalonDetails() {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("services");
   const [user, setUser] = useState("");
-  const [userId, setUserId] = useState(null);
-  const [uploading, setUploading] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     axios
@@ -35,40 +34,6 @@ function SalonDetails() {
         setLoading(false);
       });
   }, [id]);
-
-  useEffect(() => {
-    const fetchToken = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/get_token", {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data.token) {
-            const decodedToken = JSON.parse(atob(data.token.split(".")[1]));
-            if (decodedToken.userId) {
-              setUserId(decodedToken.userId);
-            }
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching token:", error);
-        Swal.fire({
-          title: "خطأ!",
-          text: "حدث خطأ أثناء جلب بيانات المستخدم",
-          icon: "error",
-          confirmButtonText: "حسناً",
-        });
-      }
-    };
-
-    fetchToken();
-  }, []);
 
   const fetchUserProfile = async () => {
     try {
@@ -94,7 +59,6 @@ function SalonDetails() {
     const file = event.target.files[0];
 
     if (file) {
-      setUploading(true);
       Swal.fire({
         title: "جاري رفع الصورة...",
         allowOutsideClick: false,
@@ -118,12 +82,10 @@ function SalonDetails() {
         );
 
         if (response.data && response.data.url) {
-          // تحديث الصالون في قاعدة البيانات
           await axios.put(`http://localhost:3000/api/salons/${salon._id}`, {
             [fieldName]: response.data.url,
           });
 
-          // تحديث الحالة المحلية
           setSalon((prev) => ({
             ...prev,
             [fieldName]: response.data.url,
@@ -144,8 +106,6 @@ function SalonDetails() {
           icon: "error",
           confirmButtonText: "حسناً",
         });
-      } finally {
-        setUploading(false);
       }
     }
   };
@@ -156,6 +116,82 @@ function SalonDetails() {
     fileInput.accept = "image/*";
     fileInput.onchange = (e) => handleImageUpload(e, fieldName);
     fileInput.click();
+  };
+
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      if (user && salon) {
+        try {
+          const response = await axios.get(
+            "http://localhost:3000/api/favorites",
+            {
+              withCredentials: true,
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+
+          const isSalonFavorite = response.data.some(
+            (favorite) =>
+              favorite.salon._id === salon._id && !favorite.isDeleted
+          );
+
+          setIsFavorite(isSalonFavorite);
+        } catch (error) {
+          console.error("Error checking favorite status:", error);
+        }
+      }
+    };
+
+    checkFavoriteStatus();
+  }, [user, salon]);
+
+  const handleToggleFavorite = async () => {
+    try {
+      if (isFavorite) {
+        await axios.delete(`http://localhost:3000/api/favorites/${salon._id}`, {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        setIsFavorite(false);
+        setUser((prev) => ({
+          ...prev,
+          favoriteList:
+            prev.favoriteList?.filter((id) => id !== salon._id) || [],
+        }));
+      } else {
+        await axios.post(
+          "http://localhost:3000/api/favorites",
+          { salonId: salon._id },
+          {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        setIsFavorite(true);
+        setUser((prev) => ({
+          ...prev,
+          favoriteList: [...(prev.favoriteList || []), salon._id],
+        }));
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      Swal.fire({
+        title: "خطأ!",
+        text: error.response?.data?.message || "حدث خطأ أثناء تحديث المفضلة",
+        icon: "error",
+        confirmButtonText: "حسناً",
+      });
+    }
   };
 
   if (loading)
@@ -170,7 +206,6 @@ function SalonDetails() {
   return (
     <div dir="rtl" className="bg-gray-50 min-h-screen pb-12">
       <ScrollToTopButton />
-      {/* رأس الصفحة مع صورة الملف الشخصي */}
       <div className="relative h-90">
         {salon.bgImage ? (
           <div className="relative w-full h-full">
@@ -179,6 +214,18 @@ function SalonDetails() {
               src={salon.bgImage}
               alt="خلفية"
             />
+            {user && user.role === "user" && (
+              <div
+                className="absolute top-2 left-2 bg-white p-2 rounded-full shadow-md cursor-pointer"
+                onClick={handleToggleFavorite}
+              >
+                <Heart
+                  size={20}
+                  fill={isFavorite ? "red" : "white"}
+                  color={isFavorite ? "red" : "gray"}
+                />
+              </div>
+            )}
             {user && user.email === salon.email && (
               <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md cursor-pointer">
                 <Camera
@@ -191,6 +238,18 @@ function SalonDetails() {
           </div>
         ) : (
           <div className="w-full h-full object-cover bg-[var(--Logo-color)] relative">
+            {user && user.role === "user" && (
+              <div
+                className="absolute top-2 left-2 bg-white p-2 rounded-full shadow-md cursor-pointer"
+                onClick={handleToggleFavorite}
+              >
+                <Heart
+                  size={20}
+                  fill={isFavorite ? "red" : "white"}
+                  color={isFavorite ? "red" : "gray"}
+                />
+              </div>
+            )}
             {user && user.email === salon.email && (
               <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md cursor-pointer">
                 <Camera
@@ -225,7 +284,6 @@ function SalonDetails() {
 
       <SalonInfo salon={salon} user={user} />
 
-      {/* تبويب التنقل */}
       <div className="mx-6 md:mx-10 mb-4">
         <div className="flex justify-center lg:justify-start md:justify-between flex-wrap gap-1 lg:gap-2 border-b">
           <button
@@ -295,7 +353,6 @@ function SalonDetails() {
         </div>
       </div>
 
-      {/* محتوى التبويب */}
       <div className="mx-6 md:mx-10">
         {activeTab === "services" && (
           <AddServiceButton user={user} salon={salon} />

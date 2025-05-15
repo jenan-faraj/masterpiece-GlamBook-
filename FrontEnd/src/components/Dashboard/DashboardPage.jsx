@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import {
   LineChart,
@@ -33,8 +33,7 @@ import {
   BarChart2,
 } from "lucide-react";
 
-const DashboardPage = (props) => {
-  // البيانات الأساسية
+const DashboardPage = () => {
   const [salons, setSalons] = useState([]);
   const [users, setUsers] = useState([]);
   const [payments, setPayments] = useState([]);
@@ -46,7 +45,6 @@ const DashboardPage = (props) => {
   const [monthlyPaymentsData, setMonthlyPaymentsData] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
 
-  // محاكاة جلب البيانات
   const fetchData = async () => {
     try {
       const [usersRes, salonsRes, paymentsRes, bookingsRes] = await Promise.all(
@@ -100,7 +98,6 @@ const DashboardPage = (props) => {
     fetchData();
   }, []);
 
-  // تنسيق العملة
   const formatCurrency = (value) => {
     if (value === undefined || value === null) {
       return "0.00 دينار";
@@ -108,7 +105,6 @@ const DashboardPage = (props) => {
     return `${value.toFixed(2)} دينار`;
   };
 
-  // أسماء الشهور بالعربية
   const arabicMonths = [
     "يناير",
     "فبراير",
@@ -124,15 +120,12 @@ const DashboardPage = (props) => {
     "ديسمبر",
   ];
 
-  // معالجة بيانات الحجوزات الشهرية
   useEffect(() => {
     if (!bookings || bookings.length === 0) return;
 
-    // تهيئة عدادات لجميع الشهور
     const monthlyCounts = Array(12).fill(0);
     const monthlyCompletedCounts = Array(12).fill(0);
 
-    // حساب الحجوزات لكل شهر
     bookings.forEach((booking) => {
       if (!booking.isDeleted) {
         const bookingDate = new Date(booking.date);
@@ -145,7 +138,6 @@ const DashboardPage = (props) => {
       }
     });
 
-    // إنشاء بيانات للرسم البياني
     const data = monthlyCounts.map((count, index) => ({
       name: arabicMonths[index],
       الحجوزات: count,
@@ -155,11 +147,9 @@ const DashboardPage = (props) => {
     setMonthlyData(data);
   }, [bookings]);
 
-  // معالجة بيانات المدفوعات
   useEffect(() => {
     if (!payments.length) return;
 
-    // معالجة بيانات المدفوعات حسب الشهر
     const paymentsByMonth = payments.reduce((acc, payment) => {
       const date = new Date(payment.createdAt);
       const month = date.getMonth();
@@ -177,38 +167,30 @@ const DashboardPage = (props) => {
 
       if (payment.status === "completed") {
         acc[key].المبلغ += payment.amount;
-        acc[key].الربح += payment.amount * 0.15; // حساب الربح بنسبة 20%
+        acc[key].الربح += payment.amount * 0.15;
         acc[key].العدد += 1;
       }
 
       return acc;
     }, {});
 
-    // تحويل إلى مصفوفة وترتيب حسب التاريخ
     const monthlyDataArray = Object.values(paymentsByMonth);
 
-    // حساب إجمالي المدفوعات والأرباح
     const total = monthlyDataArray.reduce(
       (sum, month) => sum + month.المبلغ,
       0
     );
-    const profit = total * 0.15; // حساب الربح بنسبة 20% من المجموع
 
     setMonthlyPaymentsData(monthlyDataArray);
     setTotalAmount(total);
   }, [payments]);
 
-  // حساب إجمالي المدفوعات
   const totalPayments = Array.isArray(payments)
     ? payments.reduce((total, payment) => total + (payment?.amount || 0), 0)
     : 0;
 
-  // حساب إجمالي الربح (20% من المدفوعات)
   const totalProfit20 = totalPayments * 0.15;
 
-  const totalUsers = users.length;
-
-  // توزيع أنواع المستخدمين
   const userTypes = [
     {
       name: "عملاء",
@@ -224,7 +206,6 @@ const DashboardPage = (props) => {
     },
   ];
 
-  // معالجة توزيع الصالونات
   const processSalonData = (data) => {
     const sortedData = [...data].sort(
       (a, b) => (b.visitors || 0) - (a.visitors || 0)
@@ -244,7 +225,6 @@ const DashboardPage = (props) => {
     return [...topSalons, { name: "أخرى", value: otherValue }];
   };
 
-  // معالجة بيانات الصالونات
   useEffect(() => {
     if (salons && salons.length > 0) {
       const processedSalons = processSalonData(salons);
@@ -263,10 +243,8 @@ const DashboardPage = (props) => {
     }
   }, [salons]);
 
-  // ألوان للرسوم البيانية
   const COLORS = ["#8a5936", "#c49a7a", "#a87356", "#4f2c14", "#331b0d"];
 
-  // لإظهار/إخفاء بطاقات البيانات
   const toggleCard = (cardId) => {
     setExpandedCard(expandedCard === cardId ? null : cardId);
   };
@@ -278,7 +256,6 @@ const DashboardPage = (props) => {
           لوحة المعلومات
         </h1>
 
-        {/* البطاقات الرئيسية */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 md:gap-6 mb-4 sm:mb-8 px-2">
           <div className="bg-white rounded-lg shadow p-3 sm:p-4 md:p-6 transition-all hover:shadow-lg border-r-4 border-[#8a5936]">
             <div className="flex items-center justify-between">
@@ -345,7 +322,6 @@ const DashboardPage = (props) => {
           </div>
         </div>
 
-        {/* بطاقة الربح */}
         <div className="bg-white rounded-lg shadow p-3 sm:p-4 md:p-6 mb-4 sm:mb-8 border-r-4 border-green-600 mx-2">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
             <div className="flex items-center space-x-4 space-x-reverse mb-3 sm:mb-0">
@@ -363,14 +339,12 @@ const DashboardPage = (props) => {
             </div>
             <div className="flex items-center bg-green-100 p-2 rounded mr-2 sm:mr-0">
               <Percent className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 mr-1" />
-              <span className="font-semibold text-green-600">20%</span>
+              <span className="font-semibold text-green-600">15</span>
             </div>
           </div>
         </div>
 
-        {/* الرسوم البيانية */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-8 px-2">
-          {/* مخطط الحجوزات الشهرية */}
           <div className="w-full bg-white rounded-lg shadow p-3 sm:p-4 md:p-6">
             <div className="flex justify-between items-center mb-3 sm:mb-4">
               <h2 className="text-lg sm:text-xl font-bold text-right flex items-center">
@@ -435,7 +409,6 @@ const DashboardPage = (props) => {
             </div>
           </div>
 
-          {/* مخطط المدفوعات الشهرية */}
           <div className="w-full bg-white rounded-lg shadow p-3 sm:p-4 md:p-6">
             <div className="flex justify-between items-center mb-3 sm:mb-4">
               <h2 className="text-lg sm:text-xl font-bold text-gray-800 flex items-center">
@@ -528,9 +501,7 @@ const DashboardPage = (props) => {
           </div>
         </div>
 
-        {/* صف ثالث للرسوم البيانية */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 px-2">
-          {/* توزيع الصالونات */}
           <div className="bg-white rounded-lg shadow p-3 sm:p-4 md:p-6">
             <div className="flex justify-between items-center mb-3 sm:mb-4">
               <h3 className="font-bold text-sm sm:text-base md:text-lg text-gray-700 flex items-center">
@@ -592,7 +563,6 @@ const DashboardPage = (props) => {
             </div>
           </div>
 
-          {/* توزيع المستخدمين */}
           <div className="bg-white rounded-lg shadow p-3 sm:p-4 md:p-6">
             <div className="flex justify-between items-center mb-3 sm:mb-4">
               <h3 className="font-bold text-sm sm:text-base md:text-lg text-gray-700 flex items-center">
@@ -663,9 +633,7 @@ const DashboardPage = (props) => {
           </div>
         </div>
 
-        {/* صف إضافي للإحصائيات */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mt-4 sm:mt-6 px-2 pb-6">
-          {/* تحليل الأرباح */}
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 mt-4 sm:mt-6 px-2 pb-6">
           <div className="bg-white rounded-lg shadow p-3 sm:p-4 md:p-6">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6">
               <h3 className="font-bold text-sm sm:text-base md:text-lg text-gray-700 flex items-center mb-2 sm:mb-0">
@@ -743,73 +711,6 @@ const DashboardPage = (props) => {
                     strokeWidth={2}
                   />
                 </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* معدلات النمو */}
-          <div className="bg-white rounded-lg shadow p-3 sm:p-4 md:p-6">
-            <div className="flex justify-between items-center mb-3 sm:mb-4">
-              <h3 className="font-bold text-sm sm:text-base md:text-lg text-gray-700 flex items-center">
-                <TrendingUp className="mr-1 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[#8a5936]" />
-                معدلات النمو الشهرية
-              </h3>
-            </div>
-            <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-3 sm:mb-6">
-              <div className="p-2 sm:p-4 bg-[#f6e9dc] rounded-lg">
-                <p className="text-gray-600 text-xs sm:text-sm mb-1">
-                  متوسط النمو
-                </p>
-                <p className="text-base sm:text-lg md:text-xl font-bold text-[#8a5936]">
-                  14.2%
-                </p>
-              </div>
-              <div className="p-2 sm:p-4 bg-[#f6e9dc] rounded-lg">
-                <p className="text-gray-600 text-xs sm:text-sm mb-1">
-                  زيادة المستخدمين
-                </p>
-                <p className="text-base sm:text-lg md:text-xl font-bold text-[#8a5936]">
-                  8.7%
-                </p>
-              </div>
-            </div>
-
-            <div className="w-full h-48 sm:h-56 md:h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={[
-                    { month: "يناير", نمو: 5, مستخدمين: 3 },
-                    { month: "فبراير", نمو: 7, مستخدمين: 5 },
-                    { month: "مارس", نمو: 10, مستخدمين: 6 },
-                    { month: "أبريل", نمو: 12, مستخدمين: 8 },
-                    { month: "مايو", نمو: 16, مستخدمين: 10 },
-                  ]}
-                  margin={{
-                    top: 5,
-                    right: 20,
-                    left: 0,
-                    bottom: 5,
-                  }}
-                  barSize={15}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="month"
-                    tick={{ fontSize: 10, fontWeight: "bold" }}
-                  />
-                  <YAxis
-                    tickFormatter={(value) => `${value}%`}
-                    tick={{ fontSize: 10, fontWeight: "bold" }}
-                  />
-                  <Tooltip formatter={(value) => [`${value}%`]} />
-                  <Legend wrapperStyle={{ fontSize: 10, fontWeight: "bold" }} />
-                  <Bar dataKey="نمو" name="نمو المبيعات" fill="#a0714f" />
-                  <Bar
-                    dataKey="مستخدمين"
-                    name="نمو المستخدمين"
-                    fill="#c49a7a"
-                  />
-                </BarChart>
               </ResponsiveContainer>
             </div>
           </div>

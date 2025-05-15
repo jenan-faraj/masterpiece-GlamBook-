@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ArrowUp } from "lucide-react";
 
 const ScrollToTopButton = () => {
   const [isVisible, setIsVisible] = useState(false);
 
-  // تحديد متى سيظهر الزر (بعد التمرير لأسفل بمقدار معين)
   useEffect(() => {
     const toggleVisibility = () => {
       if (window.pageYOffset > 300) {
@@ -14,14 +13,11 @@ const ScrollToTopButton = () => {
       }
     };
 
-    // إضافة مستمع حدث التمرير
     window.addEventListener("scroll", toggleVisibility);
 
-    // تنظيف المستمع عند فك تحميل المكون
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
-  // وظيفة التمرير لأعلى
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,

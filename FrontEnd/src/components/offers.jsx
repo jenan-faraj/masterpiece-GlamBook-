@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { Calendar, Camera } from "lucide-react";
+import { Calendar } from "lucide-react";
 import Swal from "sweetalert2";
 
 const SpecialOffers = ({ salon, user }) => {
-  // Special Offers State
   const [showOffersModal, setShowOffersModal] = useState(false);
   const [offer, setOffer] = useState({
     title: "",
@@ -19,15 +18,11 @@ const SpecialOffers = ({ salon, user }) => {
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
   const [offers, setOffers] = useState(salon.offers || []);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  // Load offers when component mounts
   useEffect(() => {
     setOffers(salon.offers || []);
   }, [salon]);
 
-  // Submit offer
   const handleOfferSubmit = async (e) => {
     e.preventDefault();
     setUploadingOffer(true);
@@ -72,7 +67,6 @@ const SpecialOffers = ({ salon, user }) => {
     }
   };
 
-  // Delete offer
   const handleDeleteOffer = async (offerId) => {
     const result = await Swal.fire({
       title: "هل أنت متأكد؟",
@@ -108,30 +102,24 @@ const SpecialOffers = ({ salon, user }) => {
     }
   };
 
-  // Handle form field changes
   const handleOfferChange = (e) => {
     setOffer({ ...offer, [e.target.name]: e.target.value });
   };
 
-  // Handle image selection
   const handleOfferImageChange = (e) => {
     const files = Array.from(e.target.files);
 
-    // Create preview URLs for selected images
     const newPreviewImages = files.map((file) => URL.createObjectURL(file));
     setOfferPreviewImages([...offerPreviewImages, ...newPreviewImages]);
 
-    // Store the file objects for upload
     const currentFiles = [...offer.images, ...files];
     setOffer({ ...offer, images: currentFiles });
   };
 
-  // Remove selected image
   const removeOfferImage = (index) => {
     const updatedPreviews = [...offerPreviewImages];
     const updatedImages = [...offer.images];
 
-    // Release object URL to avoid memory leaks
     URL.revokeObjectURL(offerPreviewImages[index]);
 
     updatedPreviews.splice(index, 1);
@@ -141,7 +129,6 @@ const SpecialOffers = ({ salon, user }) => {
     setOffer({ ...offer, images: updatedImages });
   };
 
-  // Upload images to server
   const uploadOfferImages = async (files) => {
     if (!files || files.length === 0) return [];
 
@@ -173,13 +160,11 @@ const SpecialOffers = ({ salon, user }) => {
     return uploadedUrls;
   };
 
-  // Handle offer click
   const handleOfferClick = (offer) => {
     setSelectedOffer(offer);
     setIsOfferPopupOpen(true);
   };
 
-  // Reset form when modal closes
   const handleCloseModal = () => {
     setShowOffersModal(false);
     setOffer({
@@ -209,7 +194,6 @@ const SpecialOffers = ({ salon, user }) => {
         )}
       </div>
 
-      {/* Special Offers Modal */}
       {showOffersModal && (
         <div className="fixed inset-0 bg-[#000000ae] bg-opacity-70 flex justify-center items-center z-50">
           <div className="bg-white max-h-[96vh] rounded-lg overflow-auto p-6 w-11/12 max-w-2xl max-h-90vh overflow-y-auto">
@@ -371,15 +355,8 @@ const SpecialOffers = ({ salon, user }) => {
         </div>
       )}
 
-      {/* Offers List */}
       <div className="mt-5">
-        {loading ? (
-          <p className="text-center py-8 text-gray-500">جاري تحميل العروض...</p>
-        ) : error ? (
-          <p className="text-center py-8 text-red-500">
-            خطأ في تحميل العروض. يرجى المحاولة مرة أخرى.
-          </p>
-        ) : visibleOffers && visibleOffers.length > 0 ? (
+        {visibleOffers && visibleOffers.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5">
             {visibleOffers.map((offerItem, index) => (
               <div
@@ -387,7 +364,6 @@ const SpecialOffers = ({ salon, user }) => {
                 className="relative border rounded-lg p-4 hover:shadow-md transition-shadow bg-gradient-to-l from-pink-50 to-white cursor-pointer"
                 onClick={() => handleOfferClick(offerItem)}
               >
-                {/* Delete button */}
                 {user && user.email === salon.email && (
                   <button
                     onClick={(e) => {
@@ -446,6 +422,10 @@ const SpecialOffers = ({ salon, user }) => {
                   <div className="w-1/3 pl-4">
                     <div className="h-32 rounded-md overflow-hidden">
                       <img
+                        onError={(e) => {
+                          e.target.src =
+                            "https://i.pinimg.com/736x/f3/96/9f/f3969fa8e0e4d8c9533fbd9fb9fcc411.jpg";
+                        }}
                         src={
                           offerItem.images && offerItem.images.length > 0
                             ? offerItem.images[0]
@@ -467,68 +447,119 @@ const SpecialOffers = ({ salon, user }) => {
         )}
       </div>
 
-      {/* Offer Details Popup */}
       {isOfferPopupOpen && selectedOffer && (
-        <div className="fixed inset-0 bg-[#000000ae] bg-opacity-80 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-[#00000099] bg-opacity-60 backdrop-blur-sm flex justify-center items-center z-50">
           <div
-            className="bg-white rounded-lg p-6 w-11/12 max-w-3xl max-h-90vh overflow-y-auto relative"
+            className="bg-white rounded-lg w-11/12 max-w-2xl overflow-hidden relative shadow-lg animate-fadeIn"
             dir="rtl"
+            style={{
+              maxHeight: "90vh",
+              animation: "fadeIn 0.3s ease-out",
+            }}
           >
-            <button
-              className="absolute top-3 left-3 text-2xl focus:outline-none"
-              onClick={() => setIsOfferPopupOpen(false)}
-            >
-              ×
-            </button>
-
-            <h3 className="text-2xl font-bold mb-4">{selectedOffer.title}</h3>
-
-            {selectedOffer.images && selectedOffer.images.length > 0 && (
-              <div className="flex overflow-x-auto gap-3 mb-5 pb-2">
-                {selectedOffer.images.map((img, i) => (
-                  <img
-                    key={i}
-                    src={img}
-                    alt={`صورة ${selectedOffer.title} ${i + 1}`}
-                    className="h-64 object-cover rounded"
-                  />
-                ))}
-              </div>
-            )}
-
-            <div className="mb-5 leading-relaxed">
-              <p>{selectedOffer.description}</p>
+            <div className="bg-[#8a5936] px-5 py-3 flex justify-between items-center">
+              <h3 className="text-xl font-bold text-white">
+                {selectedOffer.title}
+              </h3>
+              <button
+                className="text-white hover:text-[#f4e5d6] focus:outline-none transition-colors duration-200"
+                onClick={() => setIsOfferPopupOpen(false)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
             </div>
 
-            <div className="bg-gray-50 p-4 rounded mb-3">
-              <p className="mb-2">
-                صالح حتى:{" "}
-                <strong>
-                  {new Date(selectedOffer.endDate).toLocaleDateString()}
-                </strong>
-              </p>
-              <div className="mt-3">
-                <p>
-                  السعر الأصلي:{" "}
-                  <span className="line-through text-gray-500">
-                    {selectedOffer.originalPrice} د.أ
-                  </span>
-                </p>
-                <p>
-                  سعر الخصم:{" "}
-                  <span className="font-bold text-red-600">
-                    {selectedOffer.discountPrice} د.أ
-                  </span>
-                </p>
-                <p>
-                  التوفير:{" "}
-                  <span className="font-bold text-green-600">
-                    {(
-                      selectedOffer.originalPrice - selectedOffer.discountPrice
-                    ).toFixed(2)}{" "}
-                    د.أ
-                  </span>
-                </p>
+            <div
+              className="overflow-y-auto bg-[#f4e5d6]"
+              style={{ maxHeight: "calc(90vh - 120px)" }}
+            >
+              {selectedOffer.images && selectedOffer.images.length > 0 && (
+                <div className="p-4 pb-2">
+                  <div className="flex overflow-x-auto gap-3 pb-3 scrollbar-thin scrollbar-thumb-[#a0714f]">
+                    {selectedOffer.images.map((img, i) => (
+                      <img
+                        key={i}
+                        src={img}
+                        alt={`صورة ${selectedOffer.title} ${i + 1}`}
+                        className="h-56 object-cover rounded-lg shadow-md"
+                        style={{
+                          minWidth: "220px",
+                          maxWidth: "300px",
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <div className="flex justify-center mt-2 gap-1">
+                    {selectedOffer.images.map((_, i) => (
+                      <span
+                        key={i}
+                        className="h-1.5 w-6 rounded-full bg-[#a0714f] opacity-60"
+                      ></span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="px-5 pb-5">
+                <div className="bg-white bg-opacity-70 p-4 rounded-lg mb-4 shadow-sm text-[#8a5936]">
+                  <p className="leading-relaxed">{selectedOffer.description}</p>
+                </div>
+
+                <div className="bg-white rounded-lg p-4 mb-4 shadow-md">
+                  <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#f4e5d6]">
+                    <span className="text-[#8a5936] font-bold text-lg">
+                      تفاصيل العرض
+                    </span>
+                    <span className="bg-[#a0714f] text-white px-3 py-1 rounded-full text-sm">
+                      صالح حتى:{" "}
+                      {new Date(selectedOffer.endDate).toLocaleDateString()}
+                    </span>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="flex-1 bg-[#f4e5d6] p-3 rounded-lg text-center">
+                      <div className="text-sm text-[#a0714f] mb-1">
+                        السعر الأصلي
+                      </div>
+                      <div className="line-through text-gray-500 text-lg">
+                        {selectedOffer.originalPrice} د.أ
+                      </div>
+                    </div>
+
+                    <div className="flex-1 bg-[#f4e5d6] p-3 rounded-lg text-center">
+                      <div className="text-sm text-[#a0714f] mb-1">
+                        سعر الخصم
+                      </div>
+                      <div className="font-bold text-[#8a5936] text-xl">
+                        {selectedOffer.discountPrice} د.أ
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 bg-[#8a5936] bg-opacity-10 p-3 rounded-lg flex items-center justify-between">
+                    <span className="text-[#8a5936]">التوفير:</span>
+                    <span className="font-bold text-[#f9e7da] text-lg">
+                      {(
+                        selectedOffer.originalPrice -
+                        selectedOffer.discountPrice
+                      ).toFixed(2)}{" "}
+                      د.أ
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

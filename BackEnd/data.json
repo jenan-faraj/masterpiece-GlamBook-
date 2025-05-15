@@ -1,0 +1,282 @@
+[
+  {
+    "services": [
+      {
+        "serviceName": "قص شعر",
+        "servicePrice": 50
+      }
+    ],
+    "date": "2025-05-14T00:00:00.000Z",
+    "time": "09:00 AM",
+    "userId": "507f1f77bcf86cd799439011",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f8f",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "صبغة شعر",
+        "servicePrice": 120
+      }
+    ],
+    "date": "2025-05-15T00:00:00.000Z",
+    "time": "02:30 PM",
+    "userId": "507f1f77bcf86cd799439012",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f8e",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "مانيكير",
+        "servicePrice": 35
+      }
+    ],
+    "date": "2025-05-20T00:00:00.000Z",
+    "time": "11:15 AM",
+    "userId": "507f1f77bcf86cd799439013",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f8d",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "حلاقة رجالية",
+        "servicePrice": 25
+      }
+    ],
+    "date": "2025-06-01T00:00:00.000Z",
+    "time": "04:45 PM",
+    "userId": "507f1f77bcf86cd799439014",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f8c",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "ماسك للوجه",
+        "servicePrice": 60
+      }
+    ],
+    "date": "2025-06-10T00:00:00.000Z",
+    "time": "10:00 AM",
+    "userId": "507f1f77bcf86cd799439015",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f8b",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "تسريحة زفاف",
+        "servicePrice": 150
+      }
+    ],
+    "date": "2025-06-25T00:00:00.000Z",
+    "time": "08:30 AM",
+    "userId": "507f1f77bcf86cd799439016",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f8a",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "إزالة شعر بالشمع",
+        "servicePrice": 40
+      }
+    ],
+    "date": "2025-07-05T00:00:00.000Z",
+    "time": "01:00 PM",
+    "userId": "507f1f77bcf86cd799439017",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f89",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "تنظيف البشرة",
+        "servicePrice": 70
+      }
+    ],
+    "date": "2025-07-15T00:00:00.000Z",
+    "time": "03:30 PM",
+    "userId": "507f1f77bcf86cd799439018",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f88",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "حناء",
+        "servicePrice": 30
+      }
+    ],
+    "date": "2025-08-01T00:00:00.000Z",
+    "time": "12:45 PM",
+    "userId": "507f1f77bcf86cd799439019",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f87",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "تدليك الجسم",
+        "servicePrice": 90
+      }
+    ],
+    "date": "2025-08-20T00:00:00.000Z",
+    "time": "05:00 PM",
+    "userId": "507f1f77bcf86cd799439020",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f86",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "تقليم أظافر",
+        "servicePrice": 20
+      }
+    ],
+    "date": "2025-09-05T00:00:00.000Z",
+    "time": "10:30 AM",
+    "userId": "507f1f77bcf86cd799439021",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f85",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "علاج الشعر",
+        "servicePrice": 80
+      }
+    ],
+    "date": "2025-09-15T00:00:00.000Z",
+    "time": "02:15 PM",
+    "userId": "507f1f77bcf86cd799439022",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f84",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "مكياج سهرة",
+        "servicePrice": 65
+      }
+    ],
+    "date": "2025-10-01T00:00:00.000Z",
+    "time": "04:00 PM",
+    "userId": "507f1f77bcf86cd799439023",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f83",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "حمام مغربي",
+        "servicePrice": 110
+      }
+    ],
+    "date": "2025-10-15T00:00:00.000Z",
+    "time": "11:00 AM",
+    "userId": "507f1f77bcf86cd799439024",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f82",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "تنعيم الشعر",
+        "servicePrice": 75
+      }
+    ],
+    "date": "2025-11-01T00:00:00.000Z",
+    "time": "01:45 PM",
+    "userId": "507f1f77bcf86cd799439025",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f81",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "تفتيح البشرة",
+        "servicePrice": 85
+      }
+    ],
+    "date": "2025-11-20T00:00:00.000Z",
+    "time": "03:00 PM",
+    "userId": "507f1f77bcf86cd799439026",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f80",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "مساج الوجه",
+        "servicePrice": 55
+      }
+    ],
+    "date": "2025-12-01T00:00:00.000Z",
+    "time": "09:30 AM",
+    "userId": "507f1f77bcf86cd799439027",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f7f",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "إزالة شعر بالليزر",
+        "servicePrice": 200
+      }
+    ],
+    "date": "2025-12-15T00:00:00.000Z",
+    "time": "02:00 PM",
+    "userId": "507f1f77bcf86cd799439028",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f7e",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "تسريحة عروس",
+        "servicePrice": 180
+      }
+    ],
+    "date": "2025-12-25T00:00:00.000Z",
+    "time": "08:00 AM",
+    "userId": "507f1f77bcf86cd799439029",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f7d",
+    "isCanceled": false,
+    "isCompleted": false
+  },
+  {
+    "services": [
+      {
+        "serviceName": "بديكير",
+        "servicePrice": 45
+      }
+    ],
+    "date": "2025-12-31T00:00:00.000Z",
+    "time": "11:45 AM",
+    "userId": "507f1f77bcf86cd799439030",
+    "salonId": "5e9f8f8f8f8f8f8f8f8f8f7c",
+    "isCanceled": false,
+    "isCompleted": false
+  }
+]

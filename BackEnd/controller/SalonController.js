@@ -3,12 +3,23 @@ const Salon = require("../models/SalonModel");
 // Get all salons
 const getAllSalons = async (req, res) => {
   try {
+    const salons = await Salon.find({ isDeleted: false, status: "Published" });
+    res.status(200).json(salons);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get all salons
+const getAllSalonsForAdmin = async (req, res) => {
+  try {
     const salons = await Salon.find({ isDeleted: false });
     res.status(200).json(salons);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 // Create new salon
 const createSalon = async (req, res) => {
   try {
@@ -38,9 +49,9 @@ const updateSalon = async (req, res) => {
       req.params.id,
       req.body,
       {
-        new: true, // إرجاع المستند المحدث
-        runValidators: true, // التحقق من صحة البيانات حسب المخطط
-        context: "query", // تشغيل المتحققات قبل التحديث
+        new: true,
+        runValidators: true,
+        context: "query",
       }
     );
 
@@ -120,4 +131,5 @@ module.exports = {
   deleteSalon,
   softDeleteService,
   softDeleteOffer,
+  getAllSalonsForAdmin,
 };

@@ -9,11 +9,10 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export default function SalonInfo({ salon, user }) {
   const [isExpanded, setIsExpanded] = useState(false);
-
   const daysTranslation = {
     monday: "الإثنين",
     tuesday: "الثلاثاء",
@@ -26,7 +25,6 @@ export default function SalonInfo({ salon, user }) {
 
   return (
     <div dir="rtl">
-      {/* قسم العنوان والأزرار */}
       <div className="mt-24 flex flex-col md:flex-row justify-between items-start md:items-center px-6 md:px-10 mb-8">
         <div>
           <div className="flex items-center">
@@ -75,7 +73,6 @@ export default function SalonInfo({ salon, user }) {
         </div>
       </div>
 
-      {/* ملخص معلومات الصالون */}
       <div className="bg-white shadow-md rounded-lg mx-6 md:mx-10 p-6 mb-8">
         <div className="flex flex-col md:flex-row justify-between">
           <div className="md:w-2/3 mb-6 md:mb-0">
@@ -83,19 +80,16 @@ export default function SalonInfo({ salon, user }) {
             <p className="text-gray-700">{salon.longDescription}</p>
 
             <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* الهاتف */}
               <div className="flex items-center">
                 <Phone size={20} className="text-[var(--Logo-color)] ml-2" />
                 <span dir="ltr">{salon.phone}</span>
               </div>
 
-              {/* البريد الإلكتروني */}
               <div className="flex items-center">
                 <Mail size={20} className="text-[var(--Logo-color)] ml-2" />
                 <span>{salon.email}</span>
               </div>
 
-              {/* سنة الافتتاح */}
               <div className="flex items-center">
                 <Award size={20} className="text-[var(--Logo-color)] ml-2" />
                 <span className="capitalize">
@@ -104,7 +98,6 @@ export default function SalonInfo({ salon, user }) {
               </div>
 
               <div className="w-full">
-                {/* عرض ملخص ساعات العمل عندما لا يكون موسعًا */}
                 <div
                   className="flex items-center justify-between cursor-pointer p-2 hover:bg-gray-50 rounded-md"
                   onClick={() => setIsExpanded(!isExpanded)}
@@ -123,7 +116,6 @@ export default function SalonInfo({ salon, user }) {
                   )}
                 </div>
 
-                {/* عرض تفاصيل ساعات العمل عند التوسيع */}
                 {isExpanded && (
                   <div className="mt-2 pr-8 space-y-2">
                     {Object.keys(salon.openingHours).map((day) => {
@@ -174,7 +166,6 @@ export default function SalonInfo({ salon, user }) {
                     0}
                 </span>
               </div>
-              {/* اسم المالك */}
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">المالك</span>
                 <span className="capitalize">{salon.ownerName}</span>

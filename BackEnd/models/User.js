@@ -19,19 +19,13 @@ const userSchema = new mongoose.Schema(
     },
     profileImage: {
       type: String,
-      default: "default-profile.png", // صورة افتراضية
+      default: "default-profile.png",
     },
     role: {
       type: String,
       enum: ["user", "salon", "admin"],
       default: "user",
     },
-    favoriteList: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "FavoriteList", // استبدلي "Item" بالمودل المناسب
-      },
-    ],
     reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],
     payments: [
       {
@@ -40,13 +34,12 @@ const userSchema = new mongoose.Schema(
       },
     ],
 
-    book: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
+    book: [{ type: mongoose.Schema.Types.ObjectId, ref: "Booking" }],
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
 
-// تشفير كلمة المرور قبل الحفظ
 userSchema.pre("save", async function (next) {
   if (!this.isNew && !this.isModified("password")) return next();
   const salt = await bcrypt.genSalt(10);
@@ -54,13 +47,11 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// تفعيل التحقق من البيانات عند التحديث
 userSchema.pre("findOneAndUpdate", function (next) {
   this.setOptions({ runValidators: true, new: true });
   next();
 });
 
-// دالة لإضافة أو إزالة عنصر من المفضلة
 userSchema.methods.toggleFavorite = function (itemId) {
   const index = this.favoriteList.findIndex(
     (fav) => fav.toString() === itemId.toString()
@@ -73,7 +64,6 @@ userSchema.methods.toggleFavorite = function (itemId) {
   return this.save();
 };
 
-// دالة لإضافة أو إزالة تعليق
 userSchema.methods.toggleComment = function (commentId) {
   const index = this.comments.findIndex(
     (comment) => comment.toString() === commentId.toString()
@@ -86,7 +76,6 @@ userSchema.methods.toggleComment = function (commentId) {
   return this.save();
 };
 
-// مقارنة كلمة المرور عند تسجيل الدخول
 userSchema.methods.matchPassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };

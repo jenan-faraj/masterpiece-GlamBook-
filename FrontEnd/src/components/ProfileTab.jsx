@@ -1,10 +1,9 @@
-// ProfileTab.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { Camera } from "lucide-react";
 
-const ProfileTab = ({ user, setUser, fetchUserData }) => {
+const ProfileTab = ({ user, setUser, favoriteList }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -94,6 +93,17 @@ const ProfileTab = ({ user, setUser, fetchUserData }) => {
     fileInput.click();
   };
 
+  if (uploading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="flex flex-col items-center">
+          <div className="loader"></div>
+          <p className="mt-4 text-gray-700">جاري تحميل الصورة...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
       {!isEditing ? (
@@ -105,6 +115,10 @@ const ProfileTab = ({ user, setUser, fetchUserData }) => {
                   user.profileImage ||
                   "https://i.pinimg.com/736x/f1/39/dc/f139dc89e5b1ad0818f612c7f33200a5.jpg"
                 }
+                onError={(e) => {
+                  e.target.src =
+                    "https://i.pinimg.com/736x/0f/0d/cf/0f0dcf270ec5184cdfdb9d424a1f8b43.jpg";
+                }}
                 alt={user.name}
                 className="w-full h-full object-cover rounded-full"
               />
@@ -133,7 +147,7 @@ const ProfileTab = ({ user, setUser, fetchUserData }) => {
           <div className="flex justify-center gap-8 mt-8 w-full max-w-md">
             <div className="flex flex-col items-center bg-gray-50 p-4 rounded-lg w-full">
               <span className="text-2xl font-bold text-[#a0714f]">
-                {user.favoriteList?.length || 0}
+                {favoriteList?.length || 0}
               </span>
               <span className="text-sm text-gray-600">المفضلة</span>
             </div>

@@ -7,7 +7,6 @@ import {
   Scissors,
   CheckCircle,
   XCircle,
-  ArrowUpDown,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -17,9 +16,7 @@ const SalonBookings = ({ salonId }) => {
   const [loading, setLoading] = useState(false);
   const [completedFilter, setCompletedFilter] = useState("");
   const [canceledFilter, setCanceledFilter] = useState("");
-  const [sortOrder, setSortOrder] = useState("desc"); // Default to newest first (desc)
-
-  // إضافة ترقيم الصفحات
+  const [sortOrder, setSortOrder] = useState("desc");
   const [currentPage, setCurrentPage] = useState(1);
   const bookingsPerPage = 6;
 
@@ -33,7 +30,6 @@ const SalonBookings = ({ salonId }) => {
 
       const res = await axios.get(url);
 
-      // التأكد من أن الخدمات تظهر بشكل صحيح
       const processedBookings = res.data.map((booking) => ({
         ...booking,
         services: Array.isArray(booking.services)
@@ -43,7 +39,6 @@ const SalonBookings = ({ salonId }) => {
           : ["خدمة غير معروفة"],
       }));
 
-      // Sort bookings based on date
       const sortedBookings = [...processedBookings].sort((a, b) => {
         const dateA = new Date(a.date);
         const dateB = new Date(b.date);
@@ -80,7 +75,6 @@ const SalonBookings = ({ salonId }) => {
     return <Clock className="w-4 h-4" />;
   };
 
-  // تعديل حالة الإكمال
   const toggleCompletedStatus = async (bookingId, currentStatus) => {
     try {
       console.log(`محاولة تحديث الحجز رقم: ${bookingId}`);
@@ -95,7 +89,6 @@ const SalonBookings = ({ salonId }) => {
       console.log("استجابة التحديث:", response.data);
 
       if (response.data.success) {
-        // تحديث حالة الحجز محليًا
         setBookings((prevBookings) =>
           prevBookings.map((booking) =>
             booking._id === bookingId
@@ -112,7 +105,6 @@ const SalonBookings = ({ salonId }) => {
     }
   };
 
-  // حساب الصفحات للترقيم
   const indexOfLastBooking = currentPage * bookingsPerPage;
   const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
   const currentBookings = bookings.slice(
@@ -123,7 +115,6 @@ const SalonBookings = ({ salonId }) => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // التنقل للصفحة التالية والسابقة
   const nextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -286,7 +277,6 @@ const SalonBookings = ({ salonId }) => {
               ))}
             </div>
 
-            {/* ترقيم الصفحات */}
             {totalPages > 1 && (
               <div className="flex justify-center items-center mt-6 bg-white rounded-lg shadow-md p-4">
                 <button

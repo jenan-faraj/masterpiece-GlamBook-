@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import {
-  ChevronDown,
-  ChevronUp,
   Check,
   X,
   User,
@@ -13,11 +11,9 @@ import {
   Mail,
   Phone,
   Image as ImageIcon,
-  Calendar,
   ChevronLeft,
   ChevronRight,
   Clock,
-  DollarSign,
   Info,
   ArrowLeft,
   PackageX,
@@ -39,25 +35,24 @@ export default function SalonDashboard() {
   const [salonsPerPage, setSalonsPerPage] = useState(10);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
 
-  // Color palette
   const colors = {
-    primary: "#8a5936", // Dark brown
-    secondary: "#a0714f", // Medium brown
-    light: "#c4a484", // Light brown
-    background: "#f9f5f1", // Cream
-    success: "#4caf50", // Green
-    danger: "#f44336", // Red
-    warning: "#ff9800", // Amber
-    info: "#2196f3", // Blue
+    primary: "#8a5936",
+    secondary: "#a0714f",
+    light: "#c4a484",
+    background: "#f9f5f1",
+    success: "#4caf50",
+    danger: "#f44336",
+    warning: "#ff9800",
+    info: "#2196f3",
   };
 
-  // Fetch salons data
   useEffect(() => {
     const fetchSalons = async () => {
       setLoading(true);
       try {
-        // Replace with your actual API endpoint
-        const response = await axios.get("http://localhost:3000/api/salons");
+        const response = await axios.get(
+          "http://localhost:3000/api/salons/Admin"
+        );
 
         const processedSalons = response.data.map((salon) => ({
           ...salon,
@@ -82,7 +77,6 @@ export default function SalonDashboard() {
     fetchSalons();
   }, []);
 
-  // Filter salons
   useEffect(() => {
     let result = [...salons];
 
@@ -107,10 +101,9 @@ export default function SalonDashboard() {
     }
 
     setFilteredSalons(result);
-    setCurrentPage(1); // Reset to first page when filters change
+    setCurrentPage(1);
   }, [searchTerm, statusFilter, salons]);
 
-  // Handle salon approval
   const handleApprove = async (id) => {
     try {
       await axios.put(`http://localhost:3000/api/salons/${id}`, {
@@ -128,7 +121,6 @@ export default function SalonDashboard() {
     }
   };
 
-  // Handle salon rejection
   const handleReject = async (id) => {
     try {
       await axios.put(`http://localhost:3000/api/salons/${id}`, {
@@ -146,7 +138,6 @@ export default function SalonDashboard() {
     }
   };
 
-  // Format date
   const formatDate = (dateString) => {
     if (!dateString) return "غير متوفر";
     try {
@@ -162,7 +153,6 @@ export default function SalonDashboard() {
     }
   };
 
-  // Get status badge styling
   const getStatusBadgeColor = (status) => {
     switch (status) {
       case "Pending":
@@ -176,7 +166,6 @@ export default function SalonDashboard() {
     }
   };
 
-  // Get status text in Arabic
   const getStatusText = (status) => {
     switch (status) {
       case "Pending":
@@ -190,7 +179,6 @@ export default function SalonDashboard() {
     }
   };
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredSalons.length / salonsPerPage);
   const indexOfLastSalon = currentPage * salonsPerPage;
   const indexOfFirstSalon = indexOfLastSalon - salonsPerPage;
@@ -204,7 +192,6 @@ export default function SalonDashboard() {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
-  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex justify-center items-center">
@@ -220,7 +207,6 @@ export default function SalonDashboard() {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex justify-center items-center">
@@ -245,7 +231,6 @@ export default function SalonDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
           <div>
             <h1
@@ -260,10 +245,8 @@ export default function SalonDashboard() {
           </div>
         </div>
 
-        {/* Filters Section */}
         <div className="bg-white rounded-xl shadow-sm p-4 mb-6 border border-gray-200">
           <div className="flex flex-col md:flex-row gap-4 md:items-center">
-            {/* Search Input */}
             <div className="relative flex-grow">
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                 <Search size={18} style={{ color: colors.secondary }} />
@@ -281,7 +264,6 @@ export default function SalonDashboard() {
               />
             </div>
 
-            {/* Status Filter */}
             <div className="flex items-center gap-2">
               <Filter size={18} style={{ color: colors.secondary }} />
               <select
@@ -300,7 +282,6 @@ export default function SalonDashboard() {
               </select>
             </div>
 
-            {/* Items Per Page */}
             <div className="flex items-center gap-2">
               <select
                 value={salonsPerPage}
@@ -320,9 +301,7 @@ export default function SalonDashboard() {
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
-          {/* Table Header */}
           <div
             className="p-4 border-b border-gray-200"
             style={{ backgroundColor: colors.background }}
@@ -342,7 +321,6 @@ export default function SalonDashboard() {
             </div>
           </div>
 
-          {/* Empty State */}
           {filteredSalons.length === 0 ? (
             <div className="p-8 text-center">
               <div className="text-5xl mb-4" style={{ color: colors.light }}>
@@ -370,7 +348,6 @@ export default function SalonDashboard() {
             </div>
           ) : (
             <>
-              {/* Mobile View */}
               <div className="md:hidden space-y-3 p-4">
                 {currentSalons.map((salon) => (
                   <div
@@ -447,7 +424,6 @@ export default function SalonDashboard() {
                 ))}
               </div>
 
-              {/* Desktop View */}
               <div className="hidden md:block overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead style={{ backgroundColor: colors.background }}>
@@ -554,7 +530,6 @@ export default function SalonDashboard() {
                 </table>
               </div>
 
-              {/* Pagination */}
               {filteredSalons.length > salonsPerPage && (
                 <div className="px-4 py-3 border-t border-gray-200 flex items-center justify-between">
                   <div className="flex-1 flex justify-between sm:hidden">
@@ -657,13 +632,10 @@ export default function SalonDashboard() {
         </div>
       </div>
 
-      {/* Salon Details Modal */}
       {showDetailsModal && selectedSalon && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-900 bg-opacity-50 backdrop-blur-sm">
           <div className="flex items-center justify-center min-h-screen px-4 py-6">
-            {/* Modal content */}
             <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-4xl animate-fadeIn">
-              {/* Close button */}
               <button
                 type="button"
                 className="absolute top-4 left-4 text-gray-400 hover:text-gray-600 transition duration-200 focus:outline-none"
@@ -673,7 +645,6 @@ export default function SalonDashboard() {
                 <X className="h-6 w-6" />
               </button>
 
-              {/* Modal header */}
               <div className="px-6 py-4 border-b border-gray-100">
                 <div className="flex flex-col">
                   <h3
@@ -688,12 +659,9 @@ export default function SalonDashboard() {
                 </div>
               </div>
 
-              {/* Modal body */}
               <div className="p-6 max-h-[70vh] overflow-y-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Left column */}
                   <div className="space-y-5">
-                    {/* Contact info */}
                     <div className="bg-gray-50 p-5 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition duration-300">
                       <h4
                         className="text-base font-semibold mb-4 flex items-center"
@@ -752,7 +720,6 @@ export default function SalonDashboard() {
                       </div>
                     </div>
 
-                    {/* Description */}
                     <div className="bg-gray-50 p-5 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition duration-300">
                       <h4
                         className="text-base font-semibold mb-3 flex items-center"
@@ -767,9 +734,7 @@ export default function SalonDashboard() {
                     </div>
                   </div>
 
-                  {/* Right column */}
                   <div className="space-y-5">
-                    {/* Gallery - صور الهوية */}
                     <div className="bg-gray-50 p-5 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition duration-300">
                       <h4
                         className="text-base font-semibold mb-3 flex items-center"
@@ -789,6 +754,10 @@ export default function SalonDashboard() {
                               >
                                 <img
                                   src={image}
+                                  onError={(e) => {
+                                    e.target.src =
+                                      "https://i.pinimg.com/736x/a8/14/d9/a814d9dd0772132060aabee15e118554.jpg";
+                                  }}
                                   alt={`صورة هوية ${index + 1}`}
                                   className="h-28 w-full object-cover rounded-lg transform group-hover:scale-105 transition duration-300"
                                   onClick={() => setEnlargedImage(image)}
@@ -816,7 +785,6 @@ export default function SalonDashboard() {
                       </div>
                     </div>
 
-                    {/* Gallery - شهادة مزاولة المهنة */}
                     <div className="bg-gray-50 p-5 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition duration-300">
                       <h4
                         className="text-base font-semibold mb-3 flex items-center"
@@ -837,6 +805,10 @@ export default function SalonDashboard() {
                               >
                                 <img
                                   src={image}
+                                  onError={(e) => {
+                                    e.target.src =
+                                      "https://i.pinimg.com/736x/ee/c3/12/eec31285417377f889678dde265c1d76.jpg";
+                                  }}
                                   alt={`صورة شهادة ${index + 1}`}
                                   className="h-28 w-full object-cover rounded-lg transform group-hover:scale-105 transition duration-300"
                                   onClick={() => setEnlargedImage(image)}
@@ -866,7 +838,6 @@ export default function SalonDashboard() {
                   </div>
                 </div>
                 <div className="mt-6">
-                  {/* Services */}
                   <div className="bg-gray-50 p-5 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition duration-300">
                     <h4
                       className="text-base font-semibold mb-3 flex items-center"
@@ -921,7 +892,6 @@ export default function SalonDashboard() {
                 </div>
               </div>
 
-              {/* Modal footer */}
               <div className="px-6 py-4 bg-gray-50 rounded-b-xl border-t border-gray-100">
                 <div className="flex justify-end space-x-3 space-x-reverse">
                   <button
@@ -965,7 +935,6 @@ export default function SalonDashboard() {
         </div>
       )}
 
-      {/* Image Preview Modal */}
       {enlargedImage && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-sm">
           <div className="relative max-w-4xl max-h-[90vh] flex items-center justify-center">
@@ -977,6 +946,10 @@ export default function SalonDashboard() {
             </button>
             <img
               src={enlargedImage}
+              onError={(e) => {
+                e.target.src =
+                  "https://i.pinimg.com/736x/ee/c3/12/eec31285417377f889678dde265c1d76.jpg";
+              }}
               alt="صورة مكبرة"
               className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
             />
@@ -984,12 +957,15 @@ export default function SalonDashboard() {
         </div>
       )}
 
-      {/* Enlarged Image Modal */}
       {enlargedImage && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-75 flex items-center justify-center p-4">
           <div className="relative max-w-4xl max-h-full">
             <img
               src={enlargedImage}
+              onError={(e) => {
+                e.target.src =
+                  "https://i.pinimg.com/736x/ee/c3/12/eec31285417377f889678dde265c1d76.jpg";
+              }}
               alt="Enlarged salon preview"
               className="max-w-full max-h-[90vh] object-contain"
             />

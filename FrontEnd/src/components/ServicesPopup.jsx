@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const ServicePopup = ({ isOpen, onClose, service }) => {
   const [activeTab, setActiveTab] = useState("general");
   const [isPressing, setIsPressing] = useState(false);
 
-  // إغلاق النافذة المنبثقة عند الضغط على زر Escape
   useEffect(() => {
     const handleEscKey = (e) => {
       if (e.key === "Escape" && isOpen) onClose();
@@ -34,7 +33,6 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
         onMouseUp={() => setIsPressing(false)}
         onMouseLeave={() => setIsPressing(false)}
       >
-        {/* رأس النافذة */}
         <div className="bg-gradient-to-l from-[#ddc3a9] to-[#835a35] p-5 flex justify-between items-center">
           <h2 className="text-xl font-bold text-[#5d3716]">
             {service.title || "تفاصيل الخدمة"}
@@ -59,7 +57,6 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
           </button>
         </div>
 
-        {/* علامات التبويب */}
         <div
           className="flex bg-gray-50 border-b border-gray-200 overflow-x-auto"
           dir="rtl"
@@ -84,7 +81,6 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
           })}
         </div>
 
-        {/* المحتوى */}
         <div
           className="overflow-y-auto max-h-[calc(90vh-180px)] p-6 bg-[#fafbfc]"
           dir="rtl"
@@ -123,14 +119,12 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
                   dir="rtl"
                 >
                   <>
-                    {/* عنوان الخدمة */}
                     {hasContent(service.title) && (
                       <h2 className="text-2xl font-bold text-gray-900">
                         {service.title}
                       </h2>
                     )}
 
-                    {/* وصف الخدمة */}
                     {hasContent(service.shortDescription) && (
                       <div className="text-gray-700 leading-relaxed">
                         <h2>{service.shortDescription}</h2>
@@ -138,7 +132,6 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
                       </div>
                     )}
 
-                    {/* قسم الصور */}
                     {service.images && service.images.length > 0 && (
                       <div className="section-container bg-gray-50 p-4 rounded-md">
                         <h4 className="text-lg font-semibold text-gray-900 mb-3">
@@ -151,11 +144,14 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
                               className="mb-4 break-inside-avoid"
                             >
                               <img
+                                onError={(e) => {
+                                  e.target.src =
+                                    "https://i.pinimg.com/736x/06/f1/e8/06f1e85337e93c10936339de6a38a922.jpg";
+                                }}
                                 src={img}
                                 alt={`صورة الخدمة ${index + 1}`}
                                 className="w-full rounded-md shadow-md"
                               />
-                              {/* اختياري: إضافة وصف توضيحي أسفل الصورة */}
                               {img.caption && (
                                 <p className="text-sm text-gray-600 mt-1">
                                   {img.caption}
@@ -167,7 +163,6 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
                       </div>
                     )}
 
-                    {/* قسم المتطلبات */}
                     {hasContent(service.requirements) && (
                       <div className="section-container bg-gray-50 p-4 rounded-md">
                         <h4 className="text-lg font-semibold text-gray-900 mb-3">
@@ -179,7 +174,6 @@ const ServicePopup = ({ isOpen, onClose, service }) => {
                       </div>
                     )}
 
-                    {/* قسم المعلومات الإضافية */}
                     {hasContent(service.additionalInfo) && (
                       <div className="section-container bg-gray-50 p-4 rounded-md">
                         <h4 className="text-lg font-semibold text-gray-900 mb-3">

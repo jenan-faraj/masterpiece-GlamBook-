@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const bookSchema = new mongoose.Schema(
+const bookingSchema = new mongoose.Schema(
   {
     services: [
       {
@@ -61,4 +61,4 @@ const bookSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Book", bookSchema);
+module.exports = mongoose.model("Booking", bookingSchema);

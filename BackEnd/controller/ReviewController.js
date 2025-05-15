@@ -3,7 +3,7 @@ const Salon = require("../models/SalonModel");
 const mongoose = require("mongoose");
 const User = require("../models/User");
 
-// إنشاء تقييم جديد
+// create new review
 exports.createReview = async (req, res) => {
   try {
     const { rating, text, userId, salonId } = req.body;
@@ -12,32 +12,32 @@ exports.createReview = async (req, res) => {
 
     await User.findByIdAndUpdate(userId, {
       $push: { reviews: review._id },
-    }), // إضافة التقييم إلى قائمة التقييمات الخاصة بالمستخدم
+    }),
       res.status(201).json(review);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// جلب جميع التقييمات
+// get all reviews
 exports.getAllReviews = async (req, res) => {
   try {
     const reviews = await Review.find()
-      .populate("userId") // لربط بيانات المستخدم
-      .populate("salonId") // لربط بيانات الصالون
+      .populate("userId")
+      .populate("salonId")
       .then((reviews) => {
-        res.json(reviews); // ستظهر المراجعات مع بيانات المستخدمين والصالونات
+        res.json(reviews);
       })
       .catch((err) => {
         res.status(500).json({ message: err.message });
       });
-    res.status(200).json(reviews); // حطينا 200 معناها تم الاستعلام بنجاح
+    res.status(200).json(reviews);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// جلب تقييم واحد حسب ID
+// get review by id
 exports.getReviewById = async (req, res) => {
   try {
     const review = await Review.find()
@@ -52,7 +52,7 @@ exports.getReviewById = async (req, res) => {
   }
 };
 
-// تحديث التقييم
+// update review
 exports.updateReview = async (req, res) => {
   try {
     const { rating, text } = req.body;
@@ -70,7 +70,7 @@ exports.updateReview = async (req, res) => {
   }
 };
 
-// حذف التقييم (Soft Delete)
+// soft delete review
 exports.deleteReview = async (req, res) => {
   try {
     const review = await Review.findByIdAndUpdate(
@@ -87,25 +87,22 @@ exports.deleteReview = async (req, res) => {
   }
 };
 
-// دالة لجلب التقييمات الخاصة بصالون معين
+// get reviews by salon
 exports.getReviewsBySalon = async (req, res) => {
   try {
     const { salonId } = req.params;
 
-    // ✅ تحقق إذا كان الـ ID صالح
     if (!mongoose.Types.ObjectId.isValid(salonId)) {
       return res.status(400).json({ message: "Invalid Salon ID" });
     }
 
-    // ✅ جلب التقييمات من قاعدة البيانات
     const reviews = await Review.find({ salonId })
-      .populate("userId") // لربط بيانات المستخدم
-      .populate("salonId"); // لربط بيانات الصالون;
+      .populate("userId")
+      .populate("salonId");
 
-    // ✅ إرجاع البيانات
     res.json(reviews);
   } catch (error) {
-    console.error("Fetching Reviews Error:", error); // ✅ طباعة الخطأ الحقيقي
+    console.error("Fetching Reviews Error:", error);
     res
       .status(500)
       .json({ message: "Error fetching reviews", error: error.message });

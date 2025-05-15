@@ -1,16 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  User,
-  Phone,
-  Mail,
-  Scissors,
-  Calendar,
-  Check,
-  Clock,
-  Trash,
-  CreditCard,
-} from "lucide-react";
+import { User, Phone, Scissors, Calendar, Check, Clock } from "lucide-react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import PaymentForm from "../Pages/Payment";
@@ -27,7 +17,7 @@ const BookingForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [userId, setUserId] = useState(null);
   const [formData, setFormData] = useState({
-    services: [], // Will store objects with {serviceName, servicePrice}
+    services: [],
     date: "",
     time: "",
     userId: "",
@@ -44,7 +34,6 @@ const BookingForm = () => {
   const [userRole, setUserRole] = useState(false);
 
   useEffect(() => {
-    // Fetch salon details
     const fetchSalon = async () => {
       try {
         const response = await axios.get(
@@ -58,7 +47,6 @@ const BookingForm = () => {
       }
     };
 
-    // Fetch user authentication
     const fetchUserAuth = async () => {
       try {
         const response = await fetch("http://localhost:3000/api/users/me", {
@@ -97,7 +85,6 @@ const BookingForm = () => {
     }
   }, [userRole, navigate]);
 
-  // Calculate total amount when services change
   useEffect(() => {
     if (salon && formData.services.length > 0) {
       let total = 0;
@@ -114,9 +101,9 @@ const BookingForm = () => {
     const newErrors = {};
 
     switch (currentStep) {
-      case 1: // Skip validation for salon info page
+      case 1:
         break;
-      case 2: // User info validation - handled by server through userId
+      case 2:
         if (!userId) {
           newErrors.user = "يرجى تسجيل الدخول لإكمال الحجز";
         }
@@ -137,7 +124,6 @@ const BookingForm = () => {
         }
         break;
       case 5:
-        // Payment validation will be handled by PaymentForm component
         break;
       default:
         break;
@@ -152,7 +138,6 @@ const BookingForm = () => {
 
     if (type === "checkbox") {
       if (checked) {
-        // Add service with both name and price
         const selectedService = salon.services.find((s) => s.title === value);
         if (selectedService) {
           setFormData((prev) => ({
@@ -167,7 +152,6 @@ const BookingForm = () => {
           }));
         }
       } else {
-        // Remove service by name
         setFormData((prev) => ({
           ...prev,
           services: prev.services.filter((s) => s.serviceName !== value),
@@ -205,10 +189,8 @@ const BookingForm = () => {
       return;
     }
 
-    // Format time to match schema requirements
-    const formattedTime = formData.time.replace(" ", ""); // Remove space if any
+    const formattedTime = formData.time.replace(" ", "");
 
-    // Format date to ISO string
     const bookingDate = new Date(formData.date);
 
     const bookingData = {
@@ -241,7 +223,6 @@ const BookingForm = () => {
   };
 
   const formatTimeForDisplay = (time) => {
-    // Time comes in as "10:00AM" and we want to display as "10:00 صباحاً"
     if (!time) return "";
 
     const timeRegex = /^(\d{1,2}):(\d{2})\s?(AM|PM)$/i;
@@ -601,7 +582,7 @@ const BookingForm = () => {
                   العودة للصفحة الرئيسية
                 </button>
                 <button
-                  onClick={() => navigate("/my-bookings")}
+                  onClick={() => navigate("/userProfile")}
                   className="px-6 py-2 border-2 border-[var(--Logo-color)] text-[var(--Logo-color)] rounded-lg hover:bg-[var(--Logo-color)]/5 transition-colors"
                 >
                   عرض حجوزاتي
@@ -636,10 +617,9 @@ const BookingForm = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container min-h-[90vh] mx-auto py-8 px-4 flex items-center">
       <ScrollToTopButton />
-      <div className="max-w-3xl mx-auto">
-        {/* Progress bar */}
+      <div className="max-w-3xl w-full mx-auto">
         <div className="mb-8">
           <div className="flex justify-between mb-2">
             {[1, 2, 3, 4, 5, 6].map((step) => (
@@ -665,10 +645,8 @@ const BookingForm = () => {
           </div>
         </div>
 
-        {/* Step content */}
         <div className="mb-6">{renderStepContent()}</div>
 
-        {/* Navigation buttons */}
         {!bookingSuccess && currentStep < 6 && (
           <div className="flex justify-between">
             {currentStep > 1 && (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Star,
@@ -8,13 +8,11 @@ import {
   ChevronRight,
   MapPin,
   Clock,
-  Phone,
   Calendar,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import ScrollToTopButton from "../components/ScrollToTopButton";
 
-// مكون تقييم النجوم لعرض النجوم بناءً على التقييم
 const StarRating = ({ rating }) => {
   const numRating = parseFloat(rating);
   const fullStars = Math.floor(numRating);
@@ -23,7 +21,6 @@ const StarRating = ({ rating }) => {
 
   return (
     <div className="flex items-center">
-      {/* نجوم كاملة */}
       {[...Array(fullStars)].map((_, i) => (
         <Star
           key={`full-${i}`}
@@ -32,7 +29,6 @@ const StarRating = ({ rating }) => {
         />
       ))}
 
-      {/* نصف نجمة */}
       {hasHalfStar && (
         <div dir="ltr" className="relative">
           <Star className="text-amber-400" size={18} />
@@ -42,7 +38,6 @@ const StarRating = ({ rating }) => {
         </div>
       )}
 
-      {/* نجوم فارغة */}
       {[...Array(emptyStars)].map((_, i) => (
         <Star key={`empty-${i}`} className="text-amber-400" size={18} />
       ))}
@@ -59,12 +54,9 @@ function Categories() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [ratingFilter, setRatingFilter] = useState("");
-
-  // حالة الترقيم الصفحي
   const [currentPage, setCurrentPage] = useState(1);
-  const [salonsPerPage] = useState(8); // عدد البطاقات في كل صفحة
+  const [salonsPerPage] = useState(8);
 
-  // جلب البيانات من Firebase باستخدام Axios
   useEffect(() => {
     axios
       .get("http://localhost:3000/api/salons")
@@ -86,7 +78,6 @@ function Categories() {
       });
   }, []);
 
-  // تطبيق البحث والتصفية عند تغيير أي منهما
   useEffect(() => {
     const filtered = salons.filter((salon) => {
       const nameMatch = salon.name
@@ -102,10 +93,9 @@ function Categories() {
     });
 
     setFilteredSalons(filtered);
-    setCurrentPage(1); // إعادة تعيين الصفحة إلى 1 عند تغيير البحث أو التصفية
+    setCurrentPage(1);
   }, [searchTerm, ratingFilter, salons]);
 
-  // معالج حقل البحث
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -138,12 +128,10 @@ function Categories() {
     }
   }
 
-  // معالج فلتر التقييم
   const handleRatingFilter = (e) => {
     setRatingFilter(e.target.value);
   };
 
-  // حساب البطاقات للصفحة الحالية
   const indexOfLastSalon = currentPage * salonsPerPage;
   const indexOfFirstSalon = indexOfLastSalon - salonsPerPage;
   const currentSalons = filteredSalons.slice(
@@ -152,24 +140,20 @@ function Categories() {
   );
   const totalPages = Math.ceil(filteredSalons.length / salonsPerPage);
 
-  // تغيير الصفحة
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // الصفحة التالية
   const nextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     }
   };
 
-  // الصفحة السابقة
   const prevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
 
-  // استخراج عدد الخدمات المتوفرة للصالون
   const getServiceCount = (salon) => {
     if (!salon.services) return 0;
     return salon.services.filter((service) => !service.isDeleted).length;
@@ -178,7 +162,6 @@ function Categories() {
   return (
     <div className="bg-stone-50 min-h-screen pb-10">
       <ScrollToTopButton />
-      {/* عنصر رأس الصفحة */}
       <div className="bg-gradient-to-r from-[#8a5936] to-[#a0714f] text-white py-16 px-4 text-center mb-8">
         <h1 className="text-4xl font-bold mb-4">اكتشف أفضل الصالونات</h1>
         <p className="text-lg max-w-2xl mx-auto opacity-90">
@@ -186,12 +169,10 @@ function Categories() {
         </p>
       </div>
 
-      {/* قسم البحث والتصفية */}
       <div
         dir="rtl"
         className="flex lg:px-20 flex-col md:flex-row justify-between items-center mb-8 px-6 py-5 bg-white shadow-md rounded-lg mx-4 lg:mx-12"
       >
-        {/* شريط البحث */}
         <div className="relative w-full md:w-1/2 mb-4 md:mb-0">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <Search className="w-5 h-5 text-[#8a5936]" />
@@ -205,7 +186,6 @@ function Categories() {
           />
         </div>
 
-        {/* تصفية التقييم */}
         <div className="flex items-center gap-3">
           <Filter className="w-5 h-5 text-[#8a5936]" />
           <label
@@ -230,14 +210,12 @@ function Categories() {
         </div>
       </div>
 
-      {/* عنوان النتائج مع عدد الصالونات */}
       <div className="px-6 lg:px-12 mb-6">
         <h2 className="text-xl font-bold text-gray-800 text-right" dir="rtl">
           النتائج ({filteredSalons.length} صالون)
         </h2>
       </div>
 
-      {/* بطاقات الصالونات */}
       <div className="flex flex-wrap justify-center gap-6 px-4 lg:px-12">
         {loading ? (
           <div className="w-full py-32 flex justify-center items-center">
@@ -263,7 +241,6 @@ function Categories() {
               key={salon._id}
               className="w-full sm:w-80 bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:translate-y-[-5px]"
             >
-              {/* صورة خلفية الصالون */}
               <div className="h-48 overflow-hidden relative">
                 <img
                   src={
@@ -274,14 +251,12 @@ function Categories() {
                   className="w-full h-full object-cover"
                 />
 
-                {/* علامة ترويجية إذا كان هناك عروض */}
                 {salon.offers && salon.offers.length > 0 && (
                   <div className="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
                     عروض خاصة
                   </div>
                 )}
 
-                {/* شارة الاشتراك إذا كان مميز */}
                 {salon.subscription && salon.subscription !== "non" && (
                   <div className="absolute top-3 right-3 bg-[#8a5936] text-white px-3 py-1 rounded-full text-xs font-bold">
                     صالون مميز
@@ -290,7 +265,6 @@ function Categories() {
               </div>
 
               <div className="relative px-5 pt-12 pb-5" dir="rtl">
-                {/* صورة الملف الشخصي */}
                 <div className="absolute w-20 h-20 rounded-full border-4 border-white shadow-md overflow-hidden -top-10 right-5">
                   <img
                     src={
@@ -302,7 +276,6 @@ function Categories() {
                   />
                 </div>
 
-                {/* معلومات الصالون */}
                 <div className="mb-4">
                   <h3 className="text-xl font-bold text-gray-800 mb-1">
                     {salon.name}
@@ -315,7 +288,6 @@ function Categories() {
                       "صالون متميز يقدم خدمات عالية الجودة لعملائه"}
                   </p>
 
-                  {/* معلومات إضافية */}
                   <div className="flex flex-col gap-2 text-sm text-gray-600 mb-4">
                     <div className="flex items-center gap-2">
                       <MapPin size={16} className="text-[#a0714f]" />
@@ -337,7 +309,6 @@ function Categories() {
                     </div>
                   </div>
 
-                  {/* زر الزيارة */}
                   <Link
                     onClick={() => visitorsCount(salon)}
                     className="block w-full text-center bg-[#8a5936] hover:bg-[#a0714f] text-white py-2.5 px-4 rounded-lg font-medium transition-colors duration-300"
@@ -352,7 +323,6 @@ function Categories() {
         )}
       </div>
 
-      {/* ترقيم الصفحات */}
       {filteredSalons.length > salonsPerPage && (
         <div className="flex justify-center items-center gap-2 mt-12">
           <button

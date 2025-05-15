@@ -25,8 +25,8 @@ exports.getAllUsers = async (req, res) => {
 
 exports.getAllUsersForDash = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // رقم الصفحة
-    const limit = parseInt(req.query.limit) || 10; // عدد المستخدمين بالصفحة
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
 
     const skip = (page - 1) * limit;
 
@@ -42,7 +42,7 @@ exports.getAllUsersForDash = async (req, res) => {
     console.error("Error fetching users with pagination:", err);
     res.status(500).json({ message: "Server error" });
   }
-}
+};
 
 exports.register = async (req, res) => {
   try {
@@ -59,7 +59,7 @@ exports.register = async (req, res) => {
     res.cookie("token", token, { httpOnly: true });
     res.status(201).json(newUser);
   } catch (error) {
-    console.log("🔥 REGISTER ERROR:", error); // ضيفي هذا
+    console.log("🔥 REGISTER ERROR:", error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -86,7 +86,6 @@ exports.logout = (req, res) => {
 
 exports.getProfile = async (req, res) => {
   try {
-    console.log("-------------------------------------------------------",req.user.id)
     const user = await User.findOne({
       _id: req.user.id,
       isDeleted: false,
@@ -100,7 +99,7 @@ exports.getProfile = async (req, res) => {
           path: "salonId",
           model: "Salon",
         },
-      }); // لربط بيانات المستخدم
+      });
     if (!user) return res.status(404).json({ message: "User not found" });
     res.status(200).json(user);
   } catch (error) {
@@ -108,13 +107,12 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-// تحديث بيانات المستخدم
+// update user profile
 exports.updateUser = async (req, res) => {
   try {
     const userId = req.params.id;
     const updates = req.body;
 
-    // إذا كان في password جديدة بدنا نعملها hash
     if (updates.password) {
       const salt = await bcrypt.genSalt(10);
       updates.password = await bcrypt.hash(updates.password, salt);
@@ -136,18 +134,6 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-exports.toggleFavorite = async (req, res) => {
-  try {
-    const user = await User.findOne({ _id: req.user.id, isDeleted: false });
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    await user.toggleFavorite(req.body.itemId);
-    res.status(200).json(user.favoriteList);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 exports.toggleComment = async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.user.id, isDeleted: false });
@@ -164,11 +150,13 @@ exports.toggleComment = async (req, res) => {
 exports.softDeleteUser = async (req, res) => {
   try {
     const userId = req.params.id;
-    const updatedUser = await User.findByIdAndUpdate(userId, { isDeleted: true }); // أو أي منطق حذف عندك
-    res.status(200).json({ message: 'User deleted' });
+    const updatedUser = await User.findByIdAndUpdate(userId, {
+      isDeleted: true,
+    });
+    res.status(200).json({ message: "User deleted" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
