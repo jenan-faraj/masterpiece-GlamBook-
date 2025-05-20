@@ -10,10 +10,11 @@ const getAllSalons = async (req, res) => {
   }
 };
 
-// Get all salons
 const getAllSalonsForAdmin = async (req, res) => {
   try {
-    const salons = await Salon.find({ isDeleted: false });
+    const salons = await Salon.find({ isDeleted: false }).sort({
+      createdAt: -1,
+    });
     res.status(200).json(salons);
   } catch (error) {
     res.status(500).json({ error: error.message });

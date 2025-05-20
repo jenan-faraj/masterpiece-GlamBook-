@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import {
+  Search,
+  CalendarCheck,
+  Filter,
+  ChevronDown,
+  ChevronUp,
+  Download,
+  Printer,
+} from "lucide-react";
 const BookingsAllPage = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -226,12 +234,7 @@ const BookingsAllPage = () => {
           key={bookingId}
           className="bg-white rounded-lg shadow-md p-4 mb-4 border-r-4 hover:bg-[#f4e5d6]/50 transition-colors"
           style={{
-            borderRightColor:
-              status.text === "ملغي"
-                ? "#f87171"
-                : status.text === "مكتمل"
-                ? "#60a5fa"
-                : "#4ade80",
+            borderRightColor: "#8a5936",
           }}
         >
           <div className="flex justify-between items-start mb-2">
@@ -301,8 +304,13 @@ const BookingsAllPage = () => {
         : `#${index + 1}`;
       const status = getBookingStatus(booking);
 
+      const rowBgColor = index % 2 === 0 ? "bg-white" : "bg-[#f5eee6]";
+
       return (
-        <tr key={bookingId} className="hover:bg-[#f4e5d6] transition-colors">
+        <tr
+          key={bookingId}
+          className={`hover:bg-[#f4e5d6] transition-colors ${rowBgColor}`}
+        >
           <td className="px-6 py-4 whitespace-nowrap">{displayId}</td>
           <td className="px-6 py-4 whitespace-nowrap">
             {booking.salonId && booking.salonId.name
@@ -421,79 +429,90 @@ const BookingsAllPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4e5d6]/20" dir="rtl">
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="bg-[#8a5936] text-white p-4 sm:p-6">
-            <h1 className="text-xl sm:text-2xl font-bold">جميع الحجوزات</h1>
+    <div className="min-h-screen pb-6" dir="rtl">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header Section */}
+        <div>
+          <div className="container mx-auto p-4 sm:p-6">
+            <h1 className="text-2xl sm:text-3xl font-bold text-amber-800 flex items-center gap-2">
+              <CalendarCheck className="w-6 h-6" />
+              جميع الحجوزات
+            </h1>
           </div>
+        </div>
 
-          <div className="p-4 sm:p-6 bg-white border-b border-gray-200">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-              <div className="relative">
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg
-                    className="w-5 h-5 text-gray-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    ></path>
-                  </svg>
+        {/* Main Content */}
+        <div className="container mx-auto mt-6">
+          {/* Filters Section */}
+          <div className="bg-white rounded-lg shadow-md mb-6">
+            <div className="p-4 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
+                <Filter className="w-5 h-5" />
+                تصفية وبحث
+              </h2>
+            </div>
+
+            <div className="p-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Search */}
+                <div className="relative col-span-1 sm:col-span-2 xl:col-span-2">
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <Search className="w-5 h-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="text"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pr-10 p-2.5 focus:ring-amber-500 focus:border-amber-500"
+                    placeholder="بحث عن صالون أو رقم حجز أو عميل"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
                 </div>
-                <input
-                  type="text"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pr-10 p-2.5"
-                  placeholder="بحث عن صالون أو رقم حجز أو عميل"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+
+                {/* Status Filter */}
+                <div>
+                  <select
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:ring-amber-500 focus:border-amber-500"
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                  >
+                    <option value="all">جميع الحالات</option>
+                    <option value="confirmed">مؤكد</option>
+                    <option value="completed">مكتمل</option>
+                    <option value="canceled">ملغي</option>
+                  </select>
+                </div>
+
+                {/* Items Per Page */}
+                <div>
+                  <select
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:ring-amber-500 focus:border-amber-500"
+                    value={itemsPerPage}
+                    onChange={(e) => {
+                      setItemsPerPage(Number(e.target.value));
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <option value="5">5 حجوزات في الصفحة</option>
+                    <option value="10">10 حجوزات في الصفحة</option>
+                    <option value="25">25 حجز في الصفحة</option>
+                    <option value="50">50 حجز في الصفحة</option>
+                  </select>
+                </div>
               </div>
 
-              <div>
-                <select
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                >
-                  <option value="all">جميع الحالات</option>
-                  <option value="confirmed">مؤكد</option>
-                  <option value="completed">مكتمل</option>
-                  <option value="canceled">ملغي</option>
-                </select>
+              {/* Total Bookings Info */}
+              <div className="mt-4 text-sm text-gray-600">
+                إجمالي الحجوزات: {filteredBookings.length} | تم عرض{" "}
+                {Math.min(indexOfLastItem, filteredBookings.length) -
+                  indexOfFirstItem}{" "}
+                من {filteredBookings.length}
               </div>
-
-              <div className="sm:col-span-2 lg:col-span-1">
-                <select
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                  value={itemsPerPage}
-                  onChange={(e) => {
-                    setItemsPerPage(Number(e.target.value));
-                    setCurrentPage(1);
-                  }}
-                >
-                  <option value="5">5 حجوزات في الصفحة</option>
-                  <option value="10">10 حجوزات في الصفحة</option>
-                  <option value="25">25 حجز في الصفحة</option>
-                  <option value="50">50 حجز في الصفحة</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="mt-4 text-sm text-gray-600">
-              إجمالي الحجوزات: {filteredBookings.length} | تم عرض{" "}
-              {Math.min(indexOfLastItem, filteredBookings.length) -
-                indexOfFirstItem}{" "}
-              من {filteredBookings.length}
             </div>
           </div>
+        </div>
 
+        {/* Table / Cards Section */}
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
           {loading ? (
             <div className="text-center py-10">
               <div
@@ -510,52 +529,28 @@ const BookingsAllPage = () => {
             </div>
           ) : (
             <>
+              {/* Desktop Table */}
               <div className="hidden md:block overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-[#a0714f]/10">
+                  <thead className="bg-[#a0714f]">
                     <tr>
-                      <th
-                        className="px-6 py-3 text-right text-xs font-medium text-[#8a5936] uppercase tracking-wider cursor-pointer hover:bg-[#a0714f]/20"
-                        onClick={() => requestSort("_id")}
-                      >
-                        رقم الحجز {getSortIndicator("_id")}
-                      </th>
-                      <th
-                        className="px-6 py-3 text-right text-xs font-medium text-[#8a5936] uppercase tracking-wider cursor-pointer hover:bg-[#a0714f]/20"
-                        onClick={() => requestSort("salon")}
-                      >
-                        الصالون {getSortIndicator("salon")}
-                      </th>
-                      <th
-                        className="px-6 py-3 text-right text-xs font-medium text-[#8a5936] uppercase tracking-wider cursor-pointer hover:bg-[#a0714f]/20"
-                        onClick={() => requestSort("username")}
-                      >
-                        العميل {getSortIndicator("username")}
-                      </th>
-                      <th
-                        className="px-6 py-3 text-right text-xs font-medium text-[#8a5936] uppercase tracking-wider cursor-pointer hover:bg-[#a0714f]/20"
-                        onClick={() => requestSort("date")}
-                      >
-                        التاريخ {getSortIndicator("date")}
-                      </th>
-                      <th
-                        className="px-6 py-3 text-right text-xs font-medium text-[#8a5936] uppercase tracking-wider cursor-pointer hover:bg-[#a0714f]/20"
-                        onClick={() => requestSort("time")}
-                      >
-                        الوقت {getSortIndicator("time")}
-                      </th>
-                      <th
-                        className="px-6 py-3 text-right text-xs font-medium text-[#8a5936] uppercase tracking-wider cursor-pointer hover:bg-[#a0714f]/20"
-                        onClick={() => requestSort("isCompleted")}
-                      >
-                        الحالة {getSortIndicator("isCompleted")}
-                      </th>
-                      <th
-                        className="px-6 py-3 text-right text-xs font-medium text-[#8a5936] uppercase tracking-wider cursor-pointer hover:bg-[#a0714f]/20"
-                        onClick={() => requestSort("price")}
-                      >
-                        المبلغ {getSortIndicator("price")}
-                      </th>
+                      {[
+                        { label: "رقم الحجز", key: "_id" },
+                        { label: "الصالون", key: "salon" },
+                        { label: "العميل", key: "username" },
+                        { label: "التاريخ", key: "date" },
+                        { label: "الوقت", key: "time" },
+                        { label: "الحالة", key: "isCompleted" },
+                        { label: "المبلغ", key: "price" },
+                      ].map(({ label, key }) => (
+                        <th
+                          key={key}
+                          className="px-6 py-5 text-right text-sm font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-[#a0714f]/20"
+                          onClick={() => requestSort(key)}
+                        >
+                          {label} {getSortIndicator(key)}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -564,14 +559,15 @@ const BookingsAllPage = () => {
                 </table>
               </div>
 
+              {/* Mobile Cards */}
               <div className="md:hidden p-4">{renderBookingCards()}</div>
             </>
           )}
 
+          {/* Pagination */}
           {!loading && !error && filteredBookings.length > 0 && (
-            <div className="p-4 sm:p-6 border-t border-gray-200">
+            <div className="p-4 sm:p-6 border-t border-gray-200 bg-white">
               {renderPagination()}
-
               <div className="mt-3 text-sm text-center text-gray-600">
                 الصفحة {currentPage} من {totalPages}
               </div>

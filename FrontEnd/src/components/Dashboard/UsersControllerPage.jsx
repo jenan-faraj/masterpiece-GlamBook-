@@ -99,7 +99,10 @@ const UsersPage = () => {
     <div className="p-6 min-h-screen" style={{ direction: "rtl" }}>
       <div className="max-w-6xl mx-auto">
         <div className="mb-8 flex items-center justify-between">
-          <h1 className="text-2xl font-bold" style={{ color: logoColor }}>
+          <h1
+            className="text-2xl sm:text-3xl font-bold"
+            style={{ color: logoColor }}
+          >
             إدارة المستخدمين
           </h1>
           <div className="flex gap-2">

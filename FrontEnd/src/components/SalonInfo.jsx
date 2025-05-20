@@ -49,28 +49,19 @@ export default function SalonInfo({ salon, user }) {
             </div>
           </div>
         </div>
-        <div className="space-x-4 mt-4 md:mt-0">
-          <div className="group relative inline-block">
-            <Link to={`/book/${salon._id}`}>
-              <button
-                className={`px-6 py-2 rounded-md transition ${
-                  user?.role === "salon"
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-[var(--Logo-color)] hover:bg-[var(--button-color)] text-white"
-                }`}
-                disabled={user?.role === "salon"}
-              >
-                احجز الآن
-              </button>
-            </Link>
-
-            {user?.role === "salon" && (
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap z-10">
-                لا يمكن لأصحاب الصالونات الحجز
-              </div>
-            )}
+        {user?.role === "salon" || user?.role === "admin" ? null : (
+          <div className="space-x-4 mt-4 md:mt-0">
+            <div className="group relative inline-block">
+              <Link to={`/book/${salon._id}`}>
+                <button
+                  className={`px-6 py-2 rounded-md transition hover:cursor-pointer hover:bg-[var(--Logo-color)] bg-[var(--button-color)] text-white`}
+                >
+                  احجز الآن
+                </button>
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="bg-white shadow-md rounded-lg mx-6 md:mx-10 p-6 mb-8">

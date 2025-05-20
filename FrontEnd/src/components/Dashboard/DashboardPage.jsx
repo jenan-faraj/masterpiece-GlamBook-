@@ -469,7 +469,7 @@ const DashboardPage = () => {
                     <Area
                       type="monotone"
                       dataKey="الربح"
-                      name="الأرباح (20%)"
+                      name="الأرباح (15%)"
                       fill="#4CAF50"
                       stroke="#4CAF50"
                       fillOpacity={0.6}
@@ -651,7 +651,7 @@ const DashboardPage = () => {
                   إجمالي المدفوعات
                 </p>
                 <p className="text-lg sm:text-xl md:text-2xl font-bold">
-                  {formatCurrency(totalAmount)}
+                  {formatCurrency(totalPayments)}
                 </p>
               </div>
               <div className="p-2 sm:p-4 bg-green-50 rounded-lg border border-green-100">
@@ -659,7 +659,7 @@ const DashboardPage = () => {
                   صافي الربح
                 </p>
                 <p className="text-lg sm:text-xl md:text-2xl font-bold text-green-600">
-                  {formatCurrency(totalAmount * 0.15)}
+                  {formatCurrency(totalProfit20)}
                 </p>
               </div>
             </div>

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -20,6 +19,7 @@ import UserProfile from "./Pages/userProfile";
 import AdminPanel from "./components/Dashboard/AdminSidebar";
 import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
+import ScrollToTop from "./components/ScrollToTop";
 
 const AppContent = () => {
   const location = useLocation();
@@ -43,7 +43,7 @@ const AppContent = () => {
   return (
     <>
       {!shouldHideNavbar() && <Navbar />}
-
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/categories" element={<Categories />} />

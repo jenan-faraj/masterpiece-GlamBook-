@@ -162,55 +162,32 @@ function Categories() {
   return (
     <div className="bg-stone-50 min-h-screen pb-10">
       <ScrollToTopButton />
-      <div className="bg-gradient-to-r from-[#8a5936] to-[#a0714f] text-white py-16 px-4 text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4">اكتشف أفضل الصالونات</h1>
-        <p className="text-lg max-w-2xl mx-auto opacity-90">
-          استعرض مجموعة متنوعة من أرقى صالونات التجميل وخدمات العناية الشخصية
-        </p>
-      </div>
+      <div dir="rtl">
+        <div className="bg-gradient-to-r from-[#8a5936] to-[#a0714f] text-white py-12 px-4 text-center">
+          <h1 className="text-4xl font-bold mb-4">اكتشف أفضل الصالونات</h1>
+          <p className="text-lg max-w-2xl mx-auto opacity-90 mb-8">
+            استعرض مجموعة متنوعة من أرقى صالونات التجميل وخدمات العناية الشخصية
+          </p>
 
-      <div
-        dir="rtl"
-        className="flex lg:px-20 flex-col md:flex-row justify-between items-center mb-8 px-6 py-5 bg-white shadow-md rounded-lg mx-4 lg:mx-12"
-      >
-        <div className="relative w-full md:w-1/2 mb-4 md:mb-0">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Search className="w-5 h-5 text-[#8a5936]" />
+          {/* Search bar integrated within the gradient section */}
+          <div className="max-w-xl mx-auto w-full px-4">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <Search className="w-5 h-5 text-[#8a5936]" />
+              </div>
+              <input
+                type="text"
+                className="bg-white border border-stone-200 text-gray-900 text-sm rounded-lg focus:ring-[#a0714f] focus:border-[#a0714f] block w-full pl-10 p-3"
+                placeholder="ابحث عن الصالونات بالاسم..."
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+            </div>
           </div>
-          <input
-            type="text"
-            className="bg-stone-50 border border-stone-200 text-gray-900 text-sm rounded-lg focus:ring-[#a0714f] focus:border-[#a0714f] block w-full pl-10 p-3"
-            placeholder="ابحث عن الصالونات بالاسم..."
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Filter className="w-5 h-5 text-[#8a5936]" />
-          <label
-            htmlFor="rating-filter"
-            className="text-sm font-medium text-gray-700"
-          >
-            تصفية حسب التقييم:
-          </label>
-          <select
-            id="rating-filter"
-            className="bg-stone-50 border border-stone-200 text-gray-900 text-sm rounded-lg focus:ring-[#a0714f] focus:border-[#a0714f] p-3"
-            value={ratingFilter}
-            onChange={handleRatingFilter}
-          >
-            <option value="">كل التقييمات</option>
-            <option value="5">5 نجوم</option>
-            <option value="4">4 نجوم</option>
-            <option value="3">3 نجوم</option>
-            <option value="2">2 نجوم</option>
-            <option value="1">1 نجمة</option>
-          </select>
         </div>
       </div>
 
-      <div className="px-6 lg:px-12 mb-6">
+      <div className="px-6 mt-20 lg:px-12 mb-6">
         <h2 className="text-xl font-bold text-gray-800 text-right" dir="rtl">
           النتائج ({filteredSalons.length} صالون)
         </h2>
@@ -251,13 +228,7 @@ function Categories() {
                   className="w-full h-full object-cover"
                 />
 
-                {salon.offers && salon.offers.length > 0 && (
-                  <div className="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                    عروض خاصة
-                  </div>
-                )}
-
-                {salon.subscription && salon.subscription !== "non" && (
+                {salon.rating && salon.rating >= 4.5 && (
                   <div className="absolute top-3 right-3 bg-[#8a5936] text-white px-3 py-1 rounded-full text-xs font-bold">
                     صالون مميز
                   </div>

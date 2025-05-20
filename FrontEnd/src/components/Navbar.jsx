@@ -84,9 +84,9 @@ const Navbar = () => {
   const navLinks = [
     { title: "الرئيسية", path: "/" },
     { title: "الصالونات", path: "/categories" },
+    { title: "انضم إلينا", path: "/RegisterSalon" },
     { title: "من نحن", path: "/aboutUs" },
     { title: "تواصل معنا", path: "/contactUs" },
-    { title: "انضم إلينا", path: "/RegisterSalon" },
   ];
 
   const isActive = (path) => {
@@ -102,7 +102,6 @@ const Navbar = () => {
   return (
     <>
       <div className="h-16"></div>
-
       <header
         className={`w-full fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled ? "bg-[#F9F3F1] shadow-md" : "bg-[#F9F3F1] shadow-md"
@@ -110,13 +109,17 @@ const Navbar = () => {
       >
         <nav className="container xl:px-20 mx-auto px-4" dir="rtl">
           <div className="flex justify-between items-center h-16">
-            <img
-              className=" h-14 object-cover"
-              src="../../public/بيـــــــــوتي.png"
-              alt="بيوتي"
-            />
+            {/* Logo - على اليمين */}
+            <div className="flex items-center">
+              <img
+                className="h-14 object-cover"
+                src="../../public/logoo.png"
+                alt="بيوتي"
+              />
+            </div>
 
-            <div className="hidden lg:flex items-center justify-between flex-1 mx-8">
+            {/* Navigation Links - في المنتصف */}
+            <div className="hidden lg:flex items-center justify-center flex-1">
               <ul className="flex items-center text-lg space-x-reverse space-x-3 text-[#B58152] font-medium">
                 {navLinks.map((link) => (
                   <li key={link.path}>
@@ -124,8 +127,8 @@ const Navbar = () => {
                       to={link.path}
                       className={`px-3 py-2 rounded transition-colors ${
                         isActive(link.path)
-                          ? "bg-[#B58152] text-white font-bold"
-                          : "hover:bg-[#f5e6e1]"
+                          ? "border-b-2 border-[#B58152] font-bold"
+                          : "hover:border-b-2 hover:border-[#f5e6e1]"
                       }`}
                     >
                       {link.title}
@@ -135,6 +138,7 @@ const Navbar = () => {
               </ul>
             </div>
 
+            {/* Authentication - على اليسار */}
             <div className="hidden lg:flex items-center space-x-reverse space-x-4">
               {isLoggedIn ? (
                 <ul className="flex items-center text-lg space-x-reverse space-x-3 text-[#B58152] font-medium">
@@ -199,6 +203,7 @@ const Navbar = () => {
               )}
             </div>
 
+            {/* Mobile Menu Button */}
             <button
               className="lg:hidden text-[#B58152] text-2xl p-2 focus:outline-none"
               onClick={toggleMenu}
@@ -208,6 +213,7 @@ const Navbar = () => {
             </button>
           </div>
 
+          {/* Mobile Menu */}
           {isOpen && (
             <div className="lg:hidden bg-[#F9F3F1] border-t border-[#e6d8d3] py-2">
               <ul className="text-[#B58152]">
@@ -217,8 +223,8 @@ const Navbar = () => {
                       to={link.path}
                       className={`block py-3 px-4 transition-colors ${
                         isActive(link.path)
-                          ? "bg-[#B58152] text-white font-bold"
-                          : "hover:bg-[#f5e6e1]"
+                          ? "border-b-2 border-[#B58152] font-bold"
+                          : "hover:border-b-2 hover:border-[#f5e6e1]"
                       }`}
                       onClick={toggleMenu}
                     >

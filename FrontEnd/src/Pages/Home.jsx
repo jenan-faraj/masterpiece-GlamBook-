@@ -321,13 +321,7 @@ export default function ArabicHomePage() {
                       className="w-full h-full object-cover"
                     />
 
-                    {salon.offers && salon.offers.length > 0 && (
-                      <div className="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                        عروض خاصة
-                      </div>
-                    )}
-
-                    {salon.subscription && salon.subscription !== "non" && (
+                    {salon.rating && salon.rating >= 4.5 && (
                       <div className="absolute top-3 right-3 bg-[#8a5936] text-white px-3 py-1 rounded-full text-xs font-bold">
                         صالون مميز
                       </div>

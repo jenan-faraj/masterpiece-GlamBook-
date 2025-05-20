@@ -60,7 +60,6 @@ const BookingForm = () => {
           const data = await response.json();
           setUserId(data._id);
           setUserRole(data.role);
-          console.log("User role:", data.role);
           setFormData((prev) => ({ ...prev, userId: data._id }));
         }
       } catch (error) {
@@ -73,15 +72,8 @@ const BookingForm = () => {
   }, [id]);
 
   useEffect(() => {
-    if (userRole === "salon") {
-      Swal.fire({
-        icon: "error",
-        title: "خطأ",
-        text: "لا يمكنك حجز موعد كصالون",
-        confirmButtonText: "حسناً",
-      }).then(() => {
-        navigate(-1, { replace: true });
-      });
+    if (userRole === "salon" || userRole === "admin") {
+      navigate(-1, { replace: true });
     }
   }, [userRole, navigate]);
 
@@ -317,12 +309,12 @@ const BookingForm = () => {
             </h2>
 
             {userId ? (
-              <div className="flex flex-col items-center justify-center p-6 bg-green-50 rounded-lg">
-                <Check className="w-12 h-12 text-green-500 mb-4" />
-                <p className="text-lg font-medium text-green-700">
+              <div className="flex flex-col items-center justify-center p-6 bg-[#f4e5d6] rounded-lg">
+                <Check className="w-12 h-12 text-[#a0714f] mb-4" />
+                <p className="text-lg font-medium text-[#a0714f]">
                   تم تسجيل الدخول بنجاح
                 </p>
-                <p className="text-sm text-green-600 mt-2">
+                <p className="text-sm text-[#a0714f] mt-2">
                   يمكنك المتابعة لاختيار الخدمات
                 </p>
               </div>
@@ -507,10 +499,10 @@ const BookingForm = () => {
             </div>
 
             {formData.date && formData.time && (
-              <div className="mt-6 p-4 bg-green-50 rounded-lg">
+              <div className="mt-6 p-4 bg-[#f4e5d6] rounded-lg">
                 <div className="flex items-center justify-center">
-                  <Calendar className="w-5 h-5 mr-2 text-green-600" />
-                  <p className="text-green-700">
+                  <Calendar className="w-5 h-5 mr-2 text-[#a0714f]" />
+                  <p className="text-[#a0714f]">
                     تم تحديد موعدك في {formData.date} الساعة{" "}
                     {formatTimeForDisplay(formData.time)}
                   </p>
@@ -535,10 +527,10 @@ const BookingForm = () => {
         return (
           <div className="p-6 bg-white rounded-lg shadow-md">
             <div className="flex flex-col items-center justify-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                <Check className="w-8 h-8 text-green-500" />
+              <div className="w-16 h-16 bg-[#f4e5d6] rounded-full flex items-center justify-center mb-4">
+                <Check className="w-8 h-8 text-[#a0714f]" />
               </div>
-              <h2 className="text-2xl font-bold text-center mb-2 text-green-600">
+              <h2 className="text-2xl font-bold text-center mb-2 text-[#a0714f]">
                 تم الحجز بنجاح
               </h2>
               <p className="text-gray-600 text-center mb-6">
@@ -550,25 +542,27 @@ const BookingForm = () => {
                 <h3 className="text-lg font-bold mb-3 text-center">
                   تفاصيل الحجز
                 </h3>
-                <div className="space-y-3">
+                <div dir="rtl" className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">التاريخ:</span>
+                    <span className="text-[#a0714f] font-bold">التاريخ:</span>
                     <span className="font-medium">{formData.date}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">الوقت:</span>
+                    <span className="text-[#a0714f] font-bold">الوقت:</span>
                     <span className="font-medium">
                       {formatTimeForDisplay(formData.time)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">الخدمات:</span>
+                    <span className="text-[#a0714f] font-bold">الخدمات:</span>
                     <span className="font-medium">
                       {formData.services.map((s) => s.serviceName).join(", ")}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">المبلغ الإجمالي:</span>
+                    <span className="text-[#a0714f] font-bold">
+                      المبلغ الإجمالي:
+                    </span>
                     <span className="font-bold">{totalAmount} د.أ</span>
                   </div>
                 </div>
@@ -621,15 +615,15 @@ const BookingForm = () => {
       <ScrollToTopButton />
       <div className="max-w-3xl w-full mx-auto">
         <div className="mb-8">
-          <div className="flex justify-between mb-2">
+          <div dir="rtl" className="flex justify-between mb-2">
             {[1, 2, 3, 4, 5, 6].map((step) => (
               <div
                 key={step}
-                className={`text-xs md:text-sm text-center ${
+                className={`text-xs md:text-sm pb-1 text-center ${
                   step === currentStep
-                    ? "text-[var(--Logo-color)] font-bold"
+                    ? "text-[var(--Logo-color)] font-bold border-b-2 border-[#8a5936]"
                     : step < currentStep
-                    ? "text-green-500"
+                    ? "text-[#8a5936] font-bold "
                     : "text-gray-400"
                 }`}
               >
@@ -637,7 +631,10 @@ const BookingForm = () => {
               </div>
             ))}
           </div>
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div
+            dir="rtl"
+            className="h-2 bg-gray-200 rounded-full overflow-hidden"
+          >
             <div
               className="h-full bg-[var(--Logo-color)]"
               style={{ width: `${((currentStep - 1) / 5) * 100}%` }}
@@ -649,14 +646,6 @@ const BookingForm = () => {
 
         {!bookingSuccess && currentStep < 6 && (
           <div className="flex justify-between">
-            {currentStep > 1 && (
-              <button
-                onClick={handlePrevStep}
-                className="px-6 py-2 border-2 border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                السابق
-              </button>
-            )}
             {currentStep < 5 && (
               <button
                 onClick={handleNextStep}
@@ -668,6 +657,14 @@ const BookingForm = () => {
                 }`}
               >
                 التالي
+              </button>
+            )}
+            {currentStep > 1 && (
+              <button
+                onClick={handlePrevStep}
+                className="px-6 py-2 border-2 border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                السابق
               </button>
             )}
           </div>

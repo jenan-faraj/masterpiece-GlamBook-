@@ -35,8 +35,8 @@ const ReviewsTab = ({ reviews, fetchUserData }) => {
       text: "هل تريد حقاً حذف هذا التعليق؟",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#a0714f",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#a0714f",
       confirmButtonText: "نعم، احذفه",
       cancelButtonText: "تراجع",
     });
@@ -53,7 +53,7 @@ const ReviewsTab = ({ reviews, fetchUserData }) => {
   };
 
   return (
-    <div dir="rtl" className="py-6 px-4 max-w-3xl mx-auto">
+    <div dir="rtl" className="py-6 bg-amber-50 min-h-[63vh] px-4 max-w-3xl mx-auto">
       <h2 className="text-2xl font-bold text-gray-800 mb-8 text-center">
         تقيماتك
       </h2>

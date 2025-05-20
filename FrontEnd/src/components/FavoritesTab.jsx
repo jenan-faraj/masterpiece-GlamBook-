@@ -37,7 +37,7 @@ const StarRating = ({ rating }) => {
 
 const FavoritesTab = ({ favorites, onRemoveFavorite }) => {
   return (
-    <div className="text-center py-8 min-h-[300px]">
+    <div className="text-center py-8 bg-amber-50 min-h-[300px]">
       <h2 className="text-2xl font-bold mb-8" style={{ color: "#8a5936" }}>
         صالوناتك المفضلة
       </h2>
@@ -145,7 +145,7 @@ const FavoritesTab = ({ favorites, onRemoveFavorite }) => {
           </p>
 
           <Link
-            to="/"
+            to="/categories"
             className="mt-8 px-6 py-3 rounded-lg transition-colors duration-200 flex items-center justify-center"
             style={{ backgroundColor: "#a0714f", color: "white" }}
             onMouseOver={(e) => {

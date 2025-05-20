@@ -202,42 +202,76 @@ const ServicesTab = ({ user, salon }) => {
     <div dir="rtl">
       {" "}
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-y-auto">
-          <div className="bg-white p-6 rounded-md w-full max-w-lg my-8">
-            <h2 className="text-lg font-semibold mb-4">إضافة خدمة جديدة</h2>
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <input
-                type="text"
-                name="title"
-                placeholder="عنوان الخدمة"
-                className="w-full p-2 border rounded"
-                onChange={handleChange}
-                required
-              />
-              <div className="border rounded p-3">
-                <label className="block text-sm font-medium mb-2">
+        <div className="fixed inset-0 flex items-center justify-center bg-[#000000b9] bg-opacity-50 z-50 overflow-y-auto p-4">
+          <div className="bg-[#f4e5d6]  max-h-[90vh] overflow-auto p-6 rounded-lg w-full max-w-lg shadow-xl border border-[#a0714f]">
+            <div className="border-b border-[#a0714f] pb-3 mb-4">
+              <h2 className="text-xl font-semibold text-[#8a5936] text-right">
+                إضافة خدمة جديدة
+              </h2>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  name="title"
+                  placeholder="عنوان الخدمة"
+                  className="w-full p-3 border border-[#a0714f] rounded-lg bg-white text-[#8a5936] placeholder-[#a0714f] focus:outline-none focus:ring-1 focus:ring-[#8a5936]"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="border border-[#a0714f] rounded-lg p-4 bg-white">
+                <label className="block text-sm font-medium text-[#8a5936] mb-2 text-right">
                   صور الخدمة
                 </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleImageChange}
-                  className="w-full p-1 mb-2"
-                />
+                <div className="border-2 border-dashed border-[#a0714f] rounded-lg p-4 text-center">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleImageChange}
+                    className="hidden"
+                    id="image-upload"
+                  />
+                  <label
+                    htmlFor="image-upload"
+                    className="cursor-pointer block"
+                  >
+                    <div className="text-[#8a5936] mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-8 w-8 mx-auto"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="#a0714f"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                      <span className="block mt-1">اضغط لرفع الصور</span>
+                    </div>
+                  </label>
+                </div>
+
                 {previewImages.length > 0 && (
-                  <div className="grid grid-cols-3 gap-2 mt-2">
+                  <div className="grid grid-cols-3 gap-3 mt-4">
                     {previewImages.map((src, index) => (
-                      <div key={index} className="relative">
+                      <div key={index} className="relative group">
                         <img
                           src={src}
                           alt={`معاينة ${index}`}
-                          className="w-full h-24 object-cover rounded"
+                          className="w-full h-24 object-cover rounded-lg border border-[#a0714f]"
                         />
                         <button
                           type="button"
                           onClick={() => removeImage(index)}
-                          className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                          className="absolute -top-2 -right-2 bg-[#8a5936] text-[#f4e5d6] rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                           ×
                         </button>
@@ -247,61 +281,101 @@ const ServicesTab = ({ user, salon }) => {
                 )}
               </div>
 
-              <input
-                type="text"
-                name="category"
-                placeholder="الفئة"
-                className="w-full p-2 border rounded"
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="text"
-                name="duration"
-                placeholder="المدة"
-                className="w-full p-2 border rounded"
-                onChange={handleChange}
-                required
-              />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <input
+                    type="text"
+                    name="category"
+                    placeholder="الفئة"
+                    className="w-full p-3 border border-[#a0714f] rounded-lg bg-white text-[#8a5936] placeholder-[#a0714f] focus:outline-none focus:ring-1 focus:ring-[#8a5936]"
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    name="duration"
+                    placeholder="المدة"
+                    className="w-full p-3 border border-[#a0714f] rounded-lg bg-white text-[#8a5936] placeholder-[#a0714f] focus:outline-none focus:ring-1 focus:ring-[#8a5936]"
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+
               <textarea
                 name="shortDescription"
                 placeholder="وصف مختصر"
-                className="w-full p-2 border rounded"
+                className="w-full p-3 border border-[#a0714f] rounded-lg bg-white text-[#8a5936] placeholder-[#a0714f] focus:outline-none focus:ring-1 focus:ring-[#8a5936]"
                 onChange={handleChange}
                 required
               />
+
               <textarea
                 name="longDescription"
                 placeholder="وصف مفصل"
-                className="w-full p-2 border rounded"
+                className="w-full p-3 border border-[#a0714f] rounded-lg bg-white text-[#8a5936] placeholder-[#a0714f] focus:outline-none focus:ring-1 focus:ring-[#8a5936]"
                 rows="4"
                 onChange={handleChange}
                 required
               />
-              <input
-                type="number"
-                name="price"
-                placeholder="السعر"
-                className="w-full p-2 border rounded"
-                onChange={handleChange}
-                required
-              />
-              <div className="flex justify-between mt-4">
+
+              <div>
+                <input
+                  type="number"
+                  name="price"
+                  placeholder="السعر"
+                  className="w-full p-3 border border-[#a0714f] rounded-lg bg-white text-[#8a5936] placeholder-[#a0714f] focus:outline-none focus:ring-1 focus:ring-[#8a5936]"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="flex justify-between pt-4">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="bg-red-500 text-white px-4 py-2 rounded"
+                  className="px-6 py-2 rounded-lg border border-[#8a5936] text-[#8a5936] hover:bg-[#8a5936] hover:text-[#f4e5d6] transition-colors"
                 >
                   إلغاء
                 </button>
                 <button
                   type="submit"
                   disabled={uploading}
-                  className={`${
-                    uploading ? "bg-gray-400" : "bg-green-500"
-                  } text-white px-4 py-2 rounded flex items-center`}
+                  className={`px-6 py-2 rounded-lg ${
+                    uploading
+                      ? "bg-[#a0714f]"
+                      : "bg-[#8a5936] hover:bg-[#a0714f]"
+                  } text-[#f4e5d6] transition-colors flex items-center`}
                 >
-                  {uploading ? "جاري الإضافة..." : "إضافة الخدمة"}
+                  {uploading ? (
+                    <>
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      جاري الإضافة...
+                    </>
+                  ) : (
+                    "إضافة الخدمة"
+                  )}
                 </button>
               </div>
             </form>

@@ -225,23 +225,6 @@ export default function SalonSetting({ salon: initialSalon }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                البريد الإلكتروني
-              </label>
-              <input
-                type="email"
-                value={editingField === "email" ? updatedValue : salon.email}
-                onChange={(e) => setUpdatedValue(e.target.value)}
-                onFocus={() => {
-                  setEditingField("email");
-                  setUpdatedValue(salon.email);
-                }}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--Logo-color)]"
-              />
-              {editingField === "email" && renderEditButtons()}
-            </div>
-
-            <div>
-              <label className="block text-gray-700 font-medium mb-2">
                 رقم الهاتف
               </label>
               <input
@@ -402,65 +385,6 @@ export default function SalonSetting({ salon: initialSalon }) {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--Logo-color)]"
             ></textarea>
             {editingField === "longDescription" && renderEditButtons()}
-          </div>
-        )}
-      </div>
-
-      <div className="pb-4">
-        <div
-          className="flex justify-between items-center cursor-pointer"
-          onClick={() => toggleSection("security")}
-        >
-          <h3 className="text-lg font-medium text-[var(--Logo-color)]">
-            الأمان
-          </h3>
-          <span className="text-xl">
-            {expandedSections.security ? "−" : "+"}
-          </span>
-        </div>
-
-        {expandedSections.security && (
-          <div className="mt-4">
-            <label className="block text-gray-700 font-medium mb-2">
-              تغيير كلمة المرور
-            </label>
-            <div className="grid grid-cols-1 gap-4 max-w-md">
-              <div>
-                <label className="block text-gray-600 text-sm mb-1">
-                  كلمة المرور الحالية
-                </label>
-                <input
-                  type="password"
-                  placeholder="أدخل كلمة المرور الحالية"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[var(--Logo-color)]"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-600 text-sm mb-1">
-                  كلمة المرور الجديدة
-                </label>
-                <input
-                  type="password"
-                  placeholder="أدخل كلمة المرور الجديدة"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[var(--Logo-color)]"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-600 text-sm mb-1">
-                  تأكيد كلمة المرور الجديدة
-                </label>
-                <input
-                  type="password"
-                  placeholder="أعد إدخال كلمة المرور الجديدة"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[var(--Logo-color)]"
-                />
-              </div>
-              <div>
-                <button className="bg-[var(--Logo-color)] text-white px-6 py-2 rounded-md hover:bg-[var(--button-color)] transition">
-                  تحديث كلمة المرور
-                </button>
-              </div>
-            </div>
           </div>
         )}
       </div>

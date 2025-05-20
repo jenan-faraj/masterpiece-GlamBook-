@@ -15,8 +15,6 @@ import { Link } from "react-router-dom";
 import ScrollToTopButton from "../components/ScrollToTopButton";
 
 export default function EnhancedAboutPage() {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [salons, setSalons] = useState([]);
   const [users, setUsers] = useState([]);
   const [booking, setBooking] = useState([]);
@@ -44,24 +42,18 @@ export default function EnhancedAboutPage() {
           })
         );
 
-        const fetchedBooking = Object.entries(bookingsRes.data).map(
+        const fetchedBooking = Object.entries(bookingsRes.data.data).map(
           ([key, value]) => ({
             id: key,
             ...value,
           })
         );
 
-        console.log(fetchedSalons);
-        console.log(fetchedUsers);
-        console.log(fetchedBooking);
-
         setSalons(fetchedSalons);
         setUsers(fetchedUsers);
         setBooking(fetchedBooking);
       } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
+        console.log(error);
       }
     };
 
@@ -123,9 +115,9 @@ export default function EnhancedAboutPage() {
           </div>
           <div className="lg:w-1/3">
             <div className="relative flex">
-              <div className="rounded-lg overflow-hidden shadow-xl">
+              <div className="rounded-lg overflow-hidden">
                 <img
-                  src="../../public/بيـــــــــوتي.png"
+                  src="../../public/logoo.png"
                   alt="تجربة الصالون"
                   className="w-full h-full object-cover"
                 />
@@ -136,7 +128,7 @@ export default function EnhancedAboutPage() {
       </div>
 
       <div style={{ backgroundColor: "#fdf6f0" }} className="py-20">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-25">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2
               className="text-4xl font-bold mb-6"
@@ -252,7 +244,10 @@ export default function EnhancedAboutPage() {
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between">
+        <div
+          dir="rtl"
+          className="flex flex-col md:flex-row items-center justify-between"
+        >
           <div className="flex flex-col items-center mb-10 md:mb-0 md:w-1/3 px-4">
             <div
               className="w-24 h-24 rounded-full flex items-center justify-center mb-6"
@@ -327,125 +322,6 @@ export default function EnhancedAboutPage() {
         </div>
       </div>
 
-      <div dir="rtl" style={{ backgroundColor: "#fdf6f0" }} className="py-20">
-        <div className=" mx-auto px-6">
-          <div className="flex flex-col lg:flex-row items-center">
-            <div className="mx-10">
-              <h2
-                className="text-4xl font-bold mb-6"
-                style={{ color: "#B58152" }}
-              >
-                لأصحاب الصالونات
-              </h2>
-              <div
-                className="w-32 h-1 mb-8"
-                style={{ backgroundColor: "#a0714f" }}
-              ></div>
-              <p
-                dir="rtl"
-                className="text-lg mb-8"
-                style={{ color: "#a0714f" }}
-              >
-                انضم إلى شبكتنا المتنامية من محترفي التجميل وغيّر طريقة إدارتك
-                لعملك. يوفر بيوتي أدوات قوية لعرض خدماتك، وتبسيط الحجوزات،
-                وزيادة قاعدة عملائك.
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                <div
-                  className="flex items-start p-4 rounded-lg"
-                  style={{ backgroundColor: "#fbeee6" }}
-                >
-                  <div className="mr-4">
-                    <Star size={24} style={{ color: "#B58152" }} />
-                  </div>
-                  <div>
-                    <h3
-                      className="text-lg font-semibold mb-2"
-                      style={{ color: "#B58152" }}
-                    >
-                      ملفات تعريف جميلة
-                    </h3>
-                    <p style={{ color: "#a0714f" }}>
-                      أنشئ واجهات رقمية مذهلة تعرض الأسلوب الفريد لصالونك
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  className="flex items-start p-4 rounded-lg"
-                  style={{ backgroundColor: "#fbeee6" }}
-                >
-                  <div className="mr-4">
-                    <Calendar size={24} style={{ color: "#B58152" }} />
-                  </div>
-                  <div>
-                    <h3
-                      className="text-lg font-semibold mb-2"
-                      style={{ color: "#B58152" }}
-                    >
-                      جدولة ذكية
-                    </h3>
-                    <p style={{ color: "#a0714f" }}>
-                      إدارة المواعيد وتوافر الموظفين وحجوزات العملاء في مكان
-                      واحد
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  className="flex items-start p-4 rounded-lg"
-                  style={{ backgroundColor: "#fbeee6" }}
-                >
-                  <div className="mr-4">
-                    <Users size={24} style={{ color: "#B58152" }} />
-                  </div>
-                  <div>
-                    <h3
-                      className="text-lg font-semibold mb-2"
-                      style={{ color: "#B58152" }}
-                    >
-                      نمو العملاء
-                    </h3>
-                    <p style={{ color: "#a0714f" }}>
-                      تواصل مع عملاء جدد وابنِ قاعدة عملاء مخلصين
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  className="flex items-start p-4 rounded-lg"
-                  style={{ backgroundColor: "#fbeee6" }}
-                >
-                  <div className="mr-4">
-                    <Award size={24} style={{ color: "#B58152" }} />
-                  </div>
-                  <div>
-                    <h3
-                      className="text-lg font-semibold mb-2"
-                      style={{ color: "#B58152" }}
-                    >
-                      نظام التقييم
-                    </h3>
-                    <p style={{ color: "#a0714f" }}>
-                      جمع وعرض تقييمات العملاء لبناء سمعتك
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <Link
-                to="/RegisterSalon"
-                className="px-8 py-4 rounded-lg text-white font-medium text-lg transition-all duration-300 hover:shadow-lg"
-                style={{ backgroundColor: "#a0714f" }}
-              >
-                انضم كشريك صالون
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="py-20 bg-cover bg-center relative">
         <div className="absolute inset-0 bg-[#753600] opacity-70 z-0"></div>
         <div className="container mx-auto px-6 relative z-10">
@@ -466,7 +342,7 @@ export default function EnhancedAboutPage() {
                 className="text-5xl font-bold mb-2"
                 style={{ color: "#B58152" }}
               >
-                {salons.length}
+                +{salons.length}
               </div>
               <div className="text-xl" style={{ color: "#a0714f" }}>
                 صالون شريك
@@ -481,7 +357,7 @@ export default function EnhancedAboutPage() {
                 className="text-5xl font-bold mb-2"
                 style={{ color: "#B58152" }}
               >
-                {booking.length}
+                +{booking.length}
               </div>
               <div className="text-xl" style={{ color: "#a0714f" }}>
                 حجز يومي
@@ -496,7 +372,7 @@ export default function EnhancedAboutPage() {
                 className="text-5xl font-bold mb-2"
                 style={{ color: "#B58152" }}
               >
-                {users.length}
+                +{users.length}
               </div>
               <div className="text-xl" style={{ color: "#a0714f" }}>
                 عميل سعيد

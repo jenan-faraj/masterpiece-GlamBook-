@@ -234,14 +234,11 @@ export default function SalonDashboard() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
           <div>
             <h1
-              className="text-2xl md:text-3xl font-bold mb-2"
+              className="text-2xl sm:text-3xl font-bold mb-2"
               style={{ color: colors.primary }}
             >
-              لوحة تحكم الصالونات
+              إدارة الصالونات
             </h1>
-            <p className="text-sm md:text-base text-gray-500">
-              إدارة ومراجعة طلبات الصالونات المسجلة
-            </p>
           </div>
         </div>
 
@@ -302,25 +299,6 @@ export default function SalonDashboard() {
         </div>
 
         <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
-          <div
-            className="p-4 border-b border-gray-200"
-            style={{ backgroundColor: colors.background }}
-          >
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-              <h2
-                className="text-lg md:text-xl font-semibold"
-                style={{ color: colors.primary }}
-              >
-                قائمة الصالونات
-              </h2>
-              <p className="text-sm md:text-base text-gray-500">
-                عرض {indexOfFirstSalon + 1} -{" "}
-                {Math.min(indexOfLastSalon, filteredSalons.length)} من{" "}
-                {filteredSalons.length} صالون
-              </p>
-            </div>
-          </div>
-
           {filteredSalons.length === 0 ? (
             <div className="p-8 text-center">
               <div className="text-5xl mb-4" style={{ color: colors.light }}>
@@ -426,31 +404,38 @@ export default function SalonDashboard() {
 
               <div className="hidden md:block overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
-                  <thead style={{ backgroundColor: colors.background }}>
+                  <thead style={{ backgroundColor: colors.primary }}>
                     <tr>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-5 text-right font-medium text-white uppercase tracking-wider">
                         اسم الصالون
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-5 text-right font-medium text-white uppercase tracking-wider">
                         المالك
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-5 text-right font-medium text-white uppercase tracking-wider">
                         الموقع
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-5 text-right font-medium text-white uppercase tracking-wider">
                         تاريخ التسجيل
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-5 text-right font-medium text-white uppercase tracking-wider">
                         الحالة
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-5 text-right font-medium text-white uppercase tracking-wider">
                         الإجراءات
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {currentSalons.map((salon) => (
-                      <tr key={salon._id} className="hover:bg-gray-50">
+                    {currentSalons.map((salon, index) => (
+                      <tr
+                        key={salon._id}
+                        className={` ${
+                          index % 2 === 0
+                            ? "bg-[#f9f5f1] hover:bg-[#f4e5d6]"
+                            : "bg-white hover:bg-[#f9f5f1]"
+                        }`}
+                      >
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div

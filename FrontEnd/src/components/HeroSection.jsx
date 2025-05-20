@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 const Hero = () => {
   return (
     <div className="relative h-[91vh] w-full overflow-hidden">
- 
       <video
         className="absolute top-0 left-0 w-full h-full object-cover"
         src="../../public/beauty-hero-section.mp4"
@@ -18,7 +17,7 @@ const Hero = () => {
           مرحباً بك في بيوتي
         </h1>
         <p className="text-lg md:text-2xl md:font-bold mb-6 text-center text-outline">
-          اختاري صالونك المفضل بسهولة و بسرعة
+          استمتعي بتجربة حجز ذكية، واختاري الصالون الأنسب لكِ من أي مكان.
         </p>
         <Link
           to={"/categories"}

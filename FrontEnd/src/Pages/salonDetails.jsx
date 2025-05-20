@@ -288,7 +288,7 @@ function SalonDetails() {
         <div className="flex justify-center lg:justify-start md:justify-between flex-wrap gap-1 lg:gap-2 border-b">
           <button
             onClick={() => setActiveTab("services")}
-            className={`px-6 py-3 font-medium ${
+            className={`px-6 py-3 font-medium text-xl ${
               activeTab === "services"
                 ? "text-[var(--Logo-color)] border-b-2 border-[var(--Logo-color)]"
                 : "text-gray-500"
@@ -297,18 +297,8 @@ function SalonDetails() {
             الخدمات
           </button>
           <button
-            onClick={() => setActiveTab("offers")}
-            className={`px-6 py-3 font-medium ${
-              activeTab === "offers"
-                ? "text-[var(--Logo-color)] border-b-2 border-[var(--Logo-color)]"
-                : "text-gray-500"
-            }`}
-          >
-            العروض الخاصة
-          </button>
-          <button
             onClick={() => setActiveTab("reviews")}
-            className={`px-6 py-3 font-medium ${
+            className={`px-6 py-3 font-medium text-xl ${
               activeTab === "reviews"
                 ? "text-[var(--Logo-color)] border-b-2 border-[var(--Logo-color)]"
                 : "text-gray-500"
@@ -318,7 +308,7 @@ function SalonDetails() {
           </button>
           <button
             onClick={() => setActiveTab("location")}
-            className={`px-6 py-3 font-medium ${
+            className={`px-6 py-3 font-medium text-xl ${
               activeTab === "location"
                 ? "text-[var(--Logo-color)] border-b-2 border-[var(--Logo-color)]"
                 : "text-gray-500"
@@ -328,20 +318,8 @@ function SalonDetails() {
           </button>
           {user && user.email === salon.email && (
             <button
-              onClick={() => setActiveTab("settings")}
-              className={`px-6 py-3 font-medium ${
-                activeTab === "settings"
-                  ? "text-[var(--Logo-color)] border-b-2 border-[var(--Logo-color)]"
-                  : "text-gray-500"
-              }`}
-            >
-              الإعدادات
-            </button>
-          )}
-          {user && user.email === salon.email && (
-            <button
               onClick={() => setActiveTab("Bookings")}
-              className={`px-6 py-3 font-medium ${
+              className={`px-6 py-3 font-medium text-xl ${
                 activeTab === "Bookings"
                   ? "text-[var(--Logo-color)] border-b-2 border-[var(--Logo-color)]"
                   : "text-gray-500"
@@ -350,18 +328,24 @@ function SalonDetails() {
               الحجوزات
             </button>
           )}
+          {user && user.email === salon.email && (
+            <button
+              onClick={() => setActiveTab("settings")}
+              className={`px-6 py-3 font-medium text-xl ${
+                activeTab === "settings"
+                  ? "text-[var(--Logo-color)] border-b-2 border-[var(--Logo-color)]"
+                  : "text-gray-500"
+              }`}
+            >
+              الإعدادات
+            </button>
+          )}
         </div>
       </div>
 
       <div className="mx-6 md:mx-10">
         {activeTab === "services" && (
           <AddServiceButton user={user} salon={salon} />
-        )}
-
-        {activeTab === "offers" && (
-          <div className="bg-white shadow-md rounded-lg p-6">
-            <SpecialOffers salon={salon} user={user} />
-          </div>
         )}
 
         {activeTab === "reviews" && <ReviewsTab />}
@@ -376,20 +360,6 @@ function SalonDetails() {
               <div>
                 <h3 className="font-medium mb-2">العنوان</h3>
                 <p className="text-gray-700">{salon.location}</p>
-                <div className="mt-4">
-                  <h3 className="font-medium mb-2">ساعات العمل</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <p className="text-gray-700">الأحد - السبت</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-700">
-                        {salon.openingHours.open || "9:00"} صباحاً -{" "}
-                        {salon.openingHours.close || "8:00 مساءً"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
               </div>
               <div className="mt-6 md:mt-0">
                 <h3 className="font-medium mb-2">معلومات الاتصال</h3>

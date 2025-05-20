@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Upload, X, CheckCircle } from "lucide-react";
 
 export default function SalonRegistrationForm() {
   const [formData, setFormData] = useState({
@@ -11,7 +12,6 @@ export default function SalonRegistrationForm() {
     salonOwnershipImages: [],
     identityImages: [],
   });
-
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
@@ -436,130 +436,174 @@ export default function SalonRegistrationForm() {
         );
       case 3:
         return (
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium text-gray-700 mb-4 text-right">
-              المستندات والإثباتات
-            </h3>
+          <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
+            <div className="space-y-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-6 text-right border-b pb-2 border-gray-200">
+                المستندات والإثباتات
+              </h3>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 text-right">
-                صور إثبات مزاولة المهنة<span className="text-red-500">*</span>
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                name="salonOwnershipImages"
-                onChange={handleFileChange}
-                className="w-full text-sm text-right"
-                required
-              />
-              <p className="text-xs text-gray-500 mt-1 text-right">
-                مطلوب: يرجى إرفاق مستندات تثبت ملكية الصالون
-              </p>
-              {previewImages.salonOwnershipImages.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-2 justify-end">
-                  {previewImages.salonOwnershipImages.map((preview, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={preview}
-                        alt={`salon-ownership-preview-${index}`}
-                        className="h-20 w-20 object-cover rounded-md"
-                      />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          removeImage("salonOwnershipImages", index)
-                        }
-                        className="absolute top-0 right-0 text-red-500 bg-white p-1 rounded-full"
-                      >
-                        &times;
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+              {/* صور إثبات مزاولة المهنة */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <label className="block text-base font-semibold text-gray-800 mb-2 text-right">
+                  صور إثبات مزاولة المهنة{" "}
+                  <span className="text-red-500">*</span>
+                </label>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 text-right">
-                صور إثبات الهوية <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                name="identityImages"
-                onChange={handleFileChange}
-                className="w-full text-sm text-right"
-                required
-              />
-              <p className="text-xs text-gray-500 mt-1 text-right">
-                مطلوب: يرجى إرفاق صورة هوية سارية المفعول
-              </p>
-              {previewImages.identityImages.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-2 justify-end">
-                  {previewImages.identityImages.map((preview, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={preview}
-                        alt={`identity-image-preview-${index}`}
-                        className="h-20 w-20 object-cover rounded-md"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeImage("identityImages", index)}
-                        className="absolute top-0 right-0 text-red-500 bg-white p-1 rounded-full"
-                      >
-                        &times;
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="flex justify-between pt-4">
-              <button
-                type="button"
-                onClick={prevStep}
-                className="py-2 px-4 border border-[var(--button-color)] rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[var(--button-color)]"
-              >
-                السابق
-              </button>
-              <button
-                type="submit"
-                disabled={loading || uploading}
-                className="py-2 px-4 bg-[var(--button-color)] text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--button-color)]"
-              >
-                {loading || uploading ? (
-                  <div className="flex items-center justify-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    {uploading ? "جاري رفع الصور..." : "جاري المعالجة..."}
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:bg-gray-100 transition cursor-pointer relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    name="salonOwnershipImages"
+                    onChange={handleFileChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    required
+                  />
+                  <div className="flex flex-col items-center justify-center py-4">
+                    <Upload className="h-10 w-10 text-gray-400 mb-2" />
+                    <p className="text-sm font-medium text-gray-700">
+                      اضغط أو اسحب الملفات هنا للرفع
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      مطلوب: يرجى إرفاق مستندات تثبت ملكية الصالون
+                    </p>
                   </div>
-                ) : (
-                  "تسجيل الصالون"
+                </div>
+
+                {previewImages.salonOwnershipImages.length > 0 && (
+                  <div className="mt-4">
+                    <p className="text-sm font-medium text-gray-700 mb-2 text-right">
+                      الصور المرفقة ({previewImages.salonOwnershipImages.length}
+                      )
+                    </p>
+                    <div className="flex flex-wrap gap-3 justify-end">
+                      {previewImages.salonOwnershipImages.map(
+                        (preview, index) => (
+                          <div key={index} className="relative group">
+                            <div className="h-24 w-24 rounded-md overflow-hidden border border-gray-200">
+                              <img
+                                src={preview}
+                                alt={`salon-ownership-preview-${index}`}
+                                className="h-full w-full object-cover"
+                              />
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                removeImage("salonOwnershipImages", index)
+                              }
+                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md opacity-90 hover:opacity-100"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
                 )}
-              </button>
+              </div>
+
+              {/* صور إثبات الهوية */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <label className="block text-base font-semibold text-gray-800 mb-2 text-right">
+                  صور إثبات الهوية <span className="text-red-500">*</span>
+                </label>
+
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:bg-gray-100 transition cursor-pointer relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    name="identityImages"
+                    onChange={handleFileChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    required
+                  />
+                  <div className="flex flex-col items-center justify-center py-4">
+                    <Upload className="h-10 w-10 text-gray-400 mb-2" />
+                    <p className="text-sm font-medium text-gray-700">
+                      اضغط أو اسحب الملفات هنا للرفع
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      مطلوب: يرجى إرفاق صورة هوية سارية المفعول
+                    </p>
+                  </div>
+                </div>
+
+                {previewImages.identityImages.length > 0 && (
+                  <div className="mt-4">
+                    <p className="text-sm font-medium text-gray-700 mb-2 text-right">
+                      الصور المرفقة ({previewImages.identityImages.length})
+                    </p>
+                    <div className="flex flex-wrap gap-3 justify-end">
+                      {previewImages.identityImages.map((preview, index) => (
+                        <div key={index} className="relative group">
+                          <div className="h-24 w-24 rounded-md overflow-hidden border border-gray-200">
+                            <img
+                              src={preview}
+                              alt={`identity-image-preview-${index}`}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeImage("identityImages", index)}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md opacity-90 hover:opacity-100"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex justify-between pt-6 mt-6 border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={prevStep}
+                  className="py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#8a5936]"
+                >
+                  السابق
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading || uploading}
+                  className="py-2 px-6 bg-[#a0714f] text-white font-medium rounded-md shadow-sm hover:bg-[#8a5936] focus:outline-none focus:ring-2 focus:ring-[#8a5936] flex items-center transition-colors"
+                >
+                  {loading || uploading ? (
+                    <div className="flex items-center justify-center">
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      {uploading ? "جاري رفع الصور..." : "جاري المعالجة..."}
+                    </div>
+                  ) : (
+                    <>
+                      <CheckCircle className="h-4 w-4 mr-2" /> تسجيل الصالون
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         );

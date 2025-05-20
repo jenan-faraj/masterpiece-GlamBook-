@@ -87,17 +87,31 @@ const UserProfile = () => {
   }, []);
 
   const onRemoveFavorite = async (salonId) => {
-    try {
-      await axios.delete(`http://localhost:3000/api/favorites/${salonId}`, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      fetchfavorites();
-    } catch (error) {
-      console.error("خطأ:", error);
+    const result = await Swal.fire({
+      title: "هل أنت متأكدة؟",
+      text: "هل تريدين إزالة هذا الصالون من المفضلة؟",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#a0714f",
+      confirmButtonText: "نعم، احذفيه",
+      cancelButtonText: "تراجع",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`http://localhost:3000/api/favorites/${salonId}`, {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        fetchfavorites();
+      } catch (error) {
+        console.error("خطأ:", error);
+        await Swal.fire("خطأ!", "حدث خطأ أثناء الحذف.", "error");
+      }
     }
   };
 
