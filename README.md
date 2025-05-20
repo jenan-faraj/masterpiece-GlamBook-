@@ -1,4 +1,4 @@
-# 💇‍♀️ GlamBook – The Smart Way to Book Beauty Salons
+# 💇‍♀️ Beauty – The Smart Way to Book Beauty Salons
 
 GlamBook is a modern, web-based salon booking platform that simplifies the process of discovering and booking appointments at beauty salons. It connects clients with local salons and empowers salon owners to showcase and manage their services efficiently.
 
@@ -57,7 +57,7 @@ GlamBook offers a seamless experience for users to browse, filter, and book appo
 | Frontend    | React.js + Tailwind CSS           |
 | Backend     | Node.js + Express.js              |
 | Database    | MongoDB with Mongoose             |
-| Auth        | JWT / Google OAuth (optional)     |
+| Auth        | JWT      |
 
 
 ---
