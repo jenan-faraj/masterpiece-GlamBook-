@@ -4,10 +4,6 @@ import {
   Search,
   CalendarCheck,
   Filter,
-  ChevronDown,
-  ChevronUp,
-  Download,
-  Printer,
 } from "lucide-react";
 const BookingsAllPage = () => {
   const [bookings, setBookings] = useState([]);

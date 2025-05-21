@@ -126,7 +126,6 @@ const UserProfile = () => {
     navigate("/login");
   }
 
-  // لا تعرض واجهة المستخدم إذا كان دوره صالون - هذا لمنع العرض المؤقت قبل التوجيه
   if (user.role === "salon") {
     return (
       <div className="flex justify-center items-center min-h-screen">

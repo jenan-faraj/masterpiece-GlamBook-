@@ -109,7 +109,6 @@ const Navbar = () => {
       >
         <nav className="container xl:px-20 mx-auto px-4" dir="rtl">
           <div className="flex justify-between items-center h-16">
-            {/* Logo - على اليمين */}
             <div className="flex items-center">
               <img
                 className="h-14 object-cover"
@@ -118,7 +117,6 @@ const Navbar = () => {
               />
             </div>
 
-            {/* Navigation Links - في المنتصف */}
             <div className="hidden lg:flex items-center justify-center flex-1">
               <ul className="flex items-center text-lg space-x-reverse space-x-3 text-[#B58152] font-medium">
                 {navLinks.map((link) => (
@@ -138,7 +136,6 @@ const Navbar = () => {
               </ul>
             </div>
 
-            {/* Authentication - على اليسار */}
             <div className="hidden lg:flex items-center space-x-reverse space-x-4">
               {isLoggedIn ? (
                 <ul className="flex items-center text-lg space-x-reverse space-x-3 text-[#B58152] font-medium">
@@ -203,7 +200,6 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* Mobile Menu Button */}
             <button
               className="lg:hidden text-[#B58152] text-2xl p-2 focus:outline-none"
               onClick={toggleMenu}
@@ -213,7 +209,6 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Mobile Menu */}
           {isOpen && (
             <div className="lg:hidden bg-[#F9F3F1] border-t border-[#e6d8d3] py-2">
               <ul className="text-[#B58152]">

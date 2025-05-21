@@ -28,7 +28,7 @@ const AppContent = () => {
     return (
       location.pathname === "/login" ||
       location.pathname === "/signup" ||
-      location.pathname.startsWith("/admin") // هذا سيتحقق من كل المسارات التي تبدأ بـ /admin
+      location.pathname.startsWith("/admin") 
     );
   };
 

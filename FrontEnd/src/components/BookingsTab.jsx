@@ -43,7 +43,6 @@ const BookingsTab = ({
     return true;
   });
 
-  // Get current bookings
   const indexOfLastBooking = currentPage * bookingsPerPage;
   const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
   const currentBookings = filteredBookings?.slice(
@@ -51,7 +50,6 @@ const BookingsTab = ({
     indexOfLastBooking
   );
 
-  // Calculate total pages
   const totalPages = Math.ceil(
     (filteredBookings?.length || 0) / bookingsPerPage
   );
@@ -153,7 +151,6 @@ const BookingsTab = ({
     }
   };
 
-  // Pagination component
   const Pagination = () => {
     if (totalPages <= 1) return null;
 
@@ -161,15 +158,12 @@ const BookingsTab = ({
       const pageNumbers = [];
 
       if (totalPages <= 5) {
-        // If 5 or fewer pages, show all
         for (let i = 1; i <= totalPages; i++) {
           pageNumbers.push(i);
         }
       } else {
-        // Always show first page
         pageNumbers.push(1);
 
-        // Show dots or pages around current page
         if (currentPage <= 3) {
           pageNumbers.push(2, 3, 4, "...");
         } else if (currentPage >= totalPages - 2) {
@@ -189,7 +183,6 @@ const BookingsTab = ({
           );
         }
 
-        // Always show last page
         pageNumbers.push(totalPages);
       }
 
