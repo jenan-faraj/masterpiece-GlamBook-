@@ -27,6 +27,7 @@ const createSalon = async (req, res) => {
     const newSalon = new Salon(req.body);
     console.log(newSalon);
     const savedSalon = await newSalon.save();
+    console.log("savedSalon", savedSalon);
     res.status(201).json(savedSalon);
   } catch (error) {
     res.status(400).json({ error: error.message });

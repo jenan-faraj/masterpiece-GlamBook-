@@ -102,7 +102,7 @@ export default function LoginForm() {
           </p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form dir="rtl" onSubmit={handleLogin} className="space-y-6">
           <div>
             <label
               className="block text-sm font-medium mb-1"
@@ -164,13 +164,6 @@ export default function LoginForm() {
                 أنشئي حساب جديد
               </a>
             </p>
-            <a
-              href="/forgot-password"
-              className="block mt-2 text-sm font-medium"
-              style={{ color: "#B58152" }}
-            >
-              نسيتي كلمة المرور؟
-            </a>
           </div>
         </form>
       </div>

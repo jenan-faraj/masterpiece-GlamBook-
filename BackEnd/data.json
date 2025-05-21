@@ -278,5 +278,49 @@
     "salonId": "5e9f8f8f8f8f8f8f8f8f8f7c",
     "isCanceled": false,
     "isCompleted": false
+  },
+  {
+    "name": "Glow & Go Beauty",
+    "ownerName": "Sara Khaled",
+    "email": "glowgo.salon@gmail.com",
+    "password": "test1234",
+    "phone": "0799999999",
+    "location": "Sweifieh, Amman, Jordan",
+    "salonOwnershipImagePreview": [
+      "http://localhost:3000/uploads/ownership-sample.jpg"
+    ],
+    "identityImagePreview": [
+      "http://localhost:3000/uploads/identity-sample.jpg"
+    ],
+    "subscription": "non",
+    "role": "salon_owner",
+    "isDeleted": false,
+    "profileImage": "",
+    "bgImage": "",
+    "longDescription": "Glow & Go Beauty is your go-to destination for professional beauty services and relaxing self-care treatments in the heart of Amman.",
+    "shortDescription": "Professional beauty services & relaxing vibes.",
+    "rating": 0,
+    "status": "Pending",
+    "visitors": 0,
+    "reviews": [],
+    "book": [],
+    "payments": [],
+    "openingHours": {
+      "monday": { "open": "09:00", "close": "18:00" },
+      "tuesday": { "open": "09:00", "close": "18:00" },
+      "wednesday": { "open": "09:00", "close": "18:00" },
+      "thursday": { "open": "09:00", "close": "18:00" },
+      "friday": { "open": "10:00", "close": "16:00" },
+      "saturday": { "open": "10:00", "close": "16:00" },
+      "sunday": { "open": "", "close": "" }
+    },
+    "openingYear": "2021",
+    "map": {
+      "lng": 35.8914,
+      "lat": 31.9539
+    },
+    "servicesImages": [],
+    "services": [],
+    "offers": []
   }
 ]

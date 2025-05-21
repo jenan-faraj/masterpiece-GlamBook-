@@ -150,13 +150,6 @@ export default function SalonInfo({ salon, user }) {
                     .length || 0}
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">العروض الخاصة</span>
-                <span className="font-medium">
-                  {salon.offers?.filter((offer) => !offer.isDeleted).length ||
-                    0}
-                </span>
-              </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">المالك</span>
                 <span className="capitalize">{salon.ownerName}</span>

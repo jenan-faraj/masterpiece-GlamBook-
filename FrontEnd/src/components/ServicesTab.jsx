@@ -384,7 +384,7 @@ const ServicesTab = ({ user, salon }) => {
       )}
       <div className="bg-white shadow-md rounded-lg p-6">
         <div className="bg-white flex justify-between m-5 items-center">
-          <h2 className="text-xl font-semibold mb-6">خدماتنا</h2>
+          <h2 className="text-4xl font-bold text-[#825c41] mb-3">خدماتنا</h2>
           {user.email === salon.email && (
             <button
               onClick={() => setShowModal(true)}

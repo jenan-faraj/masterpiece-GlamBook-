@@ -53,7 +53,6 @@ function Categories() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [ratingFilter, setRatingFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [salonsPerPage] = useState(8);
 
@@ -84,17 +83,12 @@ function Categories() {
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
 
-      const ratingMatch =
-        ratingFilter === "" ||
-        (parseFloat(salon.rating) >= parseFloat(ratingFilter) &&
-          parseFloat(salon.rating) < parseFloat(ratingFilter) + 1);
-
-      return nameMatch && ratingMatch;
+      return nameMatch;
     });
 
     setFilteredSalons(filtered);
     setCurrentPage(1);
-  }, [searchTerm, ratingFilter, salons]);
+  }, [searchTerm, salons]);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -127,10 +121,6 @@ function Categories() {
       );
     }
   }
-
-  const handleRatingFilter = (e) => {
-    setRatingFilter(e.target.value);
-  };
 
   const indexOfLastSalon = currentPage * salonsPerPage;
   const indexOfFirstSalon = indexOfLastSalon - salonsPerPage;
@@ -295,7 +285,7 @@ function Categories() {
       </div>
 
       {filteredSalons.length > salonsPerPage && (
-        <div className="flex justify-center items-center gap-2 mt-12">
+        <div dir="rtl" className="flex justify-center items-center gap-2 mt-12">
           <button
             onClick={prevPage}
             disabled={currentPage === 1}
@@ -305,7 +295,8 @@ function Categories() {
                 : "text-gray-700 border-gray-300 hover:bg-gray-100"
             }`}
           >
-            <ChevronLeft size={20} />
+            {" "}
+            <ChevronRight size={20} />
           </button>
 
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
@@ -318,7 +309,7 @@ function Categories() {
                   : "text-gray-700 border border-gray-300 hover:bg-gray-100"
               }`}
             >
-              {number}
+              {number.toLocaleString("ar-EG")}
             </button>
           ))}
 
@@ -331,7 +322,7 @@ function Categories() {
                 : "text-gray-700 border-gray-300 hover:bg-gray-100"
             }`}
           >
-            <ChevronRight size={20} />
+            <ChevronLeft size={20} />
           </button>
         </div>
       )}

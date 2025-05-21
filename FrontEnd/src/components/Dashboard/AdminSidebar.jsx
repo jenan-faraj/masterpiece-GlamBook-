@@ -69,7 +69,7 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
       });
 
       if (response.ok) {
-        navigate("/login");
+        navigate("/");
       }
     } catch (error) {
       console.error("خطأ في تسجيل الخروج:", error);
@@ -218,7 +218,10 @@ const AdminSidebar = ({ isCollapsed, setIsCollapsed }) => {
         <div className="flex items-center justify-between p-4 border-b border-[#a0714f]">
           {!isCollapsed && (
             <div className="flex items-center gap-2">
-              <img src="../../../public/admin-logo.png" className=" w-[150px] text-white" />
+              <img
+                src="../../../public/admin-logo.png"
+                className=" w-[150px] text-white"
+              />
             </div>
           )}
 

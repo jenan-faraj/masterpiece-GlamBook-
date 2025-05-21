@@ -134,14 +134,7 @@ export default function ArabicHomePage() {
       description: "حماية كاملة لبياناتك الشخصية ومعلومات الدفع",
       bgColor: "#fbeee6",
       iconColor: "#B58152",
-    },
-    {
-      name: "عروض حصرية",
-      icon: <Zap size={32} />,
-      description: "احصل على خصومات وعروض خاصة لمستخدمي المنصة",
-      bgColor: "#fbeee6",
-      iconColor: "#B58152",
-    },
+    }
   ];
 
   const getServiceCount = (salon) => {
@@ -170,7 +163,7 @@ export default function ArabicHomePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
@@ -491,24 +484,6 @@ export default function ArabicHomePage() {
             style={{ backgroundColor: "#B58152" }}
           >
             انضم إلى شركائنا الآن
-          </Link>
-        </div>
-      </div>
-
-      <div className="bg-gradient-to-r from-[#703603] to-[#B58152] py-16 px-6">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-6 text-white">
-            جاهز لتجربة جمالية مميزة؟
-          </h2>
-          <p className="text-xl mb-10 text-white max-w-2xl mx-auto">
-            احجز موعدك الآن واستمتع بتجربة لا مثيل لها في أفضل صالونات التجميل
-            في مدينتك
-          </p>
-          <Link
-            to="/categories"
-            className="inline-block px-8 py-4 rounded-lg text-[#703603] font-semibold text-lg bg-white transition-all duration-300 hover:bg-gray-100 hover:shadow-lg transform hover:scale-105"
-          >
-            اكتشف الصالونات
           </Link>
         </div>
       </div>
